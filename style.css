@@ -121,13 +121,18 @@ section p {
   margin: 0 auto;
 }
 
-
 .card {
     background: #ffffff;
     border-radius: 12px;
     padding: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     border: 1px solid #e5e5e5;
+}
+
+.card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
 }
 
 
