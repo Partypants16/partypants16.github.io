@@ -24,7 +24,8 @@ header {
   background: #111;
   color: white;
   padding: 1rem 2rem;
-  border-bottom: 3px solid #e0f7fa; /* Added a subtle bottom border */
+  border-bottom: 3px solid #e0f7fa;
+  /* Added a subtle bottom border */
 }
 
 nav {
@@ -46,23 +47,6 @@ nav a {
 }
 
 /* ------------------------------ */
-/* Homepage Sections              */
-/* ------------------------------ */
-#hero {
-  padding: 4rem 2rem;
-  text-align: center;
-  background: linear-gradient(to bottom, #f0f4ff 0%, #e6e6ff 100%); /* Added gradient background */
-  border-bottom: 5px solid #e0f7fa; /*Added a border to the section*/
-}
-
-main section {
-  padding: 2rem;
-  max-width: 800px;
-  margin: auto;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.1); /* Added subtle shadow */
-}
-
-/* ------------------------------ */
 /* Footer                         */
 /* ------------------------------ */
 footer {
@@ -71,29 +55,102 @@ footer {
   background: #111;
   color: white;
   margin-top: 2rem;
-  border-top: 3px solid #e0f7fa; /* Added a subtle top border */
+  border-top: 3px solid #e0f7fa;
+  /* Added a subtle top border */
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ------------------------------ */
+/*Unique to index.html              */
+/* ------------------------------ */
+#hero {
+  padding: 15rem 13rem;
+  text-align: center;
+  background: linear-gradient(to bottom, #f0f4ff 0%, #e6e6ff 100%);
+  /* Added gradient background */
+}
+
+main section {
+  padding: 2rem;
+  max-width: 95%;
+  margin: 2rem auto 0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  /* Added subtle shadow */
+}
+
+section h2 {
+  margin-bottom: 1rem;
+  color: #333;
+  font-size: 5rem;
+}
+
+section p {
+  color: #555;
+  font-size: 1.2rem;
+  padding: 1rem;
+}
+
+
+.section-divider {
+  margin: 2rem auto;
+  border: none;
+  height: 2px;
+  width: 90%;
+  background: #ddd;
+}
+
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  width: 100%;
+  max-width: 1200px; /* enough space for 3 cards comfortably */
+  margin: 0 auto;
+}
+
+
+.card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e5e5e5;
+}
+
 
 /* ------------------------------ */
 /* Fancy Button Styling            */
 /* ------------------------------ */
 .fancy-button {
-    background-color: #4CAF50; /* Green color */
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: background-color 0.3s ease; /* Smooth transition */
+  background-color: #4CAF50;
+  /* Green color */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  /* Smooth transition */
 }
 
 .fancy-button:hover {
-    background-color: #3e8e41;  /* Darker green on hover */
+  background-color: #3e8e41;
+  /* Darker green on hover */
 }
-
-
-
