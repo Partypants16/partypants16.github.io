@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallpaper</title>
+    <link rel="stylesheet" href="wallpaper.css">
+</head>
+
+<body>
+
+    <header>
+        <nav>
+            <h1>PS</h1>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="wallpaper.html">Wallpaper</a></li>
+                <li><a href="profile.html">Profile</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Background video -->
+    <video class="bg-video" autoplay muted loop playsinline>
+        <source src="wallpaper-files/winter-forest-snow.mp4" type="video/mp4">
+    </video>
+
+    <!-- Optional dark overlay -->
+    <div class="overlay"></div>
+
+    <div class="content">
+        <h1 id="clock">00:00</h1>
+        <p id="date">Loading date...</p>
+        <p class="quote">“Stay focused. Stay curious.”</p>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, "0");
+            const minutes = String(now.getMinutes()).padStart(2, "0");
+
+            document.getElementById("clock").textContent = `${hours}:${minutes}`;
+
+            const options = { weekday: 'long', month: 'long', day: 'numeric' };
+            document.getElementById("date").textContent =
+                now.toLocaleDateString(undefined, options);
+        }
+
+        updateClock();
+        setInterval(updateClock, 1000);
+    </script>
+
+
+    <!-- Floating button -->
+    <button class="wallpaper-btn" id="openModal">🎨</button>
+
+    <!-- Modal -->
+    <div class="modal" id="wallpaperModal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+
+            <h2>Select a Wallpaper</h2>
+
+            <div class="wallpaper-grid">
+                <div class="wallpaper-option" data-video="wallpaper-files/winter-forest-snow.mp4">
+                    <p>Winter Forest Snow</p>
+                </div>
+
+                <div class="wallpaper-option" data-video="wallpaper-files/ff7-remake.mp4">
+                    <p>FF7 Remake</p>
+                </div>
+
+                <div class="wallpaper-option" data-video="wallpaper-files/coming-soon.mp4">
+                    <p>COMING SOON</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById("wallpaperModal");
+        const openBtn = document.getElementById("openModal");
+        const closeBtn = document.getElementById("closeModal");
+        const video = document.querySelector(".bg-video");
+
+        openBtn.onclick = () => modal.classList.add("show");
+        closeBtn.onclick = () => modal.classList.remove("show");
+        window.onclick = (e) => { if (e.target === modal) modal.classList.remove("show"); };
+
+        // Change wallpaper on click
+        document.querySelectorAll(".wallpaper-option").forEach(option => {
+            option.addEventListener("click", () => {
+                const newSrc = option.getAttribute("data-video");
+                video.querySelector("source").src = newSrc;
+                video.load();
+                modal.classList.remove("show");
+            });
+        });
+    </script>
+
+</body>
+
+</html>
