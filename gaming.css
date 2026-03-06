@@ -1,0 +1,103 @@
+/* ------------------------------ */
+/* Reset                          */
+/* ------------------------------ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ------------------------------ */
+/* Global Page Styles             */
+/* ------------------------------ */
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  color: #222;
+  background-color: #f5f5f5;
+}
+
+/* ------------------------------ */
+/* Header + Navigation            */
+/* ------------------------------ */
+header {
+  background: #111;
+  color: white;
+  padding: 1rem 2rem;
+  border-bottom: 3px solid #e0f7fa;
+  /* Added a subtle bottom border */
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* ------------------------------ */
+/* Footer                         */
+/* ------------------------------ */
+footer {
+  text-align: center;
+  padding: 1rem;
+  background: #111;
+  color: white;
+  margin-top: 2rem;
+  border-top: 3px solid #e0f7fa;
+  /* Added a subtle top border */
+}
+
+
+
+h1 {
+    text-align: center;
+}
+
+.platform-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.platform-card {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
+    color: black;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.platform-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+}
+
+.platform-card img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+
+.platform-card h2 {
+    margin: 10px 0 5px 0;
+}
+
+.platform-card p {
+    color: #666;
+}
