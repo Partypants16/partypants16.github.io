@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dashboard</title>
+    <meta
+      name="description"
+      content="A bright, animated dashboard with quick links to pages."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="topbar" role="banner">
+      <div class="topbar__inner">
+        <div class="brand">
+          <div class="brand__mark" aria-hidden="true"></div>
+          <div class="brand__text">
+            <div class="brand__title">My Dashboard</div>
+            <div class="brand__subtitle">Quick launch + overview</div>
+          </div>
+        </div>
+
+        <nav class="topnav" aria-label="Primary">
+          <a class="topnav__link" href="#apps">Apps</a>
+          <a class="topnav__link" href="#highlights">Highlights</a>
+          <a class="topnav__link" href="#updates">Updates</a>
+        </nav>
+
+        <div class="topbar__actions">
+          <button class="chip" type="button" aria-label="Search (placeholder)">
+            <span class="chip__icon" aria-hidden="true">⌘</span>
+            <span class="chip__label">Search</span>
+          </button>
+          <button class="avatar" type="button" aria-label="Profile (placeholder)">
+            <span class="avatar__dot" aria-hidden="true"></span>
+            <span class="avatar__text">P</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" class="page" role="main">
+      <section class="hero">
+        <div class="hero__content">
+          <div class="kicker">Welcome back</div>
+          <h1 class="hero__title">A bright dashboard that stays usable as you scroll.</h1>
+          <p class="hero__subtitle">
+            Launch pages fast, scan what’s new, and keep everything discoverable with a sticky
+            nav + scroll animations.
+          </p>
+
+          <div class="hero__cta">
+            <a class="btn btn--primary" href="#apps">Explore apps</a>
+            <a class="btn btn--ghost" href="#updates">See updates</a>
+          </div>
+
+          <div class="hero__meta">
+            <div class="pill">Bright theme</div>
+            <div class="pill">Accessible buttons</div>
+            <div class="pill">Smooth motion</div>
+          </div>
+        </div>
+
+        <div class="hero__panel" aria-hidden="true">
+          <div class="floatcard floatcard--a"></div>
+          <div class="floatcard floatcard--b"></div>
+          <div class="floatcard floatcard--c"></div>
+          <div class="spark spark--1"></div>
+          <div class="spark spark--2"></div>
+          <div class="spark spark--3"></div>
+        </div>
+      </section>
+
+      <section id="apps" class="section">
+        <div class="section__head">
+          <h2 class="section__title">Apps</h2>
+          <p class="section__desc">
+            Buttons are ready to link to new pages (you can wire these up later).
+          </p>
+        </div>
+
+        <div class="grid" role="list">
+          <article class="card reveal" role="listitem">
+            <div class="card__top">
+              <div class="badge badge--mint">Data</div>
+              <div class="miniicon miniicon--mint" aria-hidden="true">▦</div>
+            </div>
+            <h3 class="card__title">TutuBee Explorer</h3>
+            <p class="card__body">
+              Browse bulk-data categories and open a mini dashboard for each dataset.
+            </p>
+            <div class="card__actions">
+              <a
+                class="dashbtn dashbtn--mint"
+                href="./ProjectTutuBee/tuutuubee.html"
+                aria-label="Open TutuBee Explorer"
+              >
+                <span class="dashbtn__label">Open Explorer</span>
+                <span class="dashbtn__meta">Interactive</span>
+              </a>
+              <a
+                class="dashbtn dashbtn--mintOutline"
+                href="./ProjectTutuBee/tuutuubee.html#apps"
+                aria-label="Jump to TutuBee categories"
+              >
+                <span class="dashbtn__label">Categories</span>
+                <span class="dashbtn__meta">Browse</span>
+              </a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="highlights" class="section section--alt">
+        <div class="section__head">
+          <h2 class="section__title">Highlights</h2>
+          <p class="section__desc">Big, readable stats that don’t fight the bright palette.</p>
+        </div>
+
+        <div class="stats">
+          <div class="stat reveal">
+            <div class="stat__label">Tasks</div>
+            <div class="stat__value">12</div>
+            <div class="stat__hint">In progress</div>
+          </div>
+          <div class="stat reveal">
+            <div class="stat__label">Streak</div>
+            <div class="stat__value">6</div>
+            <div class="stat__hint">Days</div>
+          </div>
+          <div class="stat reveal">
+            <div class="stat__label">Ideas</div>
+            <div class="stat__value">34</div>
+            <div class="stat__hint">Saved</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="updates" class="section">
+        <div class="section__head">
+          <h2 class="section__title">Updates</h2>
+          <p class="section__desc">Sticky nav keeps context while you scroll.</p>
+        </div>
+
+        <div class="timeline">
+          <article class="update reveal">
+            <div class="update__dot" aria-hidden="true"></div>
+            <div class="update__content">
+              <div class="update__title">TutuBee Explorer added</div>
+              <div class="update__body">
+                You can now browse <code>bulk-data</code> categories and open dataset dashboards.
+              </div>
+            </div>
+            <div class="update__tag">Today</div>
+          </article>
+          <article class="update reveal">
+            <div class="update__dot" aria-hidden="true"></div>
+            <div class="update__content">
+              <div class="update__title">More categories next</div>
+              <div class="update__body">
+                Add more folders/files into the explorer tree to match your full <code>bulk-data</code>
+                structure.
+              </div>
+            </div>
+            <div class="update__tag">Next</div>
+          </article>
+          <article class="update reveal">
+            <div class="update__dot" aria-hidden="true"></div>
+            <div class="update__content">
+              <div class="update__title">Wire in real data</div>
+              <div class="update__body">
+                Connect the dashboards to parse Excel/CSV (or pre-convert to JSON) and replace the
+                mock charts with real numbers.
+              </div>
+            </div>
+            <div class="update__tag">Anytime</div>
+          </article>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div class="footer__inner">
+          <div class="footer__left">
+            <div class="footer__brand">
+              <span class="footer__mark" aria-hidden="true"></span>
+              <span>My Dashboard</span>
+            </div>
+            <div class="footer__muted">Built for bright vibes + professional usability.</div>
+          </div>
+          <div class="footer__right">
+            <a class="footer__link" href="#main">Back to top</a>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <script src="./dashboard.js" defer></script>
+  </body>
+</html>

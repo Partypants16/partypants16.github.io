@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TutuBee Data Explorer</title>
+    <meta
+      name="description"
+      content="Hierarchical data visualisation dashboard for bulk-data categories."
+    />
+
+    <link rel="stylesheet" href="./tuutuubee.css" />
+
+    <!-- XLSX parser for reading real Excel data in the browser -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"
+      defer
+    ></script>
+  </head>
+  <body>
+    <a class="tb-skip" href="#main">Skip to content</a>
+
+    <header class="tb-header">
+      <div class="tb-header__inner">
+        <div class="tb-brand">
+          <div class="tb-brand__mark" aria-hidden="true"></div>
+          <div>
+            <div class="tb-brand__title">TutuBee</div>
+            <div class="tb-brand__subtitle">Bulk-data explorer</div>
+          </div>
+        </div>
+
+        <div class="tb-header__meta">
+          <span class="tb-chip">Static preview · link to real files later</span>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" class="tb-main">
+      <aside class="tb-sidebar" aria-label="Top-level categories">
+        <div class="tb-sidebar__head">Categories</div>
+        <nav class="tb-sidebar__nav" id="sidebar-root"></nav>
+      </aside>
+
+      <section class="tb-content" aria-live="polite">
+        <div class="tb-breadcrumb" id="breadcrumb"></div>
+
+        <section class="tb-panel" id="panel-list" aria-label="Category contents"></section>
+
+        <section class="tb-panel tb-panel--viz" id="panel-viz" aria-label="Data visualisation">
+          <div class="tb-panel__empty">
+            <h2 class="tb-panel__emptyTitle">Pick a dataset to see its dashboard.</h2>
+            <p class="tb-panel__emptyBody">
+              Start from a top-level category on the left (for example
+              <strong>Domestic</strong>), drill into mini-categories, then choose a data file.
+            </p>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="./tuutuubee.js" defer></script>
+  </body>
+</html>
