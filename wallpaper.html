@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wallpaper</title>
+    <meta name="description" content="An animated wallpaper, clock and quote landing page.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏰</text></svg>">
     <link rel="stylesheet" href="wallpaper.css">
 </head>
 
@@ -12,11 +14,12 @@
 
     <header>
         <nav>
-            <h1>PS</h1>
+            <p class="logo"><a href="index.html">PS</a></p>
             <ul>
                 <li><a href="index.html">Home</a></li>
-                <li><a href="wallpaper.html">Wallpaper</a></li>
+                <li><a href="wallpaper.html" aria-current="page">Wallpaper</a></li>
                 <li><a href="profile.html">Profile</a></li>
+                <li><a href="gaming.html">Games</a></li>
             </ul>
         </nav>
     </header>
@@ -72,8 +75,8 @@
                     <p>FF7 Remake</p>
                 </div>
 
-                <div class="wallpaper-option" data-video="wallpaper-files/coming-soon.mp4">
-                    <p>COMING SOON</p>
+                <div class="wallpaper-option wallpaper-option--soon">
+                    <p>Coming soon</p>
                 </div>
             </div>
         </div>
@@ -89,12 +92,13 @@
         closeBtn.onclick = () => modal.classList.remove("show");
         window.onclick = (e) => { if (e.target === modal) modal.classList.remove("show"); };
 
-        // Change wallpaper on click
-        document.querySelectorAll(".wallpaper-option").forEach(option => {
+        // Change wallpaper on click (skip options with no video yet, e.g. "Coming soon")
+        document.querySelectorAll(".wallpaper-option[data-video]").forEach(option => {
             option.addEventListener("click", () => {
                 const newSrc = option.getAttribute("data-video");
                 video.querySelector("source").src = newSrc;
                 video.load();
+                video.play().catch(() => {});
                 modal.classList.remove("show");
             });
         });

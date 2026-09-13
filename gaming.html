@@ -4,59 +4,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="theme.js"></script>
     <title>Gaming Platforms</title>
+    <meta name="description" content="Parth's gaming platform profiles - PlayStation, Xbox, Steam, and Epic Games.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏰</text></svg>">
     <link rel="stylesheet" href="gaming.css">
 </head>
 
 <body>
     <header>
     <nav>
-      <h1>PS</h1>
+      <p class="logo"><a href="index.html">PS</a></p>
       <ul>
         <li><a href="index.html">Home</a></li>
         <li><a href="wallpaper.html">Wallpaper</a></li>
         <li><a href="profile.html">Profile</a></li>
+        <li><a href="gaming.html" aria-current="page">Games</a></li>
       </ul>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">🌙</button>
     </nav>
   </header>
 
+    <main>
     <h1>Gaming Platforms</h1>
 
     <div class="platform-container">
 
-        <a href="https://psnprofiles.com/Partypants16" target="_blank" class="platform-card">
+        <a href="https://psnprofiles.com/Partypants16" target="_blank" rel="noopener noreferrer" class="platform-card">
             <img src="images/playstationlogo.png" alt="PlayStation Logo">
             <h2>PlayStation</h2>
             <p>PS4 & PS5</p>
         </a>
 
-        <a href="https://xboxgamertag.com/search/CracklyWharf411" target="_blank" class="platform-card">
+        <a href="https://xboxgamertag.com/search/CracklyWharf411" target="_blank" rel="noopener noreferrer" class="platform-card">
             <img src="images/xboxlogo.png" alt="Xbox Logo">
             <h2>Xbox</h2>
             <p>Xbox 360 & PC</p>
         </a>
 
-        <a href="https://steamcommunity.com/profiles/76561198993129663/" target="_blank" class="platform-card">
+        <a href="https://steamcommunity.com/profiles/76561198993129663/" target="_blank" rel="noopener noreferrer" class="platform-card">
             <img src="images/steamlogo.png" alt="Steam Logo">
             <h2>Steam</h2>
             <p>PC</p>
         </a>
 
-        <a href="https://store.epicgames.com/en-US/u/0b0d760d0fd94018bd46af1ec471591d" target="_blank" class="platform-card">
+        <a href="https://store.epicgames.com/en-US/u/0b0d760d0fd94018bd46af1ec471591d" target="_blank" rel="noopener noreferrer" class="platform-card">
             <img src="images/epicgameslogo.png" alt="Epic Games Logo">
             <h2>Epic Games</h2>
             <p>PC</p>
         </a>
 
-        <a href="#" target="_blank" class="platform-card">
-            <img src="images/nintendo.png" alt="Nintendo Logo">
+        <div class="platform-card platform-card--soon">
             <h2>Nintendo</h2>
-            <p>Wii & Mobile</p>
-        </a>
+            <p>Coming soon</p>
+        </div>
 
     </div>
+    </main>
 
-    
+    <footer>
+        <p>&copy; <span id="year"></span> Parth</p>
+    </footer>
+
+    <script>
+        document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
 </body>
 
 </html>

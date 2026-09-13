@@ -8,13 +8,41 @@
 }
 
 /* ------------------------------ */
+/* Theme variables                */
+/* ------------------------------ */
+:root {
+    --bg: #f5f5f5;
+    --text: #222;
+    --muted-text: #444;
+    --card-bg: #fafafa;
+    --card-bg-alt: #ffffff;
+    --pill-bg: #f0f0f0;
+    --pill-text: #222;
+    --link: #0066cc;
+    --link-hover: #004999;
+}
+
+:root[data-theme="dark"] {
+    --bg: #121212;
+    --text: #e8e8e8;
+    --muted-text: #bbbbbb;
+    --card-bg: #1e1e1e;
+    --card-bg-alt: #1e1e1e;
+    --pill-bg: #2a2a2a;
+    --pill-text: #eeeeee;
+    --link: #6ea8ff;
+    --link-hover: #a9c9ff;
+}
+
+/* ------------------------------ */
 /* Global Page Styles             */
 /* ------------------------------ */
 body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
-    color: #222;
-    background-color: #f5f5f5;
+    color: var(--text);
+    background-color: var(--bg);
+    transition: background-color .3s ease, color .3s ease;
 }
 
 
@@ -45,6 +73,38 @@ nav a {
     color: white;
     text-decoration: none;
     font-weight: bold;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.logo a {
+    color: inherit;
+    text-decoration: none;
+}
+
+nav a[aria-current="page"] {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.theme-toggle {
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: white;
+    font-size: 1.1rem;
+    line-height: 1;
+    padding: .4em .6em;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background-color .2s ease, transform .2s ease;
+}
+
+.theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: scale(1.05);
 }
 
 /* ------------------------------ */
@@ -81,15 +141,6 @@ footer {
     color: white;
 }
 
-.ps-letters {
-    font-size: 60px;
-    /* Or whatever size you want */
-    font-weight: bold;
-    color: #2edbe1;
-    text-align: center;
-    /* Center the letters horizontally */
-}
-
 /* ---- Section wrapper ------------------------------------------------ */
 .tech-stack {
     max-width: 40vw;
@@ -103,7 +154,7 @@ footer {
 /* ---- Heading style --------------------------------------------------- */
 .tech-stack h2 {
     font-size: 1.8rem;
-    color: #333;
+    color: var(--text);
     margin-bottom: .5rem;
 }
 
@@ -119,12 +170,13 @@ footer {
 }
 
 .stack-list li {
-    background: #f0f0f0;
-    color: #222;
+    background: var(--pill-bg);
+    color: var(--pill-text);
     font-weight: 600;
     padding: .4rem 1rem;
     border-radius: 9999px;
     white-space: nowrap;
+    transition: background-color .3s ease, color .3s ease;
 }
 
 /* Remove this — duplicates must be visible */
@@ -149,16 +201,17 @@ footer {
     max-width: 600px;
     margin: 3rem auto;
     padding: 1.5rem;
-    background: #fafafa;
+    background: var(--card-bg);
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, .05);
+    transition: background-color .3s ease;
 }
 
 /* ----- Heading ------------------------------------------------------- */
 .contact-info h2 {
     font-size: 1.9rem;
     margin-bottom: 1rem;
-    color: #222;
+    color: var(--text);
     text-align: center;
 }
 
@@ -176,13 +229,13 @@ footer {
 /* ----- Individual item styling ----------------------------------- */
 .contact-info li {
     font-size: 1.05rem;
-    color: #444;
+    color: var(--muted-text);
     line-height: 1.4;
 }
 
 /* Link style – subtle underline + transition */
 .contact-info a {
-    color: #0066cc;
+    color: var(--link);
     text-decoration: none;
     border-bottom: 1px solid transparent;
     transition: border-color .2s ease, color .2s ease;
@@ -190,8 +243,8 @@ footer {
 
 .contact-info a:hover,
 .contact-info a:focus {
-    border-color: #0066cc;
-    color: #004999;
+    border-color: var(--link);
+    color: var(--link-hover);
 }
 
 
@@ -202,9 +255,10 @@ footer {
     max-width: 650px;
     margin: 3rem auto;
     padding: 1.5rem;
-    background: #fff;
+    background: var(--card-bg-alt);
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, .05);
+    transition: background-color .3s ease;
 }
 
 /* ---------- Heading --------------------------------------------------- */
@@ -212,7 +266,7 @@ footer {
     font-size: 1.9rem;
     margin-bottom: 1rem;
     text-align: center;
-    color: #222;
+    color: var(--text);
 }
 
 /* ---------- List layout ---------------------------------------------- */
@@ -229,12 +283,12 @@ footer {
 /* ---------- Individual items ---------------------------------------- */
 .certifications li {
     font-size: 1.05rem;
-    color: #444;
+    color: var(--muted-text);
 }
 
 /* ---------- Link styling --------------------------------------------- */
 .certifications a {
-    color: #0066cc;
+    color: var(--link);
     text-decoration: none;
     border-bottom: 1px solid transparent;
     transition: border-color .2s ease, color .2s ease;
@@ -242,8 +296,8 @@ footer {
 
 .certifications a:hover,
 .certifications a:focus {
-    border-color: #0066cc;
-    color: #004999;
+    border-color: var(--link);
+    color: var(--link-hover);
 }
 
 /* ---------- Optional status indicator -------------------------------- */
@@ -252,4 +306,30 @@ li span.status {
     font-style: italic;
     margin-left: .5rem;
     opacity: .7;
+}
+
+/* ------------------------------ */
+/* Responsive                     */
+/* ------------------------------ */
+@media (max-width: 768px) {
+    .tech-stack {
+        max-width: 90vw;
+    }
+}
+
+@media (max-width: 600px) {
+    nav {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .profile-header h1 {
+        font-size: 1.8rem;
+    }
 }

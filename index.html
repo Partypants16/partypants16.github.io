@@ -4,19 +4,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="theme.js"></script>
   <title>Parth | Home</title>
+  <meta name="description" content="Parth's personal home page - projects, gaming, self-hosted services and more.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏰</text></svg>">
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
   <header>
     <nav>
-      <h1>PS</h1>
+      <p class="logo"><a href="index.html">PS</a></p>
       <ul>
-        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html" aria-current="page">Home</a></li>
         <li><a href="wallpaper.html">Wallpaper</a></li>
         <li><a href="profile.html">Profile</a></li>
+        <li><a href="gaming.html">Games</a></li>
       </ul>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">🌙</button>
     </nav>
   </header>
 
@@ -31,8 +36,9 @@
 
     <div class="card-container" id="cards">
 
-      <a href="https://stay-safe-vic.vercel.app/" class="card-link">
+      <a href="https://stay-safe-vic.vercel.app/" target="_blank" rel="noopener noreferrer" class="card-link">
         <div class="section card">
+          <span class="badge badge--live" title="Fully working and deployed">Live</span>
           <h2>StaySafe</h2>
           <p>Victoria Crime Prediction and Community Safety Map</p>
         </div>
@@ -40,62 +46,71 @@
 
       <a href="gaming.html" class="card-link">
         <div class="section card">
+          <span class="badge badge--live" title="Fully working and deployed">Live</span>
           <h2>Video Games</h2>
           <p>Gaming platforms and more!</p>
         </div>
       </a>
 
-      <a href="/vibe-testing-zone/home.html" class="card-link">
+      <a href="vibe-testing-zone/home.html" class="card-link">
         <div class="section card">
+          <span class="badge badge--experimental" title="Vibe-coded experiment, not a finished product">Experimental</span>
           <h2>Vibe Testing Zone</h2>
           <p>Pure vibe coding to test the capabilities and experiment with new technolgies. No fleshed out products.</p>
         </div>
       </a>
 
-      <a href="https://skywardrobe-production.up.railway.app/" class="card-link">
+      <a href="https://skywardrobe-production.up.railway.app/" target="_blank" rel="noopener noreferrer" class="card-link">
         <div class="section card">
+          <span class="badge badge--live" title="Fully working and deployed">Live</span>
           <h2>SkyWardrobe</h2>
           <p>Melbourne, AU weather translated into what to wear now.</p>
         </div>
       </a>
 
-      <a href="sports.html" class="card-link">
+      <a href="sports.html?feature=Family+Tree" class="card-link">
         <div class="section card">
+          <span class="badge badge--soon" title="Not built yet">Coming Soon</span>
           <h2>Family Tree</h2>
           <p>Digital family tree builder and genealogy tool.</p>
         </div>
       </a>
 
-      <a href="http://192.168.212.60:8096" class="card-link">
+      <a href="http://192.168.212.60:8096" target="_blank" rel="noopener noreferrer" class="card-link">
         <div class="section card">
+          <span class="badge badge--lan" title="Only reachable on the home Wi-Fi">LAN Only</span>
           <h2>Jellyfin</h2>
           <p>Takes you to the self-hosted Jellyfin media server. <strong>[requires connection to Home Wi-Fi]</strong></p>
         </div>
       </a>
 
-      <a href="sports.html" class="card-link">
+      <a href="sports.html?feature=Navidrome" class="card-link">
         <div class="section card">
+          <span class="badge badge--lan" title="Only reachable on the home Wi-Fi">LAN Only</span>
           <h2>Navidrome</h2>
           <p>Takes you to the self-hosted Navidrome music server. <strong>[requires connection to Home Wi-Fi]</strong></p>
         </div>
       </a>
 
-      <a href="sports.html" class="card-link">
+      <a href="sports.html?feature=Notetaking" class="card-link">
         <div class="section card">
+          <span class="badge badge--soon" title="Not built yet">Coming Soon</span>
           <h2>Notetaking</h2>
           <p>Previously Notion files, currently are only viewable here. Will become a full fledged notetaking editor in
             the future.</p>
         </div>
       </a>
 
-      <a href="sports.html" class="card-link">
+      <a href="sports.html?feature=Sports" class="card-link">
         <div class="section card">
+          <span class="badge badge--soon" title="Not built yet">Coming Soon</span>
           <h2>Sports</h2>
           <p>Track your favorite sports and teams! Analytics????</p>
         </div>
       </a>
 
       <div class="section card">
+        <span class="badge badge--empty" title="Nothing here yet">Empty</span>
         <h2>Empty</h2>
         <p>This will describe whatever service is here!</p>
       </div>
@@ -105,8 +120,12 @@
   </main>
 
   <footer>
-    <p>© 2026 Parth</p>
+    <p>&copy; <span id="year"></span> Parth</p>
   </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
 </body>
 
 </html>
