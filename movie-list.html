@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="theme.js"></script>
+  <title>Movie List | Parth</title>
+  <meta name="description" content="A movie recommendation list from Parth's site.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏰</text></svg>">
+  <link rel="stylesheet" href="movies.css">
+</head>
+
+<body>
+  <header>
+    <nav>
+      <p class="logo"><a href="index.html">PS</a></p>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="wallpaper.html">Wallpaper</a></li>
+        <li><a href="profile.html">Profile</a></li>
+        <li><a href="gaming.html">Games</a></li>
+      </ul>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">🌙</button>
+    </nav>
+  </header>
+
+  <main>
+    <a class="back-link" href="movies.html">&larr; All lists</a>
+
+    <section class="lists-intro">
+      <h1 id="list-name">Movie List</h1>
+      <p id="list-summary"></p>
+    </section>
+
+    <p class="list-note" id="list-note" hidden></p>
+
+    <ul class="movie-list" id="movie-list"></ul>
+  </main>
+
+  <footer>
+    <p>&copy; <span id="year"></span> Parth</p>
+  </footer>
+
+  <script src="movie-lists.js"></script>
+  <script>
+    // Which list to show comes from the link, e.g. movie-list.html?for=test
+    const key = (new URLSearchParams(window.location.search).get("for") || "").toLowerCase();
+    const list = Object.prototype.hasOwnProperty.call(MOVIE_LISTS, key) ? MOVIE_LISTS[key] : null;
+
+    if (!list) {
+      document.getElementById("list-name").textContent = "List not found";
+      document.getElementById("list-summary").textContent = "There's no movie list at this link. Go back to all lists and pick a name.";
+    } else {
+      document.title = list.name + " | Movie List";
+      document.getElementById("list-name").textContent = list.name;
+      document.getElementById("list-summary").textContent =
+        "Movie recommendation list · " + list.movies.length + (list.movies.length === 1 ? " movie" : " movies");
+
+      if (list.note) {
+        const note = document.getElementById("list-note");
+        note.innerHTML = list.note;
+        note.hidden = false;
+      }
+
+      const container = document.getElementById("movie-list");
+      for (const movie of list.movies) {
+        const item = document.createElement("li");
+        item.className = "movie";
+
+        const head = document.createElement("div");
+        head.className = "movie-head";
+
+        const title = document.createElement("h2");
+        title.className = "movie-title";
+        title.textContent = movie.title;
+        head.appendChild(title);
+
+        if (movie.rating) {
+          const rating = document.createElement("span");
+          rating.className = "movie-rating";
+          rating.textContent = movie.rating;
+          head.appendChild(rating);
+        }
+
+        item.appendChild(head);
+
+        if (movie.comment) {
+          const comment = document.createElement("p");
+          comment.className = "movie-comment";
+          comment.textContent = movie.comment;
+          item.appendChild(comment);
+        }
+
+        container.appendChild(item);
+      }
+    }
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+
+</html>

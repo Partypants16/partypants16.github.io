@@ -31,11 +31,12 @@
       <p>Movies I think you should watch, with a separate list for each person I've picked them out for. Find your name below.</p>
     </section>
 
-    <!-- One card per person who has a recommendation list -->
+    <!-- One card per person who has a recommendation list.
+         A person's list lives in movie-lists.js; link to it with movie-list.html?for=<key> -->
     <ul class="people-list">
-      <li class="person-card">Person 1</li>
-      <li class="person-card">Person 2</li>
-      <li class="person-card">Person 3</li>
+      <li><span class="person-card">Person 1</span></li>
+      <li><span class="person-card">Person 2</span></li>
+      <li><a class="person-card" href="movie-list.html?for=test">Test</a></li>
     </ul>
   </main>
 
