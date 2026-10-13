@@ -226,6 +226,10 @@ section p {
   background: #b58105;
 }
 
+.badge--wip {
+  background: #0f766e;
+}
+
 .badge--empty {
   background: #888888;
 }

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="theme.js"></script>
+  <title>Parth | Movie Lists</title>
+  <meta name="description" content="Parth's movie recommendation lists, one for each person he's recommending movies to.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏰</text></svg>">
+  <link rel="stylesheet" href="movies.css">
+</head>
+
+<body>
+  <header>
+    <nav>
+      <p class="logo"><a href="index.html">PS</a></p>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="wallpaper.html">Wallpaper</a></li>
+        <li><a href="profile.html">Profile</a></li>
+        <li><a href="gaming.html">Games</a></li>
+      </ul>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">🌙</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="lists-intro">
+      <h1>Movie Recommendation Lists</h1>
+      <p>Movies I think you should watch, with a separate list for each person I've picked them out for. Find your name below.</p>
+    </section>
+
+    <!-- One card per person who has a recommendation list -->
+    <ul class="people-list">
+      <li class="person-card">Person 1</li>
+      <li class="person-card">Person 2</li>
+      <li class="person-card">Person 3</li>
+    </ul>
+  </main>
+
+  <footer>
+    <p>&copy; <span id="year"></span> Parth</p>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+
+</html>
