@@ -10,6 +10,7 @@
   --settings-accent: #1464c0;
   --settings-switch-off: #c4c4c4;
   --settings-tag-bg: #eeeeee;
+  --settings-choice-bg: #eef4fc;
   --settings-backdrop: rgba(0, 0, 0, 0.45);
 }
 
@@ -21,6 +22,7 @@
   --settings-accent: #4d8fe8;
   --settings-switch-off: #555555;
   --settings-tag-bg: #2c2c2c;
+  --settings-choice-bg: #1d2a3d;
   --settings-backdrop: rgba(0, 0, 0, 0.6);
 }
 
@@ -224,6 +226,84 @@ html.settings-open .settings-panel {
   color: var(--settings-muted);
 }
 
+/* A pick-one list (transition levels) */
+.settings-intro,
+.settings-note {
+  margin: 0 0 .75rem;
+  padding: 0;
+  font-size: .9rem;
+  color: var(--settings-muted);
+}
+
+.settings-note {
+  margin: .75rem 0 0;
+  font-size: .82rem;
+}
+
+.settings-choices {
+  display: grid;
+  gap: .5rem;
+}
+
+.settings-choice {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: .65rem;
+  align-items: start;
+  padding: .6rem .75rem;
+  border: 1px solid var(--settings-border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color .2s ease, background-color .2s ease;
+}
+
+.settings-choice:hover {
+  border-color: var(--settings-muted);
+}
+
+.settings-choice:has(input:checked) {
+  border-color: var(--settings-accent);
+  background: var(--settings-choice-bg);
+}
+
+.settings-choice:has(input:focus-visible) {
+  outline: 2px solid var(--settings-accent);
+  outline-offset: 2px;
+}
+
+.settings-choice input {
+  grid-row: span 2;
+  width: 16px;
+  height: 16px;
+  margin: .2rem 0 0;
+  accent-color: var(--settings-accent);
+  cursor: pointer;
+}
+
+.settings-choice-name {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  font-weight: 700;
+}
+
+.settings-choice-hint {
+  grid-column: 2;
+  font-size: .82rem;
+  color: var(--settings-muted);
+}
+
+.settings-tag {
+  padding: .05em .55em;
+  border-radius: 999px;
+  background: var(--settings-accent);
+  color: #ffffff;
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+}
+
 /* On/off switch */
 .settings-switch {
   position: relative;
@@ -271,19 +351,3 @@ html.settings-open .settings-panel {
   outline-color: #e0f7fa;
 }
 
-@media (prefers-reduced-motion: reduce) {
-
-  .settings-toggle svg,
-  .settings-backdrop,
-  .settings-panel,
-  html.settings-open .settings-panel,
-  .settings-switch,
-  .settings-switch::after {
-    transition: none;
-  }
-
-  .settings-toggle:hover svg,
-  .settings-toggle[aria-expanded="true"] svg {
-    transform: none;
-  }
-}
