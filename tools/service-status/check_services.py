@@ -36,6 +36,7 @@ SERVICES = [
     ("navidrome", "http://192.168.212.60:4533/"),
     ("khane", "http://192.168.212.60:8095/"),
     ("crosspaste", "http://192.168.212.60/"),
+    ("codeserver", "http://192.168.212.60:8080/"),
 ]
 
 TIMEOUT_SECONDS = 5
