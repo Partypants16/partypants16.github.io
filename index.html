@@ -34,10 +34,13 @@
 
     <hr class="section-divider">
 
+    <!-- Filled in by service-status.js once the home server's status loads -->
+    <p class="status-summary" id="status-summary" hidden></p>
+
     <div class="card-container" id="cards">
 
       <a href="http://192.168.212.60:8100" target="_blank" rel="noopener noreferrer" class="card-link">
-        <div class="section card">
+        <div class="section card" data-service="staysafe">
           <span class="badge badge--lan" title="Only reachable on the home Wi-Fi">LAN Only</span>
           <h2>StaySafe (Local)</h2>
           <p>Victoria Crime Prediction and Community Safety Map. This is a self-hosted local copy; the original online version has been shut down. <strong>[requires connection to Home Wi-Fi]</strong></p>
@@ -69,7 +72,7 @@
       </a>
 
       <a href="http://192.168.212.60:3000" target="_blank" rel="noopener noreferrer" class="card-link">
-        <div class="section card">
+        <div class="section card" data-service="skywardrobe">
           <span class="badge badge--lan" title="Only reachable on the home Wi-Fi">LAN Only</span>
           <h2>SkyWardrobe</h2>
           <p>Melbourne, AU weather translated into what to wear now. <strong>[requires connection to Home Wi-Fi]</strong></p>
@@ -85,7 +88,7 @@
       </a>
 
       <a href="http://192.168.212.160:2283/" target="_blank" rel="noopener noreferrer" class="card-link">
-        <div class="section card">
+        <div class="section card" data-service="immich">
           <span class="badge badge--lan" title="Only reachable on the home Wi-Fi">LAN Only</span>
           <h2>Immich</h2>
           <p>Takes you to the self-hosted Immich family photo library. <strong>[requires connection to Home Wi-Fi]</strong></p>
@@ -93,7 +96,7 @@
       </a>
 
       <a href="http://192.168.212.60:4533" target="_blank" rel="noopener noreferrer" class="card-link">
-        <div class="section card">
+        <div class="section card" data-service="navidrome">
           <span class="badge badge--lan" title="Only reachable on the home Wi-Fi">LAN Only</span>
           <h2>Navidrome</h2>
           <p>Takes you to the self-hosted Navidrome music server. <strong>[requires connection to Home Wi-Fi]</strong></p>
@@ -101,7 +104,7 @@
       </a>
 
       <a href="http://192.168.212.60:8095" target="_blank" rel="noopener noreferrer" class="card-link">
-        <div class="section card">
+        <div class="section card" data-service="khane">
           <span class="badge badge--lan" title="Only reachable on the home Wi-Fi">LAN Only</span>
           <h2>Khane main Kya hai?</h2>
           <p>What's on the menu today? Takes you to the self-hosted family meal planner. <strong>[requires connection to Home Wi-Fi]</strong></p>
@@ -109,7 +112,7 @@
       </a>
 
       <a href="http://192.168.212.60" target="_blank" rel="noopener noreferrer" class="card-link">
-        <div class="section card">
+        <div class="section card" data-service="crosspaste">
           <span class="badge badge--lan" title="Only reachable on the home Wi-Fi">LAN Only</span>
           <h2>CrossPaste</h2>
           <p>One shared clipboard for moving text, images and files between your own devices. Takes you to the self-hosted CrossPaste. <strong>[requires connection to Home Wi-Fi]</strong></p>
@@ -138,6 +141,7 @@
     <p>&copy; <span id="year"></span> Parth</p>
   </footer>
 
+  <script src="service-status.js"></script>
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
