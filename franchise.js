@@ -301,7 +301,9 @@ function buildCard(entry, index, people) {
 
   const head = el("div", "title-head");
   head.appendChild(el("span", "title-num", String(index + 1).padStart(2, "0")));
-  head.appendChild(el("h3", "title-name", entry.title));
+  const name = el("h3", "title-name", entry.title);
+  name.setAttribute("translate", "no"); // film titles stay as they are in Hinglish
+  head.appendChild(name);
   node.appendChild(head);
 
   const chips = el("ul", "watch-chips");
@@ -326,7 +328,9 @@ function buildCard(entry, index, people) {
       const row = el("div", "thought");
       row.dataset.person = person;
       row.appendChild(el("dt", null, person));
-      row.appendChild(el("dd", null, thoughts[person]));
+      const words = el("dd", null, thoughts[person]);
+      words.setAttribute("translate", "no"); // everyone's thoughts stay in their own words
+      row.appendChild(words);
       list.appendChild(row);
     });
     node.appendChild(list);

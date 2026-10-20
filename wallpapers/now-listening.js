@@ -257,8 +257,8 @@ const LISTENBRAINZ_USER = "";
         }
         const nodes = [
           WP.el("p", playing ? "wp-live wp-live--green" : "wp-live wp-live--quiet", playing ? "Now listening" : "Last played"),
-          WP.el("p", "wp-big", song.track),
-          WP.el("p", "wp-line", [song.artist, song.album].filter(Boolean).join("  ·  "))
+          WP.keep("p", "wp-big", song.track),
+          WP.keep("p", "wp-line", [song.artist, song.album].filter(Boolean).join("  ·  "))
         ];
         const sub = playing ? "Playing on Navidrome" : song.at ? WP.ago(song.at) : "";
         if (note || sub) nodes.push(WP.el("p", "wp-sub", note || sub));

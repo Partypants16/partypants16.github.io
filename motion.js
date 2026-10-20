@@ -235,6 +235,22 @@
     title.classList.remove("mo-title");
   }
 
+  // Switching English / Hinglish: put the plain title back so i18n.js can
+  // translate it, then split it again (i18n.js fires these around the swap).
+  let resplit = false;
+  document.addEventListener("languagewillchange", () => {
+    if (document.querySelector(".mo-title")) {
+      unsplitTitle();
+      resplit = true;
+    }
+  });
+  document.addEventListener("languagechange", () => {
+    if (resplit) {
+      resplit = false;
+      splitTitle();
+    }
+  });
+
   // ---------- Extreme: cards tilt towards the cursor ----------
 
   const TILT = ".card-container .card, .person-card, .franchise-card, .platform-card, .experiment-card";

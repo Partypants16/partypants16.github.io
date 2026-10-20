@@ -18,8 +18,8 @@
     --card-bg-alt: #ffffff;
     --pill-bg: #f0f0f0;
     --pill-text: #222;
-    --link: #0066cc;
-    --link-hover: #004999;
+    --link: var(--accent, #0066cc);
+    --link-hover: var(--accent, #004999);
 }
 
 :root[data-theme="dark"] {
@@ -30,8 +30,8 @@
     --card-bg-alt: #1e1e1e;
     --pill-bg: #2a2a2a;
     --pill-text: #eeeeee;
-    --link: #6ea8ff;
-    --link-hover: #a9c9ff;
+    --link: var(--accent-bright, #6ea8ff);
+    --link-hover: var(--accent-line, #a9c9ff);
 }
 
 /* ------------------------------ */
@@ -53,7 +53,7 @@ header {
     background: #111;
     color: white;
     padding: 1rem 2rem;
-    border-bottom: 3px solid #e0f7fa;
+    border-bottom: 3px solid var(--accent-line, #e0f7fa);
     /* Added a subtle bottom border */
 }
 
@@ -99,7 +99,7 @@ footer {
     background: #111;
     color: white;
     margin-top: 2rem;
-    border-top: 3px solid #e0f7fa;
+    border-top: 3px solid var(--accent-line, #e0f7fa);
     /* Added a subtle top border */
 }
 

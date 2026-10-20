@@ -22,8 +22,10 @@ const STATUS_URL = "https://gist.githubusercontent.com/Partypants16/bed505978930
     return Math.round(hours / 24) + " days ago";
   }
 
+  // 12- or 24-hour, as picked in Settings → Language and time
   function when(date) {
-    return date.toLocaleString("en-AU", { weekday: "short", day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
+    const hour12 = window.SiteClock ? window.SiteClock.hour12() : false;
+    return date.toLocaleString("en-AU", { weekday: "short", day: "numeric", month: "short", hour: "numeric", minute: "2-digit", hour12 });
   }
 
   // One request per page, shared by everyone who asks; fresh starts a new one.

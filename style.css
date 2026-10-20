@@ -52,7 +52,7 @@ header {
   background: #111;
   color: white;
   padding: 1rem 2rem;
-  border-bottom: 3px solid #e0f7fa;
+  border-bottom: 3px solid var(--accent-line, #e0f7fa);
   /* Added a subtle bottom border */
 }
 
@@ -98,7 +98,7 @@ footer {
   background: #111;
   color: white;
   margin-top: 2rem;
-  border-top: 3px solid #e0f7fa;
+  border-top: 3px solid var(--accent-line, #e0f7fa);
   /* Added a subtle top border */
 }
 
@@ -290,7 +290,7 @@ section p {
 /* ------------------------------ */
 .fancy-button {
   /* Base look – keep the nice padding & border‑radius you already have */
-  background: #1464c0;
+  background: var(--accent, #1464c0);
   color: #fff;
   font-size: 1.125rem;
   /* 18 px ≈ 16×1.125   */

@@ -16,7 +16,7 @@
   --muted-text: #555;
   --card-bg: #ffffff;
   --card-border: #e5e5e5;
-  --link: #1464c0;
+  --link: var(--accent, #1464c0);
   --rating-bg: #e3f2ef;
   --rating-text: #0f5e57;
   --chip-bg: #f7f7f5;
@@ -46,7 +46,7 @@
   --muted-text: #b0b0b0;
   --card-bg: #1e1e1e;
   --card-border: #333333;
-  --link: #6ea8ff;
+  --link: var(--accent-bright, #6ea8ff);
   --rating-bg: #12322e;
   --rating-text: #7fd3c7;
   --chip-bg: #262626;
@@ -90,7 +90,7 @@ header {
   background: #111;
   color: white;
   padding: 1rem 2rem;
-  border-bottom: 3px solid #e0f7fa;
+  border-bottom: 3px solid var(--accent-line, #e0f7fa);
   /* Added a subtle bottom border */
 }
 
@@ -136,7 +136,7 @@ footer {
   background: #111;
   color: white;
   margin-top: 2rem;
-  border-top: 3px solid #e0f7fa;
+  border-top: 3px solid var(--accent-line, #e0f7fa);
   /* Added a subtle top border */
 }
 

@@ -4,6 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="hinglish.js"></script>
+  <script src="i18n.js"></script>
   <script src="settings.js"></script>
   <script src="motion.js"></script>
   <title>Movie List | Parth</title>
@@ -37,7 +39,7 @@
       <p id="list-summary"></p>
     </section>
 
-    <p class="list-note" id="list-note" hidden></p>
+    <p class="list-note" id="list-note" translate="no" hidden></p>
 
     <ul class="movie-list" id="movie-list"></ul>
   </main>
@@ -77,6 +79,7 @@
 
         const title = document.createElement("h2");
         title.className = "movie-title";
+        title.setAttribute("translate", "no");
         title.textContent = movie.title;
         head.appendChild(title);
 
@@ -92,6 +95,7 @@
         if (movie.comment) {
           const comment = document.createElement("p");
           comment.className = "movie-comment";
+          comment.setAttribute("translate", "no");
           comment.textContent = movie.comment;
           item.appendChild(comment);
         }

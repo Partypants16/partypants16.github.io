@@ -203,19 +203,19 @@ const GAMING_FEED_URL = "";
         const nodes = [];
         if (now) {
           nodes.push(WP.el("p", "wp-live wp-live--green", "Now playing" + (feed.simulated ? " (preview)" : "")));
-          nodes.push(WP.el("p", "wp-big", now.title));
+          nodes.push(WP.keep("p", "wp-big", now.title));
           const bits = [];
           if (now.platform) bits.push("on " + platformName(now.platform));
           if (now.since && !isNaN(new Date(now.since))) bits.push("for " + WP.span(Date.now() - new Date(now.since)));
-          if (bits.length) nodes.push(WP.el("p", "wp-line", bits.join(" · ")));
+          if (bits.length) nodes.push(WP.bits("wp-line", bits));
         } else {
           nodes.push(WP.el("p", "wp-live wp-live--quiet", old ? "Status is out of date" : "Not playing right now"));
           if (last && last.title) {
-            nodes.push(WP.el("p", "wp-big", last.title));
+            nodes.push(WP.keep("p", "wp-big", last.title));
             const bits = ["Last played"];
             if (last.platform) bits.push("on " + platformName(last.platform));
             if (last.at && !isNaN(new Date(last.at))) bits.push(WP.ago(new Date(last.at)));
-            nodes.push(WP.el("p", "wp-line", bits.join(" · ")));
+            nodes.push(WP.bits("wp-line", bits));
           }
           if (old) nodes.push(WP.el("p", "wp-sub", "The home server hasn't reported since " + WP.fmtWhen(new Date(feed.checked_at)) + "."));
         }

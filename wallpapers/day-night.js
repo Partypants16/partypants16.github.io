@@ -292,8 +292,8 @@
           : "";
         ctx.info(
           WP.el("p", "wp-big", phaseName(alt, rising)),
-          WP.el("p", "wp-line", bits.join("  ·  ")),
-          WP.el("p", "wp-sub", sub + (simulated ? "  ·  Showing " + WP.fmtTime(now, zone) + " (from the address)" : "") + "  ·  Moon " + moonName(WP.moonPhase(now)))
+          WP.bits("wp-line", bits),
+          WP.bits("wp-sub", [sub, simulated ? "Showing " + WP.fmtTime(now, zone) + " (from the address)" : "", "Moon: " + moonName(WP.moonPhase(now))])
         );
       }
       // the scene works out the sun on its first frame

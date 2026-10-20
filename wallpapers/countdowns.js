@@ -179,7 +179,8 @@
         cards = items.map(item => {
           const card = WP.el("div", "cd-card wp-glass");
           const head = WP.el("div", "cd-head");
-          head.append(WP.el("span", "cd-icon", item.icon), WP.el("span", "cd-title", item.title));
+          // people's own countdowns are their words, so they're left as typed
+          head.append(WP.el("span", "cd-icon", item.icon), item.own !== undefined ? WP.keep("span", "cd-title", item.title) : WP.el("span", "cd-title", item.title));
           if (item.own !== undefined) {
             const remove = WP.el("button", "cd-remove", "×");
             remove.type = "button";

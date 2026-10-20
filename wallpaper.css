@@ -562,12 +562,12 @@ nav a[aria-current="page"] {
 }
 
 .wp-tile:focus-visible {
-    outline: 2px solid #6ec1ff;
+    outline: 2px solid var(--accent-bright, #6ec1ff);
     outline-offset: 2px;
 }
 
 .wp-tile[aria-pressed="true"] {
-    border-color: #6ec1ff;
+    border-color: var(--accent-bright, #6ec1ff);
     box-shadow: 0 0 0 2px rgba(110, 193, 255, 0.45);
 }
 
@@ -596,16 +596,21 @@ nav a[aria-current="page"] {
 }
 
 .wp-tile[aria-pressed="true"] .wp-tile-thumb::after {
-    content: "✓ Showing";
+    content: "✓ " var(--wp-showing, "Showing");
     position: absolute;
     right: 8px;
     top: 8px;
     padding: .1rem .5rem;
     border-radius: 999px;
-    background: #6ec1ff;
+    background: var(--accent-bright, #6ec1ff);
     color: #04111d;
     font-size: .7rem;
     font-weight: 800;
+}
+
+/* the badge's word comes from CSS, so it's translated here */
+:root[data-lang="hinglish"] {
+    --wp-showing: "Abhi yahi";
 }
 
 .wp-tile-name {

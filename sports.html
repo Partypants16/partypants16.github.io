@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="hinglish.js"></script>
+    <script src="i18n.js"></script>
     <script src="settings.js"></script>
     <script src="motion.js"></script>
     <title>Coming Soon | Parth</title>
@@ -21,7 +23,7 @@
             --card-bg: #ffffff;
             --text: #333;
             --muted-text: #666;
-            --link: #1464c0;
+            --link: var(--accent, #1464c0);
         }
 
         :root[data-theme="dark"] {
@@ -29,7 +31,7 @@
             --card-bg: #1e1e1e;
             --text: #eeeeee;
             --muted-text: #aaaaaa;
-            --link: #6ea8ff;
+            --link: var(--accent-bright, #6ea8ff);
         }
 
         body {
@@ -86,7 +88,7 @@
             padding: 1rem;
             background: #111;
             color: white;
-            border-top: 3px solid #e0f7fa;
+            border-top: 3px solid var(--accent-line, #e0f7fa);
         }
     </style>
 </head>

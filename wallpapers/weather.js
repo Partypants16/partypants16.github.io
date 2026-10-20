@@ -453,13 +453,14 @@
         const json = result.data;
         const cur = json.current || {};
         const daily = json.daily || {};
-        const big = WP.el("p", "wp-big", tempText(cur.temperature_2m) + "  " + (LABELS[cur.weather_code] || ""));
+        const big = WP.el("p", "wp-big");
+        big.append(WP.el("span", null, tempText(cur.temperature_2m)), document.createTextNode("  "), WP.el("span", null, LABELS[cur.weather_code] || ""));
         const bits = [PLACE.name];
         if (cur.apparent_temperature !== undefined) bits.push("Feels like " + tempText(cur.apparent_temperature));
         if (daily.temperature_2m_max) bits.push("H " + tempText(daily.temperature_2m_max[0]) + "  L " + tempText(daily.temperature_2m_min[0]));
         if (cur.wind_speed_10m !== undefined) bits.push("Wind " + Math.round(cur.wind_speed_10m) + " km/h");
-        const line = WP.el("p", "wp-line", bits.join("  ·  "));
-        const when = WP.el("p", "wp-sub", (result.stale ? "Couldn't refresh. Last update " : "Updated ") + WP.ago(new Date(result.at)) + " · Open-Meteo");
+        const line = WP.bits("wp-line", bits);
+        const when = WP.bits("wp-sub", [(result.stale ? "Couldn't refresh. Last update " : "Updated ") + WP.ago(new Date(result.at)), "Open-Meteo"]);
         ctx.info(big, line, when);
       }
 

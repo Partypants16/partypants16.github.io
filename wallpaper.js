@@ -10,11 +10,14 @@
 //   - helpers: canvas scenes, cached JSON, times and countdowns, sun and moon maths
 //
 // Loaded with defer, before the wallpaper files, so WP exists when they register.
+// Other pages load it too when Settings → "Wallpaper behind every page" is on;
+// there it only runs WP.mountBackdrop() (the page parts need data-page="wallpaper").
 
 (function () {
   "use strict";
 
   const root = document.documentElement;
+  const onPage = root.dataset.page === "wallpaper";
   const params = new URLSearchParams(location.search);
   const DEFAULT_ID = "weather";
   const MELBOURNE = { name: "Melbourne", lat: -37.8136, lon: 144.9631, tz: "Australia/Melbourne" };
@@ -58,8 +61,8 @@
 
   // ---------- Settings (the panel's "Wallpaper" section) ----------
 
+  // The 12/24-hour clock is site-wide now: Settings → Language and time (settings.js).
   const SETTINGS = {
-    clock: { key: "wp-clock", options: ["24", "12"], fallback: "24" },
     seconds: { key: "wp-seconds", options: ["off", "on"], fallback: "off" },
     quote: { key: "wp-quote", options: ["daily", "motto", "off"], fallback: "daily" },
     dim: { key: "wp-dim", options: ["light", "medium", "strong"], fallback: "medium" },
@@ -75,7 +78,7 @@
 
   function setSetting(name, value) {
     save(SETTINGS[name].key, value);
-    if (name === "clock" || name === "seconds") tick();
+    if (name === "seconds") tick();
     if (name === "quote") renderQuote();
     if (name === "dim") applyDim();
     if (name === "motion" && current) show(current.def.id, { instant: true });
@@ -86,19 +89,12 @@
     root.style.setProperty("--wp-dim", DIM[setting("dim")]);
   }
 
-  if (typeof SETTINGS_SECTIONS !== "undefined") {
+  if (onPage && typeof SETTINGS_SECTIONS !== "undefined") {
     SETTINGS_SECTIONS.unshift({ title: "Wallpaper", build: buildSettings });
   }
 
   function buildSettings() {
     return [
-      segmentedRow({
-        id: "wp-setting-clock",
-        label: "Clock",
-        options: [{ key: "24", label: "24-hour" }, { key: "12", label: "12-hour" }],
-        get: () => setting("clock"),
-        set: value => setSetting("clock", value)
-      }),
       switchRow({
         id: "wp-setting-seconds",
         label: "Show seconds",
@@ -156,6 +152,25 @@
     if (className) node.className = className;
     if (text !== undefined && text !== null) node.textContent = text;
     return node;
+  }
+
+  // Text that is data, not words for the site (song names, game titles, a
+  // race's name): i18n.js leaves anything inside translate="no" alone.
+  function keep(tag, className, text) {
+    const node = el(tag, className, text);
+    node.setAttribute("translate", "no");
+    return node;
+  }
+
+  // A line of short bits with dots between them. Each bit is its own text, so
+  // Hinglish can translate each one (and data bits can be kept as they are).
+  function bits(className, parts) {
+    const line = el("p", className);
+    parts.filter(Boolean).forEach((part, i) => {
+      if (i) line.appendChild(document.createTextNode("  ·  "));
+      line.appendChild(typeof part === "string" ? el("span", null, part) : part);
+    });
+    return line;
   }
 
   function pad(n) {
@@ -220,7 +235,7 @@
   // ---------- Times and countdowns ----------
 
   function hour12() {
-    return setting("clock") === "12";
+    return window.SiteClock ? window.SiteClock.hour12() : false;
   }
 
   function fmtTime(date, options) {
@@ -620,7 +635,9 @@
 
   // Everything a wallpaper gets while it's showing. Timers, listeners and
   // requests made through ctx stop by themselves when another wallpaper is picked.
-  function makeContext(def, layer) {
+  // options.background: behind another page, so there's no clock, info or quote.
+  function makeContext(def, layer, options) {
+    const background = !!(options && options.background);
     const timers = new Set();
     const intervals = new Set();
     const listeners = [];
@@ -630,15 +647,16 @@
     const ctx = {
       def, layer, widget, params,
       alive: true,
-      still: isStill(def),
+      background,
+      still: options && options.still !== undefined ? options.still : isStill(def),
       place: MELBOURNE,
 
       setLayout(name) {
-        if (ctx.alive) setLayout(name);
+        if (ctx.alive && !background) setLayout(name);
       },
       // Fill the info area under the date: text, nodes, or null to hide it.
       info(...nodes) {
-        if (!ctx.alive) return;
+        if (!ctx.alive || background) return;
         widget.replaceChildren();
         nodes.flat().forEach(node => {
           if (node === null || node === undefined || node === false) return;
@@ -647,7 +665,7 @@
         widget.hidden = !widget.childNodes.length;
       },
       setQuote(quote) {
-        if (!ctx.alive) return;
+        if (!ctx.alive || background) return;
         quoteOverride = quote;
         renderQuote();
       },
@@ -846,6 +864,8 @@
     quoteEl.hidden = !quote;
     if (!quote) return;
     quoteEl.classList.toggle("quote--verse", !!quote.verse);
+    if (quote.by || quote.verse) quoteEl.setAttribute("translate", "no");
+    else quoteEl.removeAttribute("translate");
     const text = el("p");
     quote.text.split("\n").forEach((line, i) => {
       if (i) text.appendChild(document.createElement("br"));
@@ -1019,6 +1039,28 @@
     }
   }
 
+  // A wallpaper behind another page (settings.js). scene: draw just that
+  // scene; otherwise the wallpaper runs as itself, minus its clock and info.
+  function mountBackdrop(container, id, options) {
+    const def = byId[id];
+    if (!def) return null;
+    const layer = el("div", "wp-layer wp-in");
+    container.appendChild(layer);
+    const ctx = makeContext(def, layer, { background: true, still: options && options.still });
+    try {
+      if (options && options.scene) ctx.canvas(options.scene);
+      else def.mount(ctx);
+    } catch (error) {
+      console.error("Wallpaper " + id + " failed to start", error);
+    }
+    return {
+      stop() {
+        ctx._stop();
+        layer.remove();
+      }
+    };
+  }
+
   // ---------- Public API for the wallpaper files ----------
 
   window.WP = {
@@ -1036,16 +1078,17 @@
     params,
     MELBOURNE,
     setting,
-    el, pad, hash, rng, clamp, lerp, smoothstep, hex, mix, rgba, ramp,
+    el, keep, bits, pad, hash, rng, clamp, lerp, smoothstep, hex, mix, rgba, ramp,
     fmtTime, fmtDay, fmtWhen, span, ago, countdownParts, tzOffset, zonedMidnight,
     sunPosition, sunCrossings, sunTimes, moonPhase, drawMoon, makeStars, drawStars, cloudSprite,
     getJSON, cached, loadJSON, saveJSON, load, save,
-    renderSceneThumb
+    renderSceneThumb, mountBackdrop
   };
 
   // ---------- Start ----------
 
   document.addEventListener("DOMContentLoaded", () => {
+    if (!onPage) return;
     stage = document.getElementById("stage");
     clockEl = document.getElementById("clock");
     dateEl = document.getElementById("date");
@@ -1121,5 +1164,6 @@
     });
 
     reducedMotion.addEventListener("change", () => { if (current && setting("motion") === "auto") show(current.def.id, { instant: true }); });
+    document.addEventListener("clockchange", tick);
   });
 })();

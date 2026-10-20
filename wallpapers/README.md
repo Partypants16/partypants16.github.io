@@ -34,10 +34,11 @@ engine they share is `../wallpaper.js`, and their styles are in `../wallpaper.cs
   the controls hide after 3 s, and the screen stays on. For a screen that should
   always show it (for example the book computer), open
   `wallpaper.html?w=day-night&ambient=1`.
-- The settings gear has a **Wallpaper** section: 12/24-hour clock, seconds, the
-  quote (daily / motto / hidden), how dark the wallpaper is, and movement. On
-  **Auto**, the videos become still pictures on phones and with data saver, and
-  everything stops moving when the device asks for less motion.
+- The settings gear has a **Wallpaper** section: seconds, the quote (daily /
+  motto / hidden), how dark the wallpaper is, and movement. On **Auto**, the
+  videos become still pictures on phones and with data saver, and everything
+  stops moving when the device asks for less motion. The 12/24-hour clock is
+  site-wide, under **Language and time**.
 - As a browser home page: `.../wallpaper.html?w=start-page`. Press **/** to search.
 
 ## Trying things out (address options)
@@ -114,6 +115,23 @@ as if on a 1280×720 screen.
 listeners and requests made through `ctx` stop by themselves when another
 wallpaper is picked. `WP` has shared helpers: colours, times and countdowns, sun
 position and sunrise/sunset, the moon phase, stars and clouds.
+
+## Behind other pages
+
+Settings → Appearance → **Wallpaper behind every page** puts one of these behind
+every page except this one. `settings.js` loads `wallpaper.js` and the
+wallpaper's file only when one is picked, then calls
+`WP.mountBackdrop(container, id, { still, scene })`. Drawn ones run just their
+scene; Day & Night and Weather run as themselves without their info line. The
+list is `BACKDROPS` in `settings.js`.
+
+## Hinglish
+
+The whole page can be in Hinglish (`../i18n.js` and `../hinglish.js`). Text a
+wallpaper shows is translated if `hinglish.js` has it, so when you add words,
+add their Hinglish there too. Put data (song and game titles, race names) in
+`WP.keep()`, which marks it `translate="no"`. Build lines of several facts with
+`WP.bits()`, so each fact is translated on its own.
 
 ## Images
 

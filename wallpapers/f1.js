@@ -311,8 +311,8 @@
         const race = session.race;
         view.setData({ live });
         const head = WP.el("p", live ? "wp-live" : "wp-live wp-live--quiet", live ? "Live now · " + session.name : "Next · " + session.name);
-        const title = WP.el("p", "wp-big", race.raceName);
-        const where = WP.el("p", "wp-sub", "Round " + race.round + "  ·  " + race.Circuit.circuitName + ", " + race.Circuit.Location.locality + ", " + race.Circuit.Location.country);
+        const title = WP.keep("p", "wp-big", race.raceName);
+        const where = WP.bits("wp-sub", ["Round " + race.round, WP.keep("span", null, race.Circuit.circuitName + ", " + race.Circuit.Location.locality + ", " + race.Circuit.Location.country)]);
         const clock = countdownNode();
         const at = WP.el("p", "wp-sub", (live ? "Started " : "") + WP.fmtWhen(session.start) + " your time");
         const chips = WP.el("div", "wp-chips");
