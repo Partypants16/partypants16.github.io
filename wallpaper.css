@@ -234,10 +234,14 @@ nav a[aria-current="page"] {
         gap: 0.5rem;
     }
 
+    header {
+        padding: 1rem;
+    }
+
     nav ul {
         flex-wrap: wrap;
         justify-content: center;
-        gap: 1rem;
+        gap: 0.5rem 0.75rem;
     }
 
     #clock {
