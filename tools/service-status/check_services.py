@@ -37,6 +37,7 @@ SERVICES = [
     ("khane", "http://192.168.212.60:8095/"),
     ("crosspaste", "http://192.168.212.60/"),
     ("codeserver", "http://192.168.212.60:8080/"),
+    ("netdata", "http://192.168.212.60:19999/"),
 ]
 
 TIMEOUT_SECONDS = 5
