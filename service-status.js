@@ -2,9 +2,10 @@
 // The remote box checks them every 5 minutes and publishes the result to a
 // GitHub Gist (see tools/service-status/README.md). A card opts in with
 // data-service="<id>", using the ids in tools/service-status/check_services.py.
+// The gist id is also in ~/.config/service-status/gist-id on the box.
 // While STATUS_URL is empty, or the gist can't be loaded, nothing is shown.
 
-const STATUS_URL = "";
+const STATUS_URL = "https://gist.githubusercontent.com/Partypants16/bed5059789305f00ccb304cca1d13034/raw/status.json";
 
 (function () {
   const cards = document.querySelectorAll("[data-service]");
