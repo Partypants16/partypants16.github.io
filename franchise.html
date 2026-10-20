@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="theme.js"></script>
+  <title>Franchise Tracker | Parth</title>
+  <meta name="description" content="A franchise watch tracker from Parth's site: who has watched each film in the series, and what they thought of it.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏰</text></svg>">
+  <link rel="stylesheet" href="movies.css">
+</head>
+
+<body>
+  <header>
+    <nav>
+      <p class="logo"><a href="index.html">PS</a></p>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="wallpaper.html">Wallpaper</a></li>
+        <li><a href="profile.html">Profile</a></li>
+        <li><a href="gaming.html">Games</a></li>
+      </ul>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">🌙</button>
+    </nav>
+  </header>
+
+  <main class="tracker">
+    <a class="back-link" href="movies.html">&larr; All movie lists</a>
+
+    <section class="lists-intro">
+      <h1 id="franchise-name">Franchise Tracker</h1>
+      <p id="franchise-summary"></p>
+    </section>
+
+    <p class="list-note" id="franchise-note" hidden></p>
+
+    <section class="tracker-overview" id="overview" aria-labelledby="overview-heading" hidden>
+      <h2 id="overview-heading">Who's seen what</h2>
+      <ul class="status-legend" id="legend" aria-label="What the colours mean"></ul>
+      <div class="person-bars" id="person-bars"></div>
+      <details class="counts-details">
+        <summary>Show as a table</summary>
+        <div class="table-wrap">
+          <table class="counts-table" id="counts-table">
+            <thead></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </details>
+    </section>
+
+    <div id="filters" hidden>
+      <div class="tracker-filters">
+        <label class="filter filter--search">
+          <span>Search</span>
+          <input type="search" id="filter-search" placeholder="Titles and thoughts" autocomplete="off">
+        </label>
+        <label class="filter">
+          <span>Who</span>
+          <select id="filter-who"></select>
+        </label>
+        <label class="filter">
+          <span>Status</span>
+          <select id="filter-status"></select>
+        </label>
+        <button class="filter-reset" id="filter-reset" type="button">Reset</button>
+      </div>
+
+      <!-- a div, not <nav>: the site-wide nav styles are for the header bar -->
+      <div class="section-jump" id="section-jump" role="navigation" aria-label="Jump to a series"></div>
+      <p class="filter-count" id="filter-count" aria-live="polite"></p>
+      <p class="filter-empty" id="filter-empty" hidden>Nothing matches these filters.</p>
+    </div>
+
+    <div id="sections"></div>
+  </main>
+
+  <div class="viz-tooltip" id="tooltip" role="tooltip" hidden></div>
+
+  <footer>
+    <p>&copy; <span id="year"></span> Parth</p>
+  </footer>
+
+  <script src="franchise-data.js"></script>
+  <script src="franchise.js"></script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+
+</html>

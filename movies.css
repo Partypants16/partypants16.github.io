@@ -19,6 +19,25 @@
   --link: #1464c0;
   --rating-bg: #e3f2ef;
   --rating-text: #0f5e57;
+  --chip-bg: #f7f7f5;
+  --control-bg: #ffffff;
+  --control-border: #cfcfcf;
+  --tip-bg: #111111;
+  --tip-text: #ffffff;
+  /* Watch statuses (franchise.html): the spreadsheet legend's colours.
+     Each status also has its own icon, so colour is never the only clue. */
+  --st-rewatched: #0ca30c;
+  --st-rewatched-ink: #0b0b0b;
+  --st-watched: #eda100;
+  --st-watched-ink: #0b0b0b;
+  --st-never: #d03b3b;
+  --st-never-ink: #ffffff;
+  --st-notout: #2f4f9e;
+  --st-notout-ink: #ffffff;
+  --st-wont: #ec835a;
+  --st-wont-ink: #0b0b0b;
+  --st-unmarked: #e3e3e0;
+  --st-unmarked-ink: #6b6b6b;
 }
 
 :root[data-theme="dark"] {
@@ -30,6 +49,23 @@
   --link: #6ea8ff;
   --rating-bg: #12322e;
   --rating-text: #7fd3c7;
+  --chip-bg: #262626;
+  --control-bg: #1a1a1a;
+  --control-border: #444444;
+  --tip-bg: #2e2e2e;
+  --tip-text: #f0efec;
+  --st-rewatched: #0ca30c;
+  --st-rewatched-ink: #0b0b0b;
+  --st-watched: #fab219;
+  --st-watched-ink: #0b0b0b;
+  --st-never: #d03b3b;
+  --st-never-ink: #ffffff;
+  --st-notout: #6f8fdc;
+  --st-notout-ink: #0b0b0b;
+  --st-wont: #ec835a;
+  --st-wont-ink: #0b0b0b;
+  --st-unmarked: #3a3a38;
+  --st-unmarked-ink: #b0b0b0;
 }
 
 /* ------------------------------ */
@@ -251,6 +287,460 @@ a.person-card:hover {
   margin-top: 0.35rem;
 }
 
+/* ------------------------------ */
+/* Franchise area on movies.html  */
+/* ------------------------------ */
+.area-divider {
+  border: none;
+  height: 2px;
+  background: var(--card-border);
+  margin: 3rem 0;
+}
+
+.lists-intro h2 {
+  font-size: 2rem;
+  line-height: 1.2;
+  margin-bottom: .75rem;
+}
+
+.franchise-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.franchise-list li {
+  flex: 0 1 280px;
+}
+
+.franchise-card {
+  display: block;
+  height: 100%;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 22px 25px;
+  text-align: center;
+  color: var(--text);
+  text-decoration: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s, background-color .3s ease, border-color .3s ease;
+}
+
+.franchise-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+}
+
+.franchise-name {
+  display: block;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.franchise-meta {
+  display: block;
+  color: var(--muted-text);
+  font-size: .95rem;
+  margin-top: .25rem;
+}
+
+/* ------------------------------ */
+/* Unique to franchise.html       */
+/* ------------------------------ */
+/* Elements with their own display (chips, flex rows) still hide when the script sets hidden */
+[hidden] {
+  display: none !important;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Each status sets --st (its colour) and --st-ink (icon colour on top of it) */
+[data-status="rewatched"] { --st: var(--st-rewatched); --st-ink: var(--st-rewatched-ink); }
+[data-status="watched"]   { --st: var(--st-watched);   --st-ink: var(--st-watched-ink); }
+[data-status="never"]     { --st: var(--st-never);     --st-ink: var(--st-never-ink); }
+[data-status="notout"]    { --st: var(--st-notout);    --st-ink: var(--st-notout-ink); }
+[data-status="wont"]      { --st: var(--st-wont);      --st-ink: var(--st-wont-ink); }
+[data-status="unmarked"]  { --st: var(--st-unmarked);  --st-ink: var(--st-unmarked-ink); }
+
+.status-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--st);
+  color: var(--st-ink);
+}
+
+.status-dot svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Who's seen what */
+.tracker-overview {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.tracker-overview h2 {
+  font-size: 1.25rem;
+  margin-bottom: .75rem;
+}
+
+.status-legend {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin-bottom: 1.25rem;
+  font-size: .9rem;
+  color: var(--muted-text);
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.person-bars {
+  display: grid;
+  gap: 12px;
+}
+
+.person-row {
+  display: grid;
+  grid-template-columns: 6.5rem 1fr auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.person-row-name {
+  font-weight: 700;
+}
+
+.stack-bar {
+  display: flex;
+  gap: 2px;
+  height: 14px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.stack-seg {
+  flex-basis: 0;
+  min-width: 3px;
+  background: var(--st);
+}
+
+.person-row-total {
+  color: var(--muted-text);
+  font-size: .9rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.counts-details {
+  margin-top: 1.25rem;
+}
+
+.counts-details summary {
+  cursor: pointer;
+  color: var(--link);
+  font-weight: 600;
+  font-size: .9rem;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  margin-top: .75rem;
+}
+
+.counts-table {
+  border-collapse: collapse;
+  font-size: .9rem;
+  width: 100%;
+}
+
+.counts-table th,
+.counts-table td {
+  padding: .4rem .6rem;
+  border-bottom: 1px solid var(--card-border);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.counts-table th:first-child {
+  text-align: left;
+}
+
+.counts-table thead th {
+  color: var(--muted-text);
+  font-size: .8rem;
+  font-weight: 600;
+}
+
+.counts-table td {
+  font-variant-numeric: tabular-nums;
+}
+
+.viz-tooltip {
+  position: fixed;
+  z-index: 10;
+  pointer-events: none;
+  background: var(--tip-bg);
+  color: var(--tip-text);
+  font-size: .85rem;
+  padding: .35rem .6rem;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+}
+
+/* Filters */
+.tracker-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+
+.filter {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--muted-text);
+}
+
+.filter--search {
+  flex: 1 1 220px;
+}
+
+.filter input,
+.filter select,
+.filter-reset {
+  font: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--control-bg);
+  border: 1px solid var(--control-border);
+  border-radius: 8px;
+  padding: 0 .7rem;
+  height: 42px;
+}
+
+.filter-reset {
+  background: transparent;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.filter-reset:hover {
+  background: var(--chip-bg);
+}
+
+.section-jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: .75rem;
+}
+
+.jump-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: .3rem .75rem;
+  border-radius: 999px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  color: var(--text);
+  text-decoration: none;
+  font-size: .9rem;
+  font-weight: 600;
+}
+
+.jump-chip:hover {
+  border-color: var(--link);
+}
+
+.jump-count {
+  color: var(--muted-text);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+
+.filter-count {
+  color: var(--muted-text);
+  font-size: .9rem;
+  margin-bottom: 1.5rem;
+}
+
+.filter-empty {
+  text-align: center;
+  color: var(--muted-text);
+  padding: 2rem;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+}
+
+/* Series and title cards */
+.series {
+  margin-bottom: 2.5rem;
+  scroll-margin-top: 1rem;
+}
+
+.series-heading {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: .25rem .6rem;
+  font-size: 1.5rem;
+  line-height: 1.25;
+  margin-bottom: 1rem;
+  padding-bottom: .4rem;
+  border-bottom: 2px solid var(--card-border);
+}
+
+.series-count {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--muted-text);
+}
+
+.title-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.title-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  transition: background-color .3s ease, border-color .3s ease;
+}
+
+.title-head {
+  display: flex;
+  align-items: baseline;
+  gap: .75rem;
+  margin-bottom: .6rem;
+}
+
+.title-num {
+  min-width: 1.5rem;
+  color: var(--muted-text);
+  font-size: .85rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.title-name {
+  font-size: 1.15rem;
+  line-height: 1.3;
+}
+
+.watch-chips {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+}
+
+.watch-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px 3px 4px;
+  border-radius: 999px;
+  background: var(--chip-bg);
+  border: 1px solid var(--card-border);
+  font-size: .875rem;
+  font-weight: 600;
+}
+
+.watch-chip[data-status="unmarked"] .chip-name {
+  color: var(--muted-text);
+  font-weight: 400;
+}
+
+/* The person picked in the "Who" filter */
+.watch-chip.is-focus {
+  border-color: var(--text);
+  box-shadow: 0 0 0 1px var(--text);
+}
+
+.thoughts {
+  display: grid;
+  gap: .5rem;
+  margin-top: .85rem;
+  padding-top: .75rem;
+  border-top: 1px solid var(--card-border);
+}
+
+.thought {
+  display: grid;
+  grid-template-columns: 6.5rem 1fr;
+  gap: .75rem;
+}
+
+.thought.is-focus {
+  background: var(--chip-bg);
+  border-radius: 6px;
+  margin: 0 -8px;
+  padding: 4px 8px;
+}
+
+.thought dt {
+  font-weight: 700;
+  font-size: .9rem;
+}
+
+.thought dd {
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.no-thoughts {
+  margin-top: .6rem;
+  color: var(--muted-text);
+  font-size: .9rem;
+  font-style: italic;
+}
+
 @media (max-width: 600px) {
   nav {
     flex-direction: column;
@@ -273,5 +763,37 @@ a.person-card:hover {
 
   .lists-intro p {
     font-size: 1rem;
+  }
+
+  .lists-intro h2 {
+    font-size: 1.5rem;
+  }
+
+  .tracker-overview {
+    padding: 16px;
+  }
+
+  /* Name and count on one line, the bar underneath */
+  .person-row {
+    grid-template-columns: 1fr auto;
+    gap: 4px 12px;
+  }
+
+  .stack-bar {
+    grid-column: 1 / -1;
+    order: 3;
+  }
+
+  .series-heading {
+    font-size: 1.25rem;
+  }
+
+  .title-card {
+    padding: 14px 16px;
+  }
+
+  .thought {
+    grid-template-columns: 1fr;
+    gap: 0;
   }
 }

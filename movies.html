@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="theme.js"></script>
   <title>Parth | Movie Lists</title>
-  <meta name="description" content="Parth's movie recommendation lists, one for each person he's recommending movies to.">
+  <meta name="description" content="Parth's movie recommendation lists, one for each person he's recommending movies to, plus franchise watch trackers.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏰</text></svg>">
   <link rel="stylesheet" href="movies.css">
 </head>
@@ -38,13 +38,48 @@
       <li><span class="person-card">Person 2</span></li>
       <li><a class="person-card" href="movie-list.html?for=test">Test</a></li>
     </ul>
+
+    <hr class="area-divider">
+
+    <section class="lists-intro" aria-labelledby="franchise-heading">
+      <h2 id="franchise-heading">Franchise Trackers</h2>
+      <p>Whole film series, one title at a time: who has watched what, and everyone's short take on each one.</p>
+    </section>
+
+    <!-- One card per franchise, built from franchise-data.js
+         (made from the spreadsheet by tools/build_franchise_data.py) -->
+    <ul class="franchise-list" id="franchise-list"></ul>
   </main>
 
   <footer>
     <p>&copy; <span id="year"></span> Parth</p>
   </footer>
 
+  <script src="franchise-data.js"></script>
   <script>
+    const franchiseList = document.getElementById("franchise-list");
+    for (const [key, franchise] of Object.entries(FRANCHISES)) {
+      const titles = franchise.sections.reduce((n, section) => n + section.titles.length, 0);
+
+      const link = document.createElement("a");
+      link.className = "franchise-card";
+      link.href = "franchise.html?f=" + encodeURIComponent(key);
+
+      const name = document.createElement("span");
+      name.className = "franchise-name";
+      name.textContent = franchise.name;
+      link.appendChild(name);
+
+      const meta = document.createElement("span");
+      meta.className = "franchise-meta";
+      meta.textContent = titles + " titles · " + franchise.sections.length + " series · " + franchise.people.length + " people";
+      link.appendChild(meta);
+
+      const item = document.createElement("li");
+      item.appendChild(link);
+      franchiseList.appendChild(item);
+    }
+
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
 </body>
