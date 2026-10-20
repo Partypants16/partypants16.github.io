@@ -89,23 +89,6 @@ nav a[aria-current="page"] {
   text-underline-offset: 4px;
 }
 
-.theme-toggle {
-  background: none;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  color: white;
-  font-size: 1.1rem;
-  line-height: 1;
-  padding: .4em .6em;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: background-color .2s ease, transform .2s ease;
-}
-
-.theme-toggle:hover {
-  background: rgba(255, 255, 255, 0.15);
-  transform: scale(1.05);
-}
-
 /* ------------------------------ */
 /* Footer                         */
 /* ------------------------------ */
