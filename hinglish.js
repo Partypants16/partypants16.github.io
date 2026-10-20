@@ -108,6 +108,7 @@ const HINGLISH = {
     "VS Code in the browser, running on the home server. Takes you to the self-hosted code-server.": "Browser mein VS Code, ghar ke server pe chalta hua. Self-hosted code-server pe le jaata hai.",
     "Live health of the home server: CPU, memory, disks, network and every container, updated every second. Takes you to the self-hosted Netdata dashboard.": "Ghar ke server ki live sehat: CPU, memory, disks, network aur har container, har second update hoti hai. Self-hosted Netdata dashboard pe le jaata hai.",
     "My local AI personal assistant, running on the home server. It starts up when you open it, so the first load takes a few seconds.": "Mera local AI personal assistant, ghar ke server pe chalta hai. Kholte hi start hota hai, toh pehli baar load hone mein kuch second lagte hain.",
+    "My arcade racer: ten drivers, ten circuits and drift boosts, played right in the browser with a keyboard, gamepad or touch. Takes you to the copy hosted on the home server.": "Mera arcade racer: das drivers, das circuits aur drift boosts, seedha browser mein keyboard, gamepad ya touch se khelo. Ghar ke server pe hosted copy pe le jaata hai.",
     "Track your favorite sports and teams! Analytics????": "Apne favourite sports aur teams track karo! Analytics????",
     "Empty": "Khaali",
     "Nothing here yet": "Abhi yahan kuch nahi",
