@@ -4,12 +4,14 @@
 // data-service="<id>", using the ids in tools/service-status/check_services.py.
 // The gist id is also in ~/.config/service-status/gist-id on the box.
 // While STATUS_URL is empty, or the gist can't be loaded, nothing is shown.
+//
+// Pages that build their cards later (the Wallpaper page's Start Page) call
+// ServiceStatus.apply(container) once the cards exist.
 
 const STATUS_URL = "https://gist.githubusercontent.com/Partypants16/bed5059789305f00ccb304cca1d13034/raw/status.json";
 
 (function () {
-  const cards = document.querySelectorAll("[data-service]");
-  if (!STATUS_URL || !cards.length) return;
+  let request = null;
 
   function ago(date) {
     const minutes = Math.max(0, Math.round((Date.now() - date) / 60000));
@@ -24,18 +26,44 @@ const STATUS_URL = "https://gist.githubusercontent.com/Partypants16/bed505978930
     return date.toLocaleString("en-AU", { weekday: "short", day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
   }
 
-  function show(status) {
-    const checked = new Date(status.checked_at);
-    if (isNaN(checked)) return;
-    // No word for a couple of heartbeats means the box itself is off or offline.
-    const staleAfter = ((status.heartbeat_minutes || 15) * 2 + 10) * 60000;
-    const stale = Date.now() - checked > staleAfter;
+  // One request per page, shared by everyone who asks; fresh starts a new one.
+  function load(fresh) {
+    if (!STATUS_URL) return Promise.reject(new Error("STATUS_URL is empty"));
+    if (!request || fresh) {
+      const controller = new AbortController();
+      setTimeout(() => controller.abort(), 8000);
+      // The query string gets past GitHub's 5-minute cache (a new one each minute).
+      request = fetch(STATUS_URL + "?t=" + Math.floor(Date.now() / 60000), { cache: "no-store", signal: controller.signal })
+        .then(response => {
+          if (!response.ok) throw new Error("HTTP " + response.status);
+          return response.json();
+        })
+        .then(status => {
+          if (isNaN(new Date(status.checked_at))) throw new Error("no checked_at");
+          return status;
+        });
+      request.catch(() => { request = null; }); // let the next caller try again
+    }
+    return request;
+  }
 
-    cards.forEach(card => {
+  // No word for a couple of heartbeats means the box itself is off or offline.
+  function isStale(status) {
+    const staleAfter = ((status.heartbeat_minutes || 15) * 2 + 10) * 60000;
+    return Date.now() - new Date(status.checked_at) > staleAfter;
+  }
+
+  function decorate(root, status) {
+    const checked = new Date(status.checked_at);
+    const stale = isStale(status);
+
+    root.querySelectorAll("[data-service]").forEach(card => {
       const info = status.services && status.services[card.dataset.service];
       if (!info) return;
       const state = stale ? "unknown" : info.up ? "up" : "down";
 
+      const old = card.querySelector(":scope > .status-pill");
+      if (old) old.remove();
       const pill = document.createElement("span");
       pill.className = "status-pill";
       pill.dataset.state = state;
@@ -49,24 +77,31 @@ const STATUS_URL = "https://gist.githubusercontent.com/Partypants16/bed505978930
         : (info.up ? "Online" : "Offline") + (info.since ? " since " + when(new Date(info.since)) : "") + ". Updated " + ago(checked) + ".";
       card.appendChild(pill);
     });
-
-    const summary = document.getElementById("status-summary");
-    if (summary) {
-      summary.textContent = stale
-        ? "The home server hasn't reported since " + when(checked) + ", so it may be off. Service statuses are unknown."
-        : "Self-hosted services are checked by the home server every " + (status.check_every_minutes || 5) + " minutes. Updated " + ago(checked) + ".";
-      summary.hidden = false;
-    }
   }
 
-  const controller = new AbortController();
-  setTimeout(() => controller.abort(), 8000);
-  // The query string gets past GitHub's 5-minute cache (a new one each minute).
-  fetch(STATUS_URL + "?t=" + Math.floor(Date.now() / 60000), { cache: "no-store", signal: controller.signal })
-    .then(response => {
-      if (!response.ok) throw new Error("HTTP " + response.status);
-      return response.json();
-    })
-    .then(show)
-    .catch(() => { /* no status is better than a wrong one */ });
+  function summarise(status) {
+    const summary = document.getElementById("status-summary");
+    if (!summary) return;
+    const checked = new Date(status.checked_at);
+    summary.textContent = isStale(status)
+      ? "The home server hasn't reported since " + when(checked) + ", so it may be off. Service statuses are unknown."
+      : "Self-hosted services are checked by the home server every " + (status.check_every_minutes || 5) + " minutes. Updated " + ago(checked) + ".";
+    summary.hidden = false;
+  }
+
+  window.ServiceStatus = {
+    // Resolves with the status (or null if it couldn't be loaded): no status is better than a wrong one.
+    apply(root, options) {
+      return load(options && options.fresh)
+        .then(status => { decorate(root, status); return status; })
+        .catch(() => null);
+    }
+  };
+
+  if (STATUS_URL && document.querySelector("[data-service]")) {
+    load().then(status => {
+      decorate(document, status);
+      summarise(status);
+    }).catch(() => { /* no status is better than a wrong one */ });
+  }
 })();

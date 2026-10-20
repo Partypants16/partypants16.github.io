@@ -4,6 +4,8 @@
 // The gear button in the top bar (id="settingsToggle") opens a panel that
 // slides in from the right. The panel is built here, so every page only needs
 // the button. To add a setting, add a section to SETTINGS_SECTIONS below.
+// A page can add sections of its own by putting them into SETTINGS_SECTIONS
+// before DOMContentLoaded (wallpaper.js adds "Wallpaper" that way).
 // Styles: settings.css. The transition levels themselves live in motion.js
 // and motion.css; this file only stores the choice as <html data-motion>.
 
@@ -196,6 +198,53 @@ function switchRow({ id, label, hint, get, set }) {
 
   row.append(text, button);
   return row;
+}
+
+// A short pick-one setting: a label (and optional hint) over a row of
+// segments. options: [{ key, label }]. set(key) is called with the new choice.
+function segmentedRow({ id, label, hint, options, get, set }) {
+  const field = document.createElement("div");
+  field.className = "settings-field";
+
+  const name = document.createElement("span");
+  name.className = "settings-row-label";
+  name.id = id + "-label";
+  name.textContent = label;
+  field.appendChild(name);
+  if (hint) {
+    const hintText = document.createElement("span");
+    hintText.className = "settings-row-hint";
+    hintText.id = id + "-hint";
+    hintText.textContent = hint;
+    field.appendChild(hintText);
+  }
+
+  const group = document.createElement("div");
+  group.className = "settings-segments";
+  group.setAttribute("role", "radiogroup");
+  group.setAttribute("aria-labelledby", name.id);
+  if (hint) group.setAttribute("aria-describedby", id + "-hint");
+
+  const current = get();
+  options.forEach(option => {
+    const segment = document.createElement("label");
+    segment.className = "settings-segment";
+    const input = document.createElement("input");
+    input.type = "radio";
+    input.name = id;
+    input.value = option.key;
+    input.checked = option.key === current;
+    input.addEventListener("change", () => {
+      if (input.checked) set(option.key);
+    });
+    const text = document.createElement("span");
+    text.textContent = option.label;
+    segment.append(input, text);
+    group.appendChild(segment);
+  });
+
+  field.appendChild(group);
+  return field;
 }
 
 // ---------- The panel itself ----------
