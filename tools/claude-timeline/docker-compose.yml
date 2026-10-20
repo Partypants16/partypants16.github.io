@@ -1,0 +1,18 @@
+# The Claude page on the remote box (parth@192.168.212.60), from ~/claude-timeline/.
+# A static file server only. Uses caddy:2-alpine because the box already has it
+# (CrossPaste, Apex Dash), so nothing new is pulled.
+services:
+  claude-timeline:
+    image: caddy:2-alpine
+    container_name: claude-timeline
+    restart: unless-stopped
+    ports:
+      - "8120:80"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./site:/srv:ro
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/"]
+      interval: 1m
+      timeout: 5s
+      retries: 3

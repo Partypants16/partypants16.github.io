@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <script>
+    // Served from the home server, so this page has its own saved settings.
+    // claude.html on the website passes the visitor's settings along in the
+    // link (#settings=…); copy them in before the site scripts read them.
+    (function () {
+      const KEYS = ["theme", "accent", "backdrop", "language", "clock", "transitions"];
+      const match = location.hash.match(/^#settings=([^&]*)(?:&(.*))?$/);
+      if (!match) return;
+      try {
+        const settings = JSON.parse(decodeURIComponent(match[1]));
+        KEYS.forEach(key => {
+          if (typeof settings[key] === "string") localStorage.setItem(key, settings[key]);
+          else localStorage.removeItem(key);
+        });
+      } catch (e) { /* bad link or no storage: keep what's here */ }
+      history.replaceState(null, "", location.pathname + location.search + (match[2] ? "#" + match[2] : ""));
+    })();
+  </script>
+  <script src="hinglish.js"></script>
+  <script src="i18n.js"></script>
+  <script src="settings.js"></script>
+  <script src="motion.js"></script>
+  <title>Claude | Parth</title>
+  <meta name="description" content="Everything Parth has used Claude for, from the session logs. Only on the home server.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗂️</text></svg>">
+  <link rel="stylesheet" href="movies.css">
+  <link rel="stylesheet" href="settings.css">
+  <link rel="stylesheet" href="motion.css">
+  <link rel="stylesheet" href="claude.css">
+</head>
+
+<body>
+  <header>
+    <nav>
+      <p class="logo"><a href="https://partypants16.github.io/index.html">PS</a></p>
+      <ul>
+        <li><a href="https://partypants16.github.io/index.html">Home</a></li>
+        <li><a href="https://partypants16.github.io/wallpaper.html">Wallpaper</a></li>
+        <li><a href="https://partypants16.github.io/profile.html">Profile</a></li>
+        <li><a href="https://partypants16.github.io/gaming.html">Games</a></li>
+        <li><a href="https://partypants16.github.io/movies.html">Movies</a></li>
+        <li><a href="./" aria-current="page">Claude</a></li>
+      </ul>
+      <button class="settings-toggle" id="settingsToggle" type="button" aria-label="Settings" title="Settings" aria-haspopup="dialog" aria-expanded="false" aria-controls="settingsPanel"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="3.34 3.34"/><circle cx="12" cy="12" r="5.2" fill="none" stroke="currentColor" stroke-width="4.4"/></svg></button>
+    </nav>
+  </header>
+
+  <main class="claude">
+    <section class="lists-intro">
+      <h1>Claude</h1>
+      <p>Everything I've used Claude for in parth_project, taken from the session logs. Open a card to see its raw log.</p>
+      <p class="claude-stats" id="stats"></p>
+    </section>
+
+    <div class="claude-controls" id="controls" hidden>
+      <div class="tracker-filters">
+        <label class="filter filter--search">
+          <span>Search</span>
+          <input type="search" id="filter-search" placeholder="Titles, summaries and raw logs" autocomplete="off">
+        </label>
+        <label class="filter">
+          <span>Project</span>
+          <select id="filter-project"></select>
+        </label>
+        <label class="filter">
+          <span>Type</span>
+          <select id="filter-type"></select>
+        </label>
+        <label class="filter">
+          <span>Status</span>
+          <select id="filter-status"></select>
+        </label>
+        <label class="filter">
+          <span>When</span>
+          <select id="filter-month"></select>
+        </label>
+        <label class="filter">
+          <span>Order</span>
+          <select id="filter-sort">
+            <option value="new">Newest first</option>
+            <option value="old">Oldest first</option>
+          </select>
+        </label>
+        <button class="filter-reset" id="filter-reset" type="button">Reset</button>
+      </div>
+      <div class="claude-bar">
+        <p class="filter-count" id="filter-count" aria-live="polite"></p>
+        <button class="raw-all" id="raw-all" type="button" aria-pressed="false">Show all raw logs</button>
+      </div>
+    </div>
+
+    <p class="claude-message" id="message" hidden></p>
+    <p class="filter-empty" id="filter-empty" hidden>Nothing matches these filters.</p>
+    <div class="timeline" id="timeline"></div>
+  </main>
+
+  <footer>
+    <p>&copy; <span id="year"></span> Parth · <span id="built"></span></p>
+  </footer>
+
+  <script src="claude.js"></script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+
+</html>

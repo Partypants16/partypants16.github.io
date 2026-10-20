@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="hinglish.js"></script>
+  <script src="i18n.js"></script>
+  <script src="settings.js"></script>
+  <script src="motion.js"></script>
+  <title>Claude | Parth</title>
+  <meta name="description" content="Everything Parth has used Claude for. It lives on the home server, so it only opens on home Wi-Fi.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗂️</text></svg>">
+  <link rel="stylesheet" href="movies.css">
+  <link rel="stylesheet" href="settings.css">
+  <link rel="stylesheet" href="motion.css">
+  <style>
+    .gateway {
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 4rem 1rem 2rem;
+      text-align: center;
+    }
+
+    .gateway h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .gateway p {
+      color: var(--muted-text);
+      margin-bottom: .75rem;
+    }
+
+    .gateway-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.75rem 1.5rem;
+    }
+
+    .gateway-icon {
+      font-size: 2.5rem;
+      line-height: 1;
+      margin-bottom: .75rem;
+    }
+
+    .gateway-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: .75rem;
+      margin-top: 1.25rem;
+    }
+
+    .gateway-actions button,
+    .gateway-actions a {
+      font: inherit;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: .55rem 1.1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .gateway-actions button {
+      color: #fff;
+      background: var(--accent, #1464c0);
+      border: 1px solid transparent;
+    }
+
+    .gateway-actions a {
+      color: var(--link);
+      border: 1px solid var(--control-border);
+    }
+
+    .gateway-small {
+      font-size: .85rem;
+      margin-top: 1rem;
+    }
+
+    .gateway-spinner {
+      display: inline-block;
+      width: 1.6rem;
+      height: 1.6rem;
+      border: 3px solid var(--card-border);
+      border-top-color: var(--link);
+      border-radius: 50%;
+      animation: gateway-spin .8s linear infinite;
+      margin-bottom: .75rem;
+    }
+
+    @keyframes gateway-spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .gateway-spinner { animation-duration: 3s; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <p class="logo"><a href="index.html">PS</a></p>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="wallpaper.html">Wallpaper</a></li>
+        <li><a href="profile.html">Profile</a></li>
+        <li><a href="gaming.html">Games</a></li>
+        <li><a href="movies.html">Movies</a></li>
+        <li><a href="claude.html" aria-current="page">Claude</a></li>
+      </ul>
+      <button class="settings-toggle" id="settingsToggle" type="button" aria-label="Settings" title="Settings" aria-haspopup="dialog" aria-expanded="false" aria-controls="settingsPanel"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="3.34 3.34"/><circle cx="12" cy="12" r="5.2" fill="none" stroke="currentColor" stroke-width="4.4"/></svg></button>
+    </nav>
+  </header>
+
+  <main class="gateway">
+    <h1>Claude</h1>
+
+    <div class="gateway-card" id="checking">
+      <span class="gateway-spinner" aria-hidden="true"></span>
+      <p>Opening it from the home server…</p>
+    </div>
+
+    <div class="gateway-card" id="offline" hidden>
+      <div class="gateway-icon" aria-hidden="true">📶</div>
+      <p><strong>Connect to the home Wi-Fi to open this page.</strong></p>
+      <p>It lives on the home server, so it only opens when you're on the home network.</p>
+      <div class="gateway-actions">
+        <button type="button" id="retry">Try again</button>
+        <a id="direct" href="http://192.168.212.60:8120/">Open the address anyway</a>
+      </div>
+      <p class="gateway-small">On home Wi-Fi and still seeing this? The home server might be off.</p>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; <span id="year"></span> Parth</p>
+  </footer>
+
+  <script>
+    // The Claude page lives on the remote box (LAN only, plain HTTP), so this
+    // page only sends visitors there. A secure page can't check whether a
+    // home-network address answers, so it just goes: on home Wi-Fi the box
+    // answers at once and the browser moves on; anywhere else the address
+    // doesn't answer, so after WAIT_MS this stops trying and says why.
+    // The source of the Claude page is in tools/claude-timeline/.
+    (function () {
+      const LAN_URL = "http://192.168.212.60:8120/";
+      const WAIT_MS = 3000;
+      // Settings are saved per site, so pass them along to the home server's copy.
+      const SETTING_KEYS = ["theme", "accent", "backdrop", "language", "clock", "transitions"];
+      const checking = document.getElementById("checking");
+      const offline = document.getElementById("offline");
+      let timer = null;
+
+      function target() {
+        const settings = {};
+        SETTING_KEYS.forEach(key => {
+          try {
+            const value = localStorage.getItem(key);
+            if (value !== null) settings[key] = value;
+          } catch (e) { /* no storage: the home server's copy uses its own */ }
+        });
+        // ?project=… and #<log name> links carry on to the same place.
+        const hash = location.hash.slice(1);
+        return LAN_URL + location.search + "#settings=" + encodeURIComponent(JSON.stringify(settings)) + (hash ? "&" + hash : "");
+      }
+
+      function showOffline() {
+        clearTimeout(timer);
+        checking.hidden = true;
+        offline.hidden = false;
+      }
+
+      function go() {
+        checking.hidden = false;
+        offline.hidden = true;
+        clearTimeout(timer);
+        const url = target();
+        document.getElementById("direct").href = url;
+        timer = setTimeout(() => {
+          window.stop(); // gives up on the address that isn't answering
+          showOffline();
+        }, WAIT_MS);
+        location.replace(url);
+      }
+
+      document.getElementById("retry").addEventListener("click", go);
+      // Came back to this page (Back button, restored tab): ask, don't jump.
+      window.addEventListener("pageshow", event => { if (event.persisted) showOffline(); });
+      // After the page has loaded, so stopping can't cut off this page's own files.
+      if (document.readyState === "complete") go();
+      else window.addEventListener("load", go, { once: true });
+    })();
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+
+</html>

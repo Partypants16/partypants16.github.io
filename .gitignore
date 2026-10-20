@@ -1,3 +1,6 @@
 # Source spreadsheet for franchise-data.js (see tools/build_franchise_data.py).
 # Only the generated data goes on the public site, not the raw file.
 Book.xlsx
+
+# The Claude page build: the full, unfiltered session logs. LAN only, never commit.
+tools/claude-timeline/dist/

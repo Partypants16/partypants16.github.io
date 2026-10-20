@@ -151,6 +151,41 @@ const HINGLISH = {
     "Nothing matches these filters.": "In filters se kuch match nahi hua.",
     "No thoughts written yet.": "Abhi tak kisi ne kuch nahi likha.",
 
+    // ---------- Claude (claude.html, and the page on the home server) ----------
+    "Opening it from the home server…": "Home server se khol rahe hain…",
+    "Connect to the home Wi-Fi to open this page.": "Yeh page kholne ke liye ghar ke Wi-Fi se connect karo.",
+    "It lives on the home server, so it only opens when you're on the home network.": "Yeh home server pe rehta hai, isliye sirf ghar ke network pe hi khulta hai.",
+    "Try again": "Phir se try karo",
+    "Open the address anyway": "Phir bhi address kholo",
+    "On home Wi-Fi and still seeing this? The home server might be off.": "Ghar ke Wi-Fi pe ho aur phir bhi yeh dikh raha hai? Shayad home server band hai.",
+    "Everything I've used Claude for in parth_project, taken from the session logs. Open a card to see its raw log.": "Maine parth_project mein Claude se jo bhi karwaya, sab yahan hai, session logs se liya hua. Card kholo aur uska raw log dekho.",
+    "Titles, summaries and raw logs": "Titles, summaries aur raw logs",
+    "Type": "Kism",
+    "When": "Kab",
+    "Order": "Kram",
+    "Newest first": "Naye pehle",
+    "Oldest first": "Purane pehle",
+    "All projects": "Saare projects",
+    "Any type": "Koi bhi kism",
+    "Any time": "Kabhi bhi",
+    "Built": "Banaya",
+    "Improved": "Behtar kiya",
+    "Fixed": "Theek kiya",
+    "Done": "Ho gaya",
+    "Needs testing": "Test karna baaki",
+    "Open": "Baaki hai",
+    "Parked": "Abhi ke liye roka",
+    "Show all raw logs": "Saare raw logs dikhao",
+    "Hide all raw logs": "Saare raw logs chhupao",
+    "Show raw log": "Raw log dikhao",
+    "Hide raw log": "Raw log chhupao",
+    "Found in the raw log": "Raw log mein mila",
+    "No summary yet": "Abhi summary nahi hai",
+    "In the log index": "Log index mein",
+    "The session log": "Session log",
+    "There are no session logs yet.": "Abhi koi session log nahi hai.",
+    "Couldn't load the session logs. Try reloading the page.": "Session logs load nahi hue. Page reload karke dekho.",
+
     // ---------- Under development (sports.html) ----------
     "This section": "Yeh section",
     "is under development": "abhi ban raha hai",
@@ -354,6 +389,13 @@ const HINGLISH = {
     [/^Longer (focus|short break|long break)$/, m => ({ "focus": "Focus", "short break": "Chhota break", "long break": "Lamba break" })[m[1]] + " badhao"],
     [/^(\d+) focus sessions? done$/, "$1 focus session ho gaye"],
     [/^New Year (\d+)$/, "Naya Saal $1"],
-    [/^Remove (.+)$/, "$1 hatao"]
+    [/^Remove (.+)$/, "$1 hatao"],
+    // Claude page
+    [/^(\d+) sessions? · (\d+) days? ·$/, "$1 sessions · $2 din ·"],
+    [/^Showing all (\d+) sessions?$/, "Saare $1 sessions dikh rahe hain"],
+    [/^Showing (\d+) of (\d+) sessions?$/, "$2 mein se $1 sessions dikh rahe hain"],
+    [/^(\d+) words?$/, "$1 shabd"],
+    [/^(Built|Improved|Fixed|Ideas|Research|Setup|Sync|Docs|Done|Needs testing|Open|Parked) \((\d+)\)$/, (m, t) => t(m[1]) + " (" + m[2] + ")"],
+    [/^(Needs testing|Open|Parked): (\d+)$/, (m, t) => t(m[1]) + ": " + m[2]]
   ]
 };

@@ -1,0 +1,15 @@
+# Serves the Claude page (dist/, mounted at /srv) on the remote box. LAN only, plain HTTP.
+{
+	admin off
+}
+
+:80 {
+	root * /srv
+	encode gzip
+	file_server
+
+	# Small site, redeployed after every session: always revalidate, so a new
+	# build shows up at once. Never indexed (it's only on the LAN anyway).
+	header Cache-Control "no-cache"
+	header X-Robots-Tag "noindex, nofollow"
+}
