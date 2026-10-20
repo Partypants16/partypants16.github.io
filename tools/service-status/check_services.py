@@ -38,6 +38,7 @@ SERVICES = [
     ("crosspaste", "http://192.168.212.60/"),
     ("codeserver", "http://192.168.212.60:8080/"),
     ("netdata", "http://192.168.212.60:19999/"),
+    ("apexdash", "http://192.168.212.60:8110/"),
 ]
 
 TIMEOUT_SECONDS = 5
