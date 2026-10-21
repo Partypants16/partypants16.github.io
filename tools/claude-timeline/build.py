@@ -49,8 +49,8 @@ DIST = HERE / "dist"
 
 # The filter lists show these in this order.
 PROJECTS = ["Website", "Apex Dash", "Claire", "Iris", "PAT-AI", "PrintPlace", "SkyWardrobe",
-            "StaySafe", "CrossPaste", "Sonic", "NovaDiagnostics", "Coles", "Remote box", "Music",
-            "Physical projects", "Photos", "OpenRecall", "Workspace"]
+            "StaySafe", "CrossPaste", "Sonic", "NovaDiagnostics", "n8n", "Coles", "Remote box",
+            "Music", "Physical projects", "Photos", "OpenRecall", "Workspace"]
 TYPES = ["Built", "Improved", "Fixed", "Ideas", "Research", "Setup", "Sync", "Docs"]
 STATUSES = ["Done", "Needs testing", "Open", "Parked"]
 TITLE_MAX, SUMMARY_MAX = 60, 240

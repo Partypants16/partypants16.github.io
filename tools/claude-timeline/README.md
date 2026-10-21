@@ -62,7 +62,7 @@ summary: "Added a CrossPaste card to the home page ... (1-2 sentences, at most 2
 - **title**: at most 60 characters, no project prefix (the project is a chip).
 - **projects**: main project first. Names: Website, Apex Dash, Claire, Iris,
   PAT-AI, PrintPlace, SkyWardrobe, StaySafe, CrossPaste, Sonic,
-  NovaDiagnostics, Coles, Remote box, Music, Physical projects, Photos,
+  NovaDiagnostics, n8n, Coles, Remote box, Music, Physical projects, Photos,
   OpenRecall, Workspace. To add one, add it to `PROJECTS` in `build.py`.
 - **type**: Built, Improved, Fixed, Ideas, Research, Setup, Sync or Docs.
 - **status**: Done, Needs testing, Open or Parked.
