@@ -45,6 +45,7 @@ HERE = Path(__file__).resolve().parent
 SITE = HERE.parent.parent                     # my-website/
 WORKSPACE = SITE.parent.parent                # parth_project/ (my-website is in apps/ since 2026-10-21)
 CONTEXT = WORKSPACE / "_workspace" / "context"
+DISCONTINUED = WORKSPACE / "discontinued"     # dropped projects; their saved pages are served too
 DIST = HERE / "dist"
 
 # The filter lists show these in this order.
@@ -280,6 +281,12 @@ def build():
         (DIST / folder).mkdir()
         for path in (SITE / folder).glob(pattern):
             shutil.copy2(path, DIST / folder / path.name)
+    # Saved pages of dropped projects (e.g. a review page from a claude.ai Artifact), so they
+    # open on the LAN without a Claude sign-in: discontinued/<project>/x.html → /discontinued/<project>/x.html
+    for path in sorted(DISCONTINUED.glob("*/*.html")):
+        target = DIST / "discontinued" / path.parent.name / path.name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(path, target)
     (DIST / "data.json").write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
     size = (DIST / "data.json").stat().st_size

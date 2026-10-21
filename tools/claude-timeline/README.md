@@ -18,7 +18,7 @@ connect to home Wi-Fi.
 
 | File | What it is |
 |---|---|
-| `build.py` | Reads the logs + `_workspace/context/LOG.md` and writes `dist/`: the page, `data.json`, and copies of the site files it shares (top bar styles, settings, Hinglish, transitions, wallpapers). |
+| `build.py` | Reads the logs + `_workspace/context/LOG.md` and writes `dist/`: the page, `data.json`, and copies of the site files it shares (top bar styles, settings, Hinglish, transitions, wallpapers). It also copies every `.html` page saved in `parth_project/discontinued/<project>/` to `/discontinued/<project>/`, so pages like Artifact reviews open on the LAN without a Claude sign-in. |
 | `page/` | The page itself: `index.html`, `claude.js`, `claude.css`. |
 | `deploy.py` | Runs `build.py`, then uploads `dist/` to `~/claude-timeline/` on the box and restarts the container. |
 | `update_site.py`, `Caddyfile`, `docker-compose.yml` | The box side: container `claude-timeline` (`caddy:2-alpine`, port 8120 → 80, `restart: unless-stopped`), same setup as Apex Dash. |
