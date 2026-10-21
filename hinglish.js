@@ -92,7 +92,6 @@ const HINGLISH = {
     "Are you ready?": "Taiyaar ho?",
     "LAN Only": "Sirf LAN",
     "Only reachable on the home Wi-Fi": "Sirf ghar ke Wi-Fi pe chalta hai",
-    "[requires connection to Home Wi-Fi]": "[ghar ka Wi-Fi chahiye]",
     "Victoria Crime Prediction and Community Safety Map. This is a self-hosted local copy; the original online version has been shut down.": "Victoria ka Crime Prediction aur Community Safety Map. Yeh self-hosted local copy hai; asli online version band ho chuka hai.",
     "Experimental": "Experiment",
     "Vibe-coded experiment, not a finished product": "Vibe-coding wala experiment, poora product nahi",
