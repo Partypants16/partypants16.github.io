@@ -18,6 +18,7 @@ Each session file starts with a frontmatter block. The card shows these fields:
     ---
     title: "CrossPaste card on the home page"     (at most 60 characters)
     date: 2026-10-14
+    time: "21:18"                                (when the log was started, 24 h, quoted)
     projects: [Website, CrossPaste]              (names from PROJECTS below)
     type: Built                                  (one of TYPES)
     status: Done                                 (one of STATUSES)
@@ -202,6 +203,20 @@ def check(name, meta):
     return card
 
 
+def clock(name, value):
+    """time: "HH:MM" → "HH:MM", or "" if it's missing or wrong. Unquoted 21:18 reaches here as
+    1278 (YAML 1.1 reads it as minutes in base 60), so that's turned back into a time too."""
+    if value is None:
+        return ""
+    if isinstance(value, int) and 0 <= value < 24 * 60:
+        return f"{value // 60:02d}:{value % 60:02d}"
+    found = re.match(r"^([01]?\d|2[0-3]):([0-5]\d)$", str(value).strip())
+    if found:
+        return f"{int(found.group(1)):02d}:{found.group(2)}"
+    warn(name, f"time {value!r} isn't HH:MM, leaving it off")
+    return ""
+
+
 def read_session(path, log_index):
     name = path.stem
     text = path.read_text(encoding="utf-8").replace("\r\n", "\n").lstrip("﻿")
@@ -223,6 +238,7 @@ def read_session(path, log_index):
     if not re.match(r"^\d{4}-\d{2}-\d{2}$", date):
         warn(name, f"date {date!r} isn't YYYY-MM-DD, using {file_date}")
         date = file_date
+    time = clock(name, meta.get("time"))
 
     heading = heading_of(body)
     position, log_md = log_index.get(name, (None, ""))
@@ -233,6 +249,7 @@ def read_session(path, log_index):
     return {
         "id": name,
         "date": date,
+        "time": time,
         "title": card.get("title") or heading or name,
         "summary": card.get("summary", ""),
         "projects": projects,
@@ -259,8 +276,9 @@ def build():
         if not (CONTEXT / "sessions" / (name + ".md")).exists():
             warn(name, "listed in LOG.md but the file doesn't exist")
 
-    # Newest first: by date, then by where LOG.md puts it (it lists newest first).
-    entries.sort(key=lambda e: (e["date"], -e["_order"], e["id"]), reverse=True)
+    # Newest first: by date, then time, then by where LOG.md puts it (it lists newest first).
+    # Logs with no time count as the earliest of their day.
+    entries.sort(key=lambda e: (e["date"], e["time"], -e["_order"], e["id"]), reverse=True)
     for entry in entries:
         del entry["_order"]
 

@@ -2,7 +2,7 @@
 
 A timeline of everything Parth has used Claude for in `parth_project`, built
 from the session logs in `parth_project/_workspace/context/sessions/`. Each log is a card
-with a clean title, summary, project, type and status. Every card opens to
+with a clean title, summary, project, type, status and the time it was started. Every card opens to
 show its raw log, and "Show all raw logs" opens them all. Filters (search,
 project, type, status, month, order) are at the top and are kept in the
 address, so a filtered view can be bookmarked.
@@ -52,6 +52,7 @@ Every session file starts with:
 ---
 title: "CrossPaste card on the home page"
 date: 2026-10-14
+time: "21:18"
 projects: [Website, CrossPaste]
 type: Built
 status: Done
@@ -60,6 +61,13 @@ summary: "Added a CrossPaste card to the home page ... (1-2 sentences, at most 2
 ```
 
 - **title**: at most 60 characters, no project prefix (the project is a chip).
+- **time**: when the log was started, 24-hour local time, **in quotes** (YAML
+  reads an unquoted `21:18` as a number; `build.py` copes, but quote it). It's
+  shown on the right of the card in the site's 12/24 h clock format, and orders
+  cards within a day. Optional: a log without one shows just the day. The
+  times on logs before 2026-10-21 were backfilled from Claude Code's
+  transcripts (the first write of each file). The 8 oldest logs have no
+  transcript, so they have no time.
 - **projects**: main project first. Names: Website, Apex Dash, Claire, Iris,
   PAT-AI, PrintPlace, SkyWardrobe, StaySafe, CrossPaste, Sonic,
   NovaDiagnostics, n8n, Coles, Remote box, Music, Physical projects, Photos,

@@ -50,11 +50,18 @@
   const thisYear = String(new Date().getFullYear());
   const dayLabel = iso => (iso.slice(0, 4) === thisYear ? DAY : DAY_YEAR).format(asDate(iso)).replace(",", "");
 
+  const hour12 = () => (window.SiteClock ? window.SiteClock.hour12() : false);  // the site-wide 12/24 h setting
+
+  // "21:18" (from the log's frontmatter) → "21:18" or "9:18 pm", whichever the clock setting says.
+  function timeLabel(hhmm) {
+    const [h, m] = hhmm.split(":").map(Number);
+    return new Date(Date.UTC(2000, 0, 1, h, m)).toLocaleTimeString("en-AU", { hour: "numeric", minute: "2-digit", hour12: hour12(), timeZone: "UTC" });
+  }
+
   function builtLabel(iso) {
     const when = new Date(iso);
     if (isNaN(when)) return "";
-    const hour12 = window.SiteClock ? window.SiteClock.hour12() : false;  // the site-wide 12/24 h setting
-    const time = when.toLocaleTimeString("en-AU", { hour: "numeric", minute: "2-digit", hour12 });
+    const time = when.toLocaleTimeString("en-AU", { hour: "numeric", minute: "2-digit", hour12: hour12() });
     return SHORT.format(new Date(Date.UTC(when.getFullYear(), when.getMonth(), when.getDate()))) + ", " + time;
   }
 
@@ -153,6 +160,13 @@
       meta.appendChild(status);
     }
     if (!entry.complete) meta.appendChild(el("span", "badge badge--todo", "No summary yet"));
+    let time = null;
+    if (entry.time) {
+      time = el("time", "entry-time", timeLabel(entry.time));
+      time.dateTime = entry.date + "T" + entry.time;
+      time.setAttribute("translate", "no");
+      meta.appendChild(time);
+    }
     node.appendChild(meta);
 
     const title = el("h3", "entry-title");
@@ -178,7 +192,7 @@
     raw.hidden = true;
     node.appendChild(raw);
 
-    const card = { entry, node, parts: { title, summary, hit, toggle, label, raw }, open: false, rawShown: null };
+    const card = { entry, node, parts: { title, summary, hit, toggle, label, raw, time }, open: false, rawShown: null };
     toggle.addEventListener("click", () => {
       setOpen(card, !card.open);
       syncRawAll();
@@ -374,9 +388,20 @@
     });
     if (quick.children.length) ui.stats.appendChild(quick);
 
+    showBuilt();
+  }
+
+  function showBuilt() {
     const when = builtLabel(data.built);
     ui.built.textContent = when ? "Updated " + when : "";
   }
+
+  // The clock setting changed (12/24 h): redo every time shown.
+  document.addEventListener("clockchange", () => {
+    if (!data) return;
+    cards.forEach(card => { if (card.parts.time) card.parts.time.textContent = timeLabel(card.entry.time); });
+    showBuilt();
+  });
 
   // ---------- Jumping to a card ----------
 
