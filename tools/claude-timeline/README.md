@@ -1,7 +1,7 @@
 # The Claude page
 
 A timeline of everything Parth has used Claude for in `parth_project`, built
-from the session logs in `parth_project/context/sessions/`. Each log is a card
+from the session logs in `parth_project/_workspace/context/sessions/`. Each log is a card
 with a clean title, summary, project, type and status. Every card opens to
 show its raw log, and "Show all raw logs" opens them all. Filters (search,
 project, type, status, month, order) are at the top and are kept in the
@@ -18,7 +18,7 @@ connect to home Wi-Fi.
 
 | File | What it is |
 |---|---|
-| `build.py` | Reads the logs + `context/LOG.md` and writes `dist/`: the page, `data.json`, and copies of the site files it shares (top bar styles, settings, Hinglish, transitions, wallpapers). |
+| `build.py` | Reads the logs + `_workspace/context/LOG.md` and writes `dist/`: the page, `data.json`, and copies of the site files it shares (top bar styles, settings, Hinglish, transitions, wallpapers). |
 | `page/` | The page itself: `index.html`, `claude.js`, `claude.css`. |
 | `deploy.py` | Runs `build.py`, then uploads `dist/` to `~/claude-timeline/` on the box and restarts the container. |
 | `update_site.py`, `Caddyfile`, `docker-compose.yml` | The box side: container `claude-timeline` (`caddy:2-alpine`, port 8120 → 80, `restart: unless-stopped`), same setup as Apex Dash. |

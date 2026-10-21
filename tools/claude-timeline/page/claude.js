@@ -1,4 +1,4 @@
-// The Claude page: every session log from parth_project/context/sessions/ as
+// The Claude page: every session log from parth_project/_workspace/context/sessions/ as
 // a timeline of cards, newest first. Each card shows the clean summary from
 // the log's frontmatter, and opens to the raw log underneath.
 //

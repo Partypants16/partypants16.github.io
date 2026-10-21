@@ -1,7 +1,7 @@
 """Build the Claude timeline (the LAN-only "Claude" page) into dist/.
 
-Reads every session log in parth_project/context/sessions/ plus the index in
-context/LOG.md, and writes dist/: the page (from page/), data.json, and copies
+Reads every session log in parth_project/_workspace/context/sessions/ plus the
+index in _workspace/context/LOG.md, and writes dist/: the page (from page/), data.json, and copies
 of the site files it shares with my-website (top bar, settings, Hinglish,
 transitions, wallpapers). deploy.py then puts dist/ on the remote box.
 
@@ -43,7 +43,8 @@ from markdown_it import MarkdownIt
 
 HERE = Path(__file__).resolve().parent
 SITE = HERE.parent.parent                     # my-website/
-CONTEXT = SITE.parent / "context"             # parth_project/context/
+WORKSPACE = SITE.parent.parent                # parth_project/ (my-website is in apps/ since 2026-10-21)
+CONTEXT = WORKSPACE / "_workspace" / "context"
 DIST = HERE / "dist"
 
 # The filter lists show these in this order.
@@ -237,7 +238,7 @@ def read_session(path, log_index):
         "type": card.get("type", ""),
         "status": card.get("status", ""),
         "heading": heading,
-        "file": "context/sessions/" + path.name,
+        "file": "_workspace/context/sessions/" + path.name,
         "words": len(body.split()),
         "complete": all(key in card for key in ("title", "summary", "projects", "type", "status")),
         "log": render(log_md, name) if log_md else "",

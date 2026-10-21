@@ -15,7 +15,7 @@ Writes, all inside wallpaper-files/:
 
 The plates are drawn by the book's own code in
 physical_projects/completed-or-paused-indefinitely/loveless_book/build, so
-that folder has to sit next to my-website (it does in parth_project). Needs
+that folder has to sit next to apps/ (it does in parth_project). Needs
 opencv-python, pillow, numpy, pymupdf and fonttools.
 """
 import pathlib
@@ -31,7 +31,7 @@ from PIL import Image
 
 SITE = pathlib.Path(__file__).resolve().parent.parent
 FILES = SITE / "wallpaper-files"
-BOOK = SITE.parent / "physical_projects" / "completed-or-paused-indefinitely" / "loveless_book" / "build"
+BOOK = SITE.parent.parent / "physical_projects" / "completed-or-paused-indefinitely" / "loveless_book" / "build"
 
 VIDEOS = {"winter-forest-snow.mp4": 3.0, "FF7-remake.mp4": 4.0}  # seconds in: a good-looking frame
 PLATES = [  # (module, function, file name), in the poem's order
