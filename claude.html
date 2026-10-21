@@ -12,6 +12,7 @@
   <meta name="description" content="Everything Parth has used Claude for. It lives on the home server, so it only opens on home Wi-Fi.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗂️</text></svg>">
   <link rel="stylesheet" href="movies.css">
+  <link rel="stylesheet" href="projects.css">
   <link rel="stylesheet" href="settings.css">
   <link rel="stylesheet" href="motion.css">
   <style>
@@ -104,20 +105,24 @@
 <body>
   <header>
     <nav>
-      <p class="logo"><a href="index.html">PS</a></p>
+      <p class="logo"><a href="profile.html" title="Profile">PS</a></p>
       <ul>
         <li><a href="index.html">Home</a></li>
         <li><a href="wallpaper.html">Wallpaper</a></li>
-        <li><a href="profile.html">Profile</a></li>
         <li><a href="gaming.html">Games</a></li>
         <li><a href="movies.html">Movies</a></li>
-        <li><a href="claude.html" aria-current="page">Claude</a></li>
+        <li><a href="projects.html" aria-current="page">Projects</a></li>
       </ul>
       <button class="settings-toggle" id="settingsToggle" type="button" aria-label="Settings" title="Settings" aria-haspopup="dialog" aria-expanded="false" aria-controls="settingsPanel"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="3.34 3.34"/><circle cx="12" cy="12" r="5.2" fill="none" stroke="currentColor" stroke-width="4.4"/></svg></button>
     </nav>
   </header>
 
   <main class="gateway">
+    <nav class="section-tabs" aria-label="Projects sections">
+      <a href="projects.html">Showcase</a>
+      <a href="claude.html" aria-current="page">Claude <span class="tab-badge"><svg class="pj-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 8.8a15 15 0 0 1 20 0"/><path d="M5 12.6a10 10 0 0 1 14 0"/><path d="M8.5 16.3a5 5 0 0 1 7 0"/><path d="M12 20h.01"/></svg>Home Wi-Fi only</span></a>
+    </nav>
+
     <h1>Claude</h1>
 
     <div class="gateway-card" id="checking">

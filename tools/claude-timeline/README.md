@@ -9,8 +9,11 @@ address, so a filtered view can be bookmarked.
 
 **It's only on the home network:** http://192.168.212.60:8120 on the remote
 box. The raw logs hold everything (Coles work, logins, family details), so
-they never go on the public website. The top bar's **Claude** link goes to
-`claude.html` on the website, which forwards to the box. Off home Wi-Fi, the
+they never go on the public website. It's a section of **Projects** (since
+2026-10-21): the top bar's Projects link opens the public showcase
+(`projects.html`), and its **Claude** tab goes to `claude.html` on the
+website, which forwards to the box. This page has the same Showcase / Claude
+tabs (styles from `projects.css`), so the way back is the Showcase tab. Off home Wi-Fi, the
 box's address doesn't answer, so after 3 seconds it stops trying and says to
 connect to home Wi-Fi.
 
@@ -18,12 +21,12 @@ connect to home Wi-Fi.
 
 | File | What it is |
 |---|---|
-| `build.py` | Reads the logs + `_workspace/context/LOG.md` and writes `dist/`: the page, `data.json`, and copies of the site files it shares (top bar styles, settings, Hinglish, transitions, wallpapers). It also copies every `.html` page saved in `parth_project/discontinued/<project>/` to `/discontinued/<project>/`, so pages like Artifact reviews open on the LAN without a Claude sign-in. |
+| `build.py` | Reads the logs + `_workspace/context/LOG.md` and writes `dist/`: the page, `data.json`, and copies of the site files it shares (top bar styles, the Projects tabs, settings, Hinglish, transitions, wallpapers). It also copies every `.html` page saved in `parth_project/discontinued/<project>/` to `/discontinued/<project>/`, so pages like Artifact reviews open on the LAN without a Claude sign-in. |
 | `page/` | The page itself: `index.html`, `claude.js`, `claude.css`. |
 | `deploy.py` | Runs `build.py`, then uploads `dist/` to `~/claude-timeline/` on the box and restarts the container. |
 | `update_site.py`, `Caddyfile`, `docker-compose.yml` | The box side: container `claude-timeline` (`caddy:2-alpine`, port 8120 → 80, `restart: unless-stopped`), same setup as Apex Dash. |
 | `dist/` | The build. **Git-ignored and must never be committed**: it's the full logs, and this repo is public. |
-| `../../claude.html` | The public gateway page the top bar links to. |
+| `../../claude.html` | The public gateway page the Projects page's Claude tab links to. |
 
 ## Updating it
 

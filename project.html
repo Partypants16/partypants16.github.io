@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="hinglish.js"></script>
+  <script src="i18n.js"></script>
+  <script src="settings.js"></script>
+  <script src="motion.js"></script>
+  <title>Projects | Parth</title>
+  <meta name="description" content="The story of one of Parth's projects: how it changed, the decisions behind it, and what didn't work.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛠️</text></svg>">
+  <link rel="stylesheet" href="movies.css">
+  <link rel="stylesheet" href="projects.css">
+  <link rel="stylesheet" href="settings.css">
+  <link rel="stylesheet" href="motion.css">
+</head>
+
+<body data-page="project">
+  <header>
+    <nav>
+      <p class="logo"><a href="profile.html" title="Profile">PS</a></p>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="wallpaper.html">Wallpaper</a></li>
+        <li><a href="gaming.html">Games</a></li>
+        <li><a href="movies.html">Movies</a></li>
+        <li><a href="projects.html" aria-current="page">Projects</a></li>
+      </ul>
+      <button class="settings-toggle" id="settingsToggle" type="button" aria-label="Settings" title="Settings" aria-haspopup="dialog" aria-expanded="false" aria-controls="settingsPanel"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="3.34 3.34"/><circle cx="12" cy="12" r="5.2" fill="none" stroke="currentColor" stroke-width="4.4"/></svg></button>
+    </nav>
+  </header>
+
+  <main class="projects project-page">
+    <a class="back-link" href="projects.html"><svg class="pj-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19 12H5"/><path d="M11 18l-6-6 6-6"/></svg> All projects</a>
+
+    <div id="story"></div>
+
+    <noscript>
+      <p class="pj-empty">Turn on JavaScript to see this project's story.</p>
+    </noscript>
+  </main>
+
+  <footer>
+    <p>&copy; <span id="year"></span> Parth</p>
+  </footer>
+
+  <script src="projects-data.js"></script>
+  <script src="projects.js"></script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+
+</html>

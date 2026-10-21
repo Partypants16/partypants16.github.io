@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="hinglish.js"></script>
+  <script src="i18n.js"></script>
+  <script src="settings.js"></script>
+  <script src="motion.js"></script>
+  <title>Projects | Parth</title>
+  <meta name="description" content="What Parth has built, and the thinking behind it: the decisions, the experiments and the dead ends along the way.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛠️</text></svg>">
+  <link rel="stylesheet" href="movies.css">
+  <link rel="stylesheet" href="projects.css">
+  <link rel="stylesheet" href="settings.css">
+  <link rel="stylesheet" href="motion.css">
+</head>
+
+<body data-page="projects">
+  <header>
+    <nav>
+      <p class="logo"><a href="profile.html" title="Profile">PS</a></p>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="wallpaper.html">Wallpaper</a></li>
+        <li><a href="gaming.html">Games</a></li>
+        <li><a href="movies.html">Movies</a></li>
+        <li><a href="projects.html" aria-current="page">Projects</a></li>
+      </ul>
+      <button class="settings-toggle" id="settingsToggle" type="button" aria-label="Settings" title="Settings" aria-haspopup="dialog" aria-expanded="false" aria-controls="settingsPanel"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="3.34 3.34"/><circle cx="12" cy="12" r="5.2" fill="none" stroke="currentColor" stroke-width="4.4"/></svg></button>
+    </nav>
+  </header>
+
+  <main class="projects">
+    <section class="lists-intro">
+      <h1>Projects</h1>
+      <p>What I've built, and the thinking behind it: the decisions, the experiments and the dead ends along the way.</p>
+    </section>
+
+    <nav class="section-tabs" aria-label="Projects sections">
+      <a href="projects.html" aria-current="page">Showcase</a>
+      <a href="claude.html">Claude <span class="tab-badge"><svg class="pj-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 8.8a15 15 0 0 1 20 0"/><path d="M5 12.6a10 10 0 0 1 14 0"/><path d="M8.5 16.3a5 5 0 0 1 7 0"/><path d="M12 20h.01"/></svg>Home Wi-Fi only</span></a>
+    </nav>
+
+    <div id="sample-slot"></div>
+
+    <div class="pj-stats" id="stats"></div>
+
+    <section class="pj-section" id="featured" aria-labelledby="featured-title">
+      <div class="pj-section-head">
+        <div>
+          <span class="pj-eyebrow">Featured</span>
+          <h2 id="featured-title">The full story</h2>
+          <p class="pj-lead">Projects with every decision, experiment and dead end written up.</p>
+        </div>
+      </div>
+      <div class="feature-list" id="featured-list"></div>
+    </section>
+
+    <section class="pj-section" aria-labelledby="archive-title">
+      <div class="pj-section-head">
+        <div>
+          <span class="pj-eyebrow">Archive</span>
+          <h2 id="archive-title">Everything</h2>
+          <p class="pj-lead">Big and small, finished and not.</p>
+        </div>
+        <div class="chip-row" id="filters" role="group" aria-label="Filter projects"></div>
+      </div>
+      <div id="archive"></div>
+      <p class="pj-empty" id="archive-empty" hidden>No projects here yet.</p>
+    </section>
+
+    <section class="claude-promo" aria-labelledby="claude-title">
+      <div class="promo-art" aria-hidden="true">
+        <div class="promo-card"><i></i><i></i><i></i></div>
+        <div class="promo-card"><i></i><i></i><i></i></div>
+        <div class="promo-card"><i></i><i></i><i></i></div>
+      </div>
+      <div>
+        <span class="pj-eyebrow">Behind the scenes</span>
+        <h2 id="claude-title">Claude</h2>
+        <p>Every session with Claude behind these projects, as a timeline: what I asked for, what got decided, and the raw logs if you want every detail.</p>
+        <p class="lan-note"><svg class="pj-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 8.8a15 15 0 0 1 20 0"/><path d="M5 12.6a10 10 0 0 1 14 0"/><path d="M8.5 16.3a5 5 0 0 1 7 0"/><path d="M12 20h.01"/></svg>It lives on my home server, so it only opens on home Wi-Fi.</p>
+        <a class="pj-btn" href="claude.html">Open the Claude timeline <svg class="pj-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </section>
+
+    <noscript>
+      <p class="pj-empty">Turn on JavaScript to see the projects.</p>
+    </noscript>
+  </main>
+
+  <footer>
+    <p>&copy; <span id="year"></span> Parth</p>
+  </footer>
+
+  <script src="projects-data.js"></script>
+  <script src="projects.js"></script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+
+</html>

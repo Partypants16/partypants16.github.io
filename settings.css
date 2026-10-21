@@ -668,10 +668,10 @@ html[data-backdrop][data-theme="dark"] {
 }
 
 /* ---------- Top bar on small phones ----------
-   Six links (Home … Claude) don't fit on one row at 360px with the pages' own
-   phone styles, so on small screens the links get a little smaller and closer.
-   Here rather than in each page's stylesheet because every page loads this one
-   last. */
+   The top bar's links (Home … Projects; the PS logo is the way to Profile)
+   crowd one row at 360px with the pages' own phone styles, so on small screens
+   the links get a little smaller and closer. Here rather than in each page's
+   stylesheet because every page loads this one last. */
 @media (max-width: 420px) {
   header {
     padding-left: .75rem;
