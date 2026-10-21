@@ -19,30 +19,29 @@ connect to home Wi-Fi.
 
 The same build makes a second page, **To do** (`todo.html`, since 2026-10-21):
 what's waiting on Parth across `parth_project`. It's LAN-only for the same
-reason (it names Coles work), and the website's `todo.html` is its gateway. It
-has two parts:
+reason (it names Coles work), and the website's `todo.html` is its gateway.
 
-- **The list** in `parth_project/_workspace/context/TODO.yaml`: tests only he
-  can run (grouped by where: LEGION, phone, Azure…), decisions he owes, parked
-  things and research, plus a "Start here" pick. Every session keeps it current
-  (step 3 of the logging rule in the root `CLAUDE.md`). Its header lists the
-  fields. Each item links to the session logs it came from, which open their
-  cards on the Claude page.
-- **Work you could lose**, which nobody writes: `todo.py` finds every git repo in
-  `parth_project` on each build and lists the ones with uncommitted files,
-  commits not pushed, no remote, or a remote that isn't Parth's.
-  `repo_notes` in TODO.yaml adds a line to a repo's card. It's this laptop's
-  state at build time, and nothing is fetched first.
+It's one short text, like a message: `parth_project/_workspace/context/TODO.md`,
+shown as it is, with numbered sections (uncommitted work, tests only Parth can
+run, decisions he owes, things he parked) and "My pick" at the end, which the
+page sets apart. Every session rewrites it (step 3 of the logging rule in the
+root `CLAUDE.md`).
 
-If sessions were logged after the list's `updated` time, the page says so and
-links them, in case they left something that isn't on the list yet.
+The build writes section 1 itself, in place of the file's `{{git}}` line:
+`todo.py` finds every git repo in `parth_project` and adds a line for each one
+with uncommitted files, commits not pushed, no remote, or a remote that isn't
+Parth's. It's this laptop's state at build time, and nothing is fetched first.
+
+Under the text: when it was last written (the file's time), when git was
+checked, and any session logged since it was written, in case they left
+something that isn't in it yet.
 
 ## Files
 
 | File | What it is |
 |---|---|
 | `build.py` | Reads the logs + `_workspace/context/LOG.md` and writes `dist/`: the pages, `data.json`, `todo.json` (from `todo.py`), and copies of the site files it shares (top bar styles, the Projects tabs, settings, Hinglish, transitions, wallpapers). It also copies every `.html` page saved in `parth_project/discontinued/<project>/` to `/discontinued/<project>/`, so pages like Artifact reviews open on the LAN without a Claude sign-in. |
-| `todo.py` | The To do page's data: `_workspace/context/TODO.yaml`, checked (project names, logs that exist, dates), plus what git says about every repo. |
+| `todo.py` | The To do page's text: `_workspace/context/TODO.md`, with section 1 written from what git says about every repo. |
 | `page/` | The pages: `index.html`, `claude.js`, `claude.css` (Claude) and `todo.html`, `todo.js`, `todo.css` (To do). `handoff.js` copies in the settings the website passes along, on both. |
 | `deploy.py` | Runs `build.py`, then uploads `dist/` to `~/claude-timeline/` on the box and restarts the container. |
 | `update_site.py`, `Caddyfile`, `docker-compose.yml` | The box side: container `claude-timeline` (`caddy:2-alpine`, port 8120 → 80, `restart: unless-stopped`), same setup as Apex Dash. |
@@ -111,7 +110,6 @@ that isn't on the lists) still shows up, using its heading, with a
   wallpaper, language, clock and transitions along in the link
   (`#settings=…`), and `handoff.js` copies them in before anything draws.
   Changes made on the box's copy stay there.
-- `todo.html?project=Claire` shows one project, through the gateway too.
 - Links work both ways: `claude.html?project=Coles#2026-10-14-…` lands on the
   same filter and card. Links inside a raw log to another session log jump to
   that card. Links to other files in the workspace are shown, not clickable.
