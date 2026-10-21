@@ -90,6 +90,8 @@ const HINGLISH = {
     "Welcome to Parth's Palace": "Parth ke Palace mein aapka swagat hai",
     "where you will find everything...": "jahan sab kuch milega...",
     "Are you ready?": "Taiyaar ho?",
+    "Projects & Ideas": "Projects aur Ideas",
+    "Experiments and ideas that aren't hosted services.": "Experiments aur ideas jo hosted services nahi hain.",
     "LAN Only": "Sirf LAN",
     "Only reachable on the home Wi-Fi": "Sirf ghar ke Wi-Fi pe chalta hai",
     "Victoria Crime Prediction and Community Safety Map. This is a self-hosted local copy; the original online version has been shut down.": "Victoria ka Crime Prediction aur Community Safety Map. Yeh self-hosted local copy hai; asli online version band ho chuka hai.",
@@ -121,6 +123,7 @@ const HINGLISH = {
 
     // ---------- Games ----------
     "Gaming Platforms": "Mere Gaming Platforms",
+    "My Games": "Mere Games",
 
     // ---------- Movies ----------
     "Movie Recommendation Lists": "Filmon ki Recommendation Lists",

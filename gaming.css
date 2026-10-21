@@ -15,6 +15,9 @@
   --text: #222;
   --muted-text: #666;
   --card-bg: #ffffff;
+  --status-up: #0ca30c;
+  --status-down: #d03b3b;
+  --status-unknown: #9a9a9a;
 }
 
 :root[data-theme="dark"] {
@@ -22,6 +25,7 @@
   --text: #e8e8e8;
   --muted-text: #aaaaaa;
   --card-bg: #1e1e1e;
+  --status-unknown: #6b6b6b;
 }
 
 /* ------------------------------ */
@@ -143,6 +147,99 @@ h1 {
 .platform-card--soon:hover {
     transform: none;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* ------------------------------ */
+/* My Games                       */
+/* ------------------------------ */
+.section-title {
+    text-align: center;
+    font-size: 2rem;
+    margin: 2.5rem 0 1rem;
+}
+
+/* One card shouldn't stretch across the whole page */
+.platform-container--games {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.platform-container--games .platform-card {
+    flex: 0 1 340px;
+}
+
+.game-card {
+    position: relative;
+    padding-top: 44px; /* clears the badge and status dot */
+}
+
+.game-icon {
+    display: block;
+    font-size: 64px;
+    line-height: 80px;
+    margin-bottom: 15px;
+}
+
+/* Same bubble as the home page's cards used (style.css) */
+.badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 0.3em 0.8em;
+    border-radius: 999px;
+    color: #fff;
+}
+
+.badge--lan {
+    background: #1464c0;
+}
+
+/* Online / Offline from service-status.js, same as the home page */
+.status-pill {
+    position: absolute;
+    top: 12px;
+    left: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.3em 0;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--muted-text);
+}
+
+.status-pill-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--status-unknown);
+}
+
+.status-pill[data-state="up"] .status-pill-dot {
+    background: var(--status-up);
+    animation: status-pulse 2.4s ease-out infinite;
+}
+
+.status-pill[data-state="down"] .status-pill-dot {
+    background: var(--status-down);
+}
+
+@keyframes status-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(12, 163, 12, 0.45); }
+    70%, 100% { box-shadow: 0 0 0 6px rgba(12, 163, 12, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .status-pill[data-state="up"] .status-pill-dot {
+        animation: none;
+    }
 }
 
 @media (max-width: 600px) {

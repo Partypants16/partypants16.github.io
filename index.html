@@ -41,127 +41,126 @@
 
     <hr class="section-divider">
 
-    <!-- Filled in by service-status.js once the home server's status loads -->
-    <p class="status-summary" id="status-summary" hidden></p>
+    <div class="card-group" id="cards">
+      <div class="group-head group-head--lan">
+        <h2>LAN Only</h2>
+        <p>Only reachable on the home Wi-Fi</p>
+      </div>
 
-    <div class="card-container" id="cards">
+      <!-- Filled in by service-status.js once the home server's status loads -->
+      <p class="status-summary" id="status-summary" hidden></p>
 
-      <a href="http://192.168.212.60:8100" target="_blank" rel="noopener noreferrer" class="card-link">
-        <div class="section card" data-service="staysafe">
-          <span class="badge badge--lan" title="Only reachable on the home Wi-Fi">LAN Only</span>
-          <h2>StaySafe (Local)</h2>
-          <p>Victoria Crime Prediction and Community Safety Map. This is a self-hosted local copy; the original online version has been shut down.</p>
-        </div>
-      </a>
+      <div class="card-container">
 
-      <a href="vibe-testing-zone/home.html" class="card-link">
+        <a href="http://192.168.212.60:8100" target="_blank" rel="noopener noreferrer" class="card-link">
+          <div class="section card" data-service="staysafe">
+            <h2>StaySafe (Local)</h2>
+            <p>Victoria Crime Prediction and Community Safety Map. This is a self-hosted local copy; the original online version has been shut down.</p>
+          </div>
+        </a>
+
+        <a href="http://192.168.212.60:3000" target="_blank" rel="noopener noreferrer" class="card-link">
+          <div class="section card" data-service="skywardrobe">
+            <h2>SkyWardrobe</h2>
+            <p>Melbourne, AU weather translated into what to wear now.</p>
+          </div>
+        </a>
+
+        <a href="sports.html?feature=Family+Tree" class="card-link">
+          <div class="section card">
+            <span class="badge badge--soon" title="Not built yet">Coming Soon</span>
+            <h2>Family Tree</h2>
+            <p>Digital family tree builder and genealogy tool.</p>
+          </div>
+        </a>
+
+        <a href="http://192.168.212.160:2283/" target="_blank" rel="noopener noreferrer" class="card-link">
+          <div class="section card" data-service="immich">
+            <h2>Immich</h2>
+            <p>Takes you to the self-hosted Immich family photo library.</p>
+          </div>
+        </a>
+
+        <a href="http://192.168.212.60:4533" target="_blank" rel="noopener noreferrer" class="card-link">
+          <div class="section card" data-service="navidrome">
+            <h2>Navidrome</h2>
+            <p>Takes you to the self-hosted Navidrome music server.</p>
+          </div>
+        </a>
+
+        <a href="http://192.168.212.60:8095" target="_blank" rel="noopener noreferrer" class="card-link">
+          <div class="section card" data-service="khane">
+            <h2>Khane main Kya hai?</h2>
+            <p>What's on the menu today? Takes you to the self-hosted family meal planner.</p>
+          </div>
+        </a>
+
+        <a href="http://192.168.212.60" target="_blank" rel="noopener noreferrer" class="card-link">
+          <div class="section card" data-service="crosspaste">
+            <h2>CrossPaste</h2>
+            <p>One shared clipboard for moving text, images and files between your own devices. Takes you to the self-hosted CrossPaste.</p>
+          </div>
+        </a>
+
+        <a href="http://192.168.212.60:8080" target="_blank" rel="noopener noreferrer" class="card-link">
+          <div class="section card" data-service="codeserver">
+            <h2>Code Server</h2>
+            <p>VS Code in the browser, running on the home server. Takes you to the self-hosted code-server.</p>
+          </div>
+        </a>
+
+        <a href="http://192.168.212.60:19999" target="_blank" rel="noopener noreferrer" class="card-link">
+          <div class="section card" data-service="netdata">
+            <h2>Netdata</h2>
+            <p>Live health of the home server: CPU, memory, disks, network and every container, updated every second. Takes you to the self-hosted Netdata dashboard.</p>
+          </div>
+        </a>
+
+        <a href="http://192.168.212.60:5678" target="_blank" rel="noopener noreferrer" class="card-link">
+          <div class="section card" data-service="n8n">
+            <h2>n8n</h2>
+            <p>Automations built by picking triggers and actions on a visual canvas, like Azure Logic Apps, running on the home server. Takes you to the self-hosted n8n.</p>
+          </div>
+        </a>
+
+        <a href="http://192.168.212.60:8000" target="_blank" rel="noopener noreferrer" class="card-link">
+          <div class="section card">
+            <h2>Sonic</h2>
+            <p>My local AI personal assistant, running on the home server. It starts up when you open it, so the first load takes a few seconds.</p>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="card-group">
+      <div class="group-head">
+        <h2>Projects &amp; Ideas</h2>
+        <p>Experiments and ideas that aren't hosted services.</p>
+      </div>
+
+      <div class="card-container">
+
+        <a href="vibe-testing-zone/home.html" class="card-link">
+          <div class="section card">
+            <span class="badge badge--experimental" title="Vibe-coded experiment, not a finished product">Experimental</span>
+            <h2>Vibe Testing Zone</h2>
+            <p>Pure vibe coding to test the capabilities and experiment with new technolgies. No fleshed out products.</p>
+          </div>
+        </a>
+
+        <a href="sports.html?feature=Sports" class="card-link">
+          <div class="section card">
+            <span class="badge badge--soon" title="Not built yet">Coming Soon</span>
+            <h2>Sports</h2>
+            <p>Track your favorite sports and teams! Analytics????</p>
+          </div>
+        </a>
+
         <div class="section card">
-          <span class="badge badge--experimental" title="Vibe-coded experiment, not a finished product">Experimental</span>
-          <h2>Vibe Testing Zone</h2>
-          <p>Pure vibe coding to test the capabilities and experiment with new technolgies. No fleshed out products.</p>
-        </div>
-      </a>
-
-      <a href="http://192.168.212.60:3000" target="_blank" rel="noopener noreferrer" class="card-link">
-        <div class="section card" data-service="skywardrobe">
-          <span class="badge badge--lan" title="Only reachable on the home Wi-Fi">LAN Only</span>
-          <h2>SkyWardrobe</h2>
-          <p>Melbourne, AU weather translated into what to wear now.</p>
-        </div>
-      </a>
-
-      <a href="sports.html?feature=Family+Tree" class="card-link">
-        <div class="section card">
-          <span class="badge badge--soon" title="Not built yet">Coming Soon</span>
-          <h2>Family Tree</h2>
-          <p>Digital family tree builder and genealogy tool.</p>
-        </div>
-      </a>
-
-      <a href="http://192.168.212.160:2283/" target="_blank" rel="noopener noreferrer" class="card-link">
-        <div class="section card" data-service="immich">
-          <span class="badge badge--lan" title="Only reachable on the home Wi-Fi">LAN Only</span>
-          <h2>Immich</h2>
-          <p>Takes you to the self-hosted Immich family photo library.</p>
-        </div>
-      </a>
-
-      <a href="http://192.168.212.60:4533" target="_blank" rel="noopener noreferrer" class="card-link">
-        <div class="section card" data-service="navidrome">
-          <span class="badge badge--lan" title="Only reachable on the home Wi-Fi">LAN Only</span>
-          <h2>Navidrome</h2>
-          <p>Takes you to the self-hosted Navidrome music server.</p>
-        </div>
-      </a>
-
-      <a href="http://192.168.212.60:8095" target="_blank" rel="noopener noreferrer" class="card-link">
-        <div class="section card" data-service="khane">
-          <span class="badge badge--lan" title="Only reachable on the home Wi-Fi">LAN Only</span>
-          <h2>Khane main Kya hai?</h2>
-          <p>What's on the menu today? Takes you to the self-hosted family meal planner.</p>
-        </div>
-      </a>
-
-      <a href="http://192.168.212.60" target="_blank" rel="noopener noreferrer" class="card-link">
-        <div class="section card" data-service="crosspaste">
-          <span class="badge badge--lan" title="Only reachable on the home Wi-Fi">LAN Only</span>
-          <h2>CrossPaste</h2>
-          <p>One shared clipboard for moving text, images and files between your own devices. Takes you to the self-hosted CrossPaste.</p>
-        </div>
-      </a>
-
-      <a href="http://192.168.212.60:8080" target="_blank" rel="noopener noreferrer" class="card-link">
-        <div class="section card" data-service="codeserver">
-          <span class="badge badge--lan" title="Only reachable on the home Wi-Fi">LAN Only</span>
-          <h2>Code Server</h2>
-          <p>VS Code in the browser, running on the home server. Takes you to the self-hosted code-server.</p>
-        </div>
-      </a>
-
-      <a href="http://192.168.212.60:19999" target="_blank" rel="noopener noreferrer" class="card-link">
-        <div class="section card" data-service="netdata">
-          <span class="badge badge--lan" title="Only reachable on the home Wi-Fi">LAN Only</span>
-          <h2>Netdata</h2>
-          <p>Live health of the home server: CPU, memory, disks, network and every container, updated every second. Takes you to the self-hosted Netdata dashboard.</p>
-        </div>
-      </a>
-
-      <a href="http://192.168.212.60:5678" target="_blank" rel="noopener noreferrer" class="card-link">
-        <div class="section card" data-service="n8n">
-          <span class="badge badge--lan" title="Only reachable on the home Wi-Fi">LAN Only</span>
-          <h2>n8n</h2>
-          <p>Automations built by picking triggers and actions on a visual canvas, like Azure Logic Apps, running on the home server. Takes you to the self-hosted n8n.</p>
-        </div>
-      </a>
-
-      <a href="http://192.168.212.60:8000" target="_blank" rel="noopener noreferrer" class="card-link">
-        <div class="section card">
-          <span class="badge badge--lan" title="Only reachable on the home Wi-Fi">LAN Only</span>
-          <h2>Sonic</h2>
-          <p>My local AI personal assistant, running on the home server. It starts up when you open it, so the first load takes a few seconds.</p>
-        </div>
-      </a>
-
-      <a href="http://192.168.212.60:8110" target="_blank" rel="noopener noreferrer" class="card-link">
-        <div class="section card" data-service="apexdash">
-          <span class="badge badge--lan" title="Only reachable on the home Wi-Fi">LAN Only</span>
-          <h2>Apex Dash</h2>
-          <p>My arcade racer: ten drivers, ten circuits and drift boosts, played right in the browser with a keyboard, gamepad or touch. Takes you to the copy hosted on the home server.</p>
-        </div>
-      </a>
-
-      <a href="sports.html?feature=Sports" class="card-link">
-        <div class="section card">
-          <span class="badge badge--soon" title="Not built yet">Coming Soon</span>
-          <h2>Sports</h2>
-          <p>Track your favorite sports and teams! Analytics????</p>
-        </div>
-      </a>
-
-      <div class="section card">
-        <span class="badge badge--empty" title="Nothing here yet">Empty</span>
-        <h2>Empty</h2>
-        <p>This will describe whatever service is here!</p>
+          <span class="badge badge--empty" title="Nothing here yet">Empty</span>
+          <h2>Empty</h2>
+          <p>This will describe whatever service is here!</p>
+      </div>
       </div>
     </div>
 

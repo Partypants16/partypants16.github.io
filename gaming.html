@@ -9,7 +9,7 @@
     <script src="settings.js"></script>
     <script src="motion.js"></script>
     <title>Gaming Platforms</title>
-    <meta name="description" content="Parth's gaming platform profiles - PlayStation, Xbox, Steam, and Epic Games.">
+    <meta name="description" content="Parth's gaming platform profiles - PlayStation, Xbox, Steam, and Epic Games - and his own games.">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏰</text></svg>">
     <link rel="stylesheet" href="gaming.css">
     <link rel="stylesheet" href="settings.css">
@@ -67,12 +67,26 @@
         </div>
 
     </div>
+
+    <h2 class="section-title">My Games</h2>
+
+    <div class="platform-container platform-container--games">
+
+        <a href="http://192.168.212.60:8110" target="_blank" rel="noopener noreferrer" class="platform-card game-card" data-service="apexdash">
+            <span class="badge badge--lan" title="Only reachable on the home Wi-Fi">LAN Only</span>
+            <span class="game-icon" aria-hidden="true">🏎️</span>
+            <h2>Apex Dash</h2>
+            <p>My arcade racer: ten drivers, ten circuits and drift boosts, played right in the browser with a keyboard, gamepad or touch. Takes you to the copy hosted on the home server.</p>
+        </a>
+
+    </div>
     </main>
 
     <footer>
         <p>&copy; <span id="year"></span> Parth</p>
     </footer>
 
+    <script src="service-status.js"></script>
     <script>
         document.getElementById("year").textContent = new Date().getFullYear();
     </script>

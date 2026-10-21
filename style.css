@@ -183,6 +183,48 @@ section p {
   display: block;
 }
 
+/* Home page card groups: a header, then its cards */
+.card-group {
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+}
+
+.group-head {
+  padding: 0 20px;
+}
+
+.group-head h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Same colour as the bubble the LAN Only cards used to carry */
+.group-head h2::before {
+  content: "";
+  width: 6px;
+  align-self: stretch;
+  border-radius: 3px;
+  background: var(--muted-text);
+}
+
+.group-head--lan h2::before {
+  background: #1464c0;
+}
+
+.group-head p {
+  color: var(--muted-text);
+  margin-top: 0.15rem;
+}
+
+.card-group .status-summary {
+  text-align: left;
+  margin-top: 0.4rem;
+}
+
 /* ------------------------------ */
 /* Status badges                  */
 /* ------------------------------ */
