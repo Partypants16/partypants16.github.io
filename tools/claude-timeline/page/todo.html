@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <script src="handoff.js"></script>
+  <script src="hinglish.js"></script>
+  <script src="i18n.js"></script>
+  <script src="settings.js"></script>
+  <script src="motion.js"></script>
+  <title>To do | Parth</title>
+  <meta name="description" content="What's waiting on Parth across parth_project, from the session logs and git. Only on the home server.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✅</text></svg>">
+  <link rel="stylesheet" href="movies.css">
+  <link rel="stylesheet" href="projects.css">
+  <link rel="stylesheet" href="settings.css">
+  <link rel="stylesheet" href="motion.css">
+  <link rel="stylesheet" href="todo.css">
+</head>
+
+<body>
+  <header>
+    <nav>
+      <p class="logo"><a href="https://partypants16.github.io/profile.html" title="Profile">PS</a></p>
+      <ul>
+        <li><a href="https://partypants16.github.io/index.html">Home</a></li>
+        <li><a href="https://partypants16.github.io/wallpaper.html">Wallpaper</a></li>
+        <li><a href="https://partypants16.github.io/gaming.html">Games</a></li>
+        <li><a href="https://partypants16.github.io/movies.html">Movies</a></li>
+        <li><a href="https://partypants16.github.io/projects.html" aria-current="page">Projects</a></li>
+      </ul>
+      <button class="settings-toggle" id="settingsToggle" type="button" aria-label="Settings" title="Settings" aria-haspopup="dialog" aria-expanded="false" aria-controls="settingsPanel"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="3.34 3.34"/><circle cx="12" cy="12" r="5.2" fill="none" stroke="currentColor" stroke-width="4.4"/></svg></button>
+    </nav>
+  </header>
+
+  <main class="projects todo">
+    <nav class="section-tabs" aria-label="Projects sections">
+      <a href="https://partypants16.github.io/projects.html">Showcase</a>
+      <a href="./">Claude <span class="tab-badge" title="Home Wi-Fi only"><svg class="pj-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 8.8a15 15 0 0 1 20 0"/><path d="M5 12.6a10 10 0 0 1 14 0"/><path d="M8.5 16.3a5 5 0 0 1 7 0"/><path d="M12 20h.01"/></svg><span class="tab-badge-text">Home Wi-Fi</span></span></a>
+      <a href="todo.html" aria-current="page">To do <span class="tab-badge" title="Home Wi-Fi only"><svg class="pj-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 8.8a15 15 0 0 1 20 0"/><path d="M5 12.6a10 10 0 0 1 14 0"/><path d="M8.5 16.3a5 5 0 0 1 7 0"/><path d="M12 20h.01"/></svg><span class="tab-badge-text">Home Wi-Fi</span></span></a>
+    </nav>
+
+    <section class="lists-intro">
+      <h1>To do</h1>
+      <p>What's waiting on you across parth_project: work that only lives on one laptop, tests only you can run, and decisions only you can make. It's updated after every Claude session.</p>
+      <p class="todo-meta" id="meta"></p>
+    </section>
+
+    <p class="todo-message" id="message" hidden></p>
+    <div id="todo"></div>
+  </main>
+
+  <footer>
+    <p>&copy; <span id="year"></span> Parth · <span id="built"></span></p>
+  </footer>
+
+  <script src="todo.js"></script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+
+</html>

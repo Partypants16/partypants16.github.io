@@ -5,24 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex">
-  <script>
-    // Served from the home server, so this page has its own saved settings.
-    // claude.html on the website passes the visitor's settings along in the
-    // link (#settings=…); copy them in before the site scripts read them.
-    (function () {
-      const KEYS = ["theme", "accent", "backdrop", "language", "clock", "transitions"];
-      const match = location.hash.match(/^#settings=([^&]*)(?:&(.*))?$/);
-      if (!match) return;
-      try {
-        const settings = JSON.parse(decodeURIComponent(match[1]));
-        KEYS.forEach(key => {
-          if (typeof settings[key] === "string") localStorage.setItem(key, settings[key]);
-          else localStorage.removeItem(key);
-        });
-      } catch (e) { /* bad link or no storage: keep what's here */ }
-      history.replaceState(null, "", location.pathname + location.search + (match[2] ? "#" + match[2] : ""));
-    })();
-  </script>
+  <script src="handoff.js"></script>
   <script src="hinglish.js"></script>
   <script src="i18n.js"></script>
   <script src="settings.js"></script>
@@ -55,7 +38,8 @@
   <main class="claude">
     <nav class="section-tabs" aria-label="Projects sections">
       <a href="https://partypants16.github.io/projects.html">Showcase</a>
-      <a href="./" aria-current="page">Claude <span class="tab-badge"><svg class="pj-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 8.8a15 15 0 0 1 20 0"/><path d="M5 12.6a10 10 0 0 1 14 0"/><path d="M8.5 16.3a5 5 0 0 1 7 0"/><path d="M12 20h.01"/></svg>Home Wi-Fi only</span></a>
+      <a href="./" aria-current="page">Claude <span class="tab-badge" title="Home Wi-Fi only"><svg class="pj-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 8.8a15 15 0 0 1 20 0"/><path d="M5 12.6a10 10 0 0 1 14 0"/><path d="M8.5 16.3a5 5 0 0 1 7 0"/><path d="M12 20h.01"/></svg><span class="tab-badge-text">Home Wi-Fi</span></span></a>
+      <a href="todo.html">To do <span class="tab-badge" title="Home Wi-Fi only"><svg class="pj-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 8.8a15 15 0 0 1 20 0"/><path d="M5 12.6a10 10 0 0 1 14 0"/><path d="M8.5 16.3a5 5 0 0 1 7 0"/><path d="M12 20h.01"/></svg><span class="tab-badge-text">Home Wi-Fi</span></span></a>
     </nav>
 
     <section class="lists-intro">

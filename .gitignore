@@ -4,3 +4,6 @@ Book.xlsx
 
 # The Claude page build: the full, unfiltered session logs. LAN only, never commit.
 tools/claude-timeline/dist/
+
+# Python bytecode (build.py imports todo.py)
+__pycache__/

@@ -42,11 +42,14 @@ from pathlib import Path
 import yaml
 from markdown_it import MarkdownIt
 
+import todo  # the To do page's data (todo.py, next to this file)
+
 HERE = Path(__file__).resolve().parent
 SITE = HERE.parent.parent                     # my-website/
 WORKSPACE = SITE.parent.parent                # parth_project/ (my-website is in apps/ since 2026-10-21)
 CONTEXT = WORKSPACE / "_workspace" / "context"
 DISCONTINUED = WORKSPACE / "discontinued"     # dropped projects; their saved pages are served too
+TODO = CONTEXT / "TODO.yaml"                  # what's waiting on Parth: the To do page (todo.html)
 DIST = HERE / "dist"
 
 # The filter lists show these in this order.
@@ -306,9 +309,14 @@ def build():
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(path, target)
     (DIST / "data.json").write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    to_do = todo.make(TODO, WORKSPACE, PROJECTS, entries, warn)
+    (DIST / "todo.json").write_text(json.dumps(to_do, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
     size = (DIST / "data.json").stat().st_size
     print(f"{len(entries)} sessions → {DIST.relative_to(SITE)} (data.json {size / 1024:.0f} KB)")
+    items = sum(len(items) for items in to_do["sections"].values())
+    risky = len(to_do["repos"]["risky"]) if to_do["repos"] else "?"
+    print(f"To do: {items} items from TODO.yaml, {risky} repos with work that could be lost")
     return len(entries)
 
 

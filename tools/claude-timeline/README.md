@@ -13,20 +13,41 @@ they never go on the public website. It's a section of **Projects** (since
 2026-10-21): the top bar's Projects link opens the public showcase
 (`projects.html`), and its **Claude** tab goes to `claude.html` on the
 website, which forwards to the box. This page has the same Showcase / Claude
-tabs (styles from `projects.css`), so the way back is the Showcase tab. Off home Wi-Fi, the
+/ To do tabs (styles from `projects.css`), so the way back is the Showcase tab. Off home Wi-Fi, the
 box's address doesn't answer, so after 3 seconds it stops trying and says to
 connect to home Wi-Fi.
+
+The same build makes a second page, **To do** (`todo.html`, since 2026-10-21):
+what's waiting on Parth across `parth_project`. It's LAN-only for the same
+reason (it names Coles work), and the website's `todo.html` is its gateway. It
+has two parts:
+
+- **The list** in `parth_project/_workspace/context/TODO.yaml`: tests only he
+  can run (grouped by where: LEGION, phone, Azure…), decisions he owes, parked
+  things and research, plus a "Start here" pick. Every session keeps it current
+  (step 3 of the logging rule in the root `CLAUDE.md`). Its header lists the
+  fields. Each item links to the session logs it came from, which open their
+  cards on the Claude page.
+- **Work you could lose**, which nobody writes: `todo.py` finds every git repo in
+  `parth_project` on each build and lists the ones with uncommitted files,
+  commits not pushed, no remote, or a remote that isn't Parth's.
+  `repo_notes` in TODO.yaml adds a line to a repo's card. It's this laptop's
+  state at build time, and nothing is fetched first.
+
+If sessions were logged after the list's `updated` time, the page says so and
+links them, in case they left something that isn't on the list yet.
 
 ## Files
 
 | File | What it is |
 |---|---|
-| `build.py` | Reads the logs + `_workspace/context/LOG.md` and writes `dist/`: the page, `data.json`, and copies of the site files it shares (top bar styles, the Projects tabs, settings, Hinglish, transitions, wallpapers). It also copies every `.html` page saved in `parth_project/discontinued/<project>/` to `/discontinued/<project>/`, so pages like Artifact reviews open on the LAN without a Claude sign-in. |
-| `page/` | The page itself: `index.html`, `claude.js`, `claude.css`. |
+| `build.py` | Reads the logs + `_workspace/context/LOG.md` and writes `dist/`: the pages, `data.json`, `todo.json` (from `todo.py`), and copies of the site files it shares (top bar styles, the Projects tabs, settings, Hinglish, transitions, wallpapers). It also copies every `.html` page saved in `parth_project/discontinued/<project>/` to `/discontinued/<project>/`, so pages like Artifact reviews open on the LAN without a Claude sign-in. |
+| `todo.py` | The To do page's data: `_workspace/context/TODO.yaml`, checked (project names, logs that exist, dates), plus what git says about every repo. |
+| `page/` | The pages: `index.html`, `claude.js`, `claude.css` (Claude) and `todo.html`, `todo.js`, `todo.css` (To do). `handoff.js` copies in the settings the website passes along, on both. |
 | `deploy.py` | Runs `build.py`, then uploads `dist/` to `~/claude-timeline/` on the box and restarts the container. |
 | `update_site.py`, `Caddyfile`, `docker-compose.yml` | The box side: container `claude-timeline` (`caddy:2-alpine`, port 8120 → 80, `restart: unless-stopped`), same setup as Apex Dash. |
-| `dist/` | The build. **Git-ignored and must never be committed**: it's the full logs, and this repo is public. |
-| `../../claude.html` | The public gateway page the Projects page's Claude tab links to. |
+| `dist/` | The build. **Git-ignored and must never be committed**: it's the full logs and the to-do list, and this repo is public. |
+| `../../claude.html`, `../../todo.html` | The public gateway pages the Claude and To do tabs link to. Both use `../../lan-gateway.js`. |
 
 ## Updating it
 
@@ -86,10 +107,11 @@ that isn't on the lists) still shows up, using its heading, with a
 ## How the pieces talk
 
 - The website and the box are different sites, so settings saved in the
-  browser aren't shared. `claude.html` passes theme, accent, wallpaper,
-  language, clock and transitions along in the link (`#settings=…`), and the
-  page copies them in before anything draws. Changes made on the box's copy
-  stay there.
+  browser aren't shared. `claude.html` and `todo.html` pass theme, accent,
+  wallpaper, language, clock and transitions along in the link
+  (`#settings=…`), and `handoff.js` copies them in before anything draws.
+  Changes made on the box's copy stay there.
+- `todo.html?project=Claire` shows one project, through the gateway too.
 - Links work both ways: `claude.html?project=Coles#2026-10-14-…` lands on the
   same filter and card. Links inside a raw log to another session log jump to
   that card. Links to other files in the workspace are shown, not clickable.
