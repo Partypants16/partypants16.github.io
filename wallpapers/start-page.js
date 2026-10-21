@@ -31,6 +31,7 @@
       { name: "CrossPaste", icon: "📋", href: "http://192.168.212.60", service: "crosspaste" },
       { name: "Code Server", icon: "💻", href: "http://192.168.212.60:8080", service: "codeserver" },
       { name: "Netdata", icon: "📈", href: "http://192.168.212.60:19999", service: "netdata" },
+      { name: "n8n", icon: "⚙️", href: "http://192.168.212.60:5678", service: "n8n" },
       { name: "Apex Dash", icon: "🏎️", href: "http://192.168.212.60:8110", service: "apexdash" },
       { name: "Sonic", icon: "🦔", href: "http://192.168.212.60:8000" }
     ] },
