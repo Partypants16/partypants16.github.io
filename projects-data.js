@@ -1,8 +1,8 @@
 // The projects shown on projects.html and project.html (projects.js draws them).
 //
-// The six stories (PAT-AI, Claire, Apex Dash, LOVELESS book, Sonic laptop,
-// Parth's Palace) are simplified versions of their real history (git, session
-// logs and project docs). Parth approved the layout on 2026-10-22, so `sample`
+// The eight stories (PAT-AI, Claire, Apex Dash, LOVELESS book, Sonic laptop,
+// Parth's Palace, PrintPlace, NovaDiagnostics) are simplified versions of their
+// real history (git, session logs and project docs). Parth approved the layout on 2026-10-22, so `sample`
 // is off; setting it to true brings back the "Sample data" note and badges.
 // Later this file will be generated from the project history files (see the
 // 2026-10-21 plan in parth_project/_workspace/context/sessions/), and must not
@@ -609,13 +609,198 @@ const PROJECTS_DATA = {
       icon: "🧊",
       hue: 25,
       tagline: "See a 3D print on your real desk in AR before you print it.",
+      summary: "A 3D print can take hours, and from a slicer it's hard to tell how big something will really be. PrintPlace imports STL and 3MF files, shows them in 3D, and puts them on your real desk in AR at their true size. The library and the 3D preview work. AR opens on my phone now, and placing a model is the next test.",
       status: "building",
+      featured: true,
       kind: "Personal",
       categories: ["Android", "3D printing"],
       started: "2026-08-07",
-      technologies: ["Kotlin", "Jetpack Compose", "Filament", "ARCore"],
+      technologies: ["Kotlin", "Jetpack Compose", "Room", "Filament", "ARCore", "JUnit"],
       repo: { name: "Partypants16/PrintPlace", private: false },
-      claudeProject: "PrintPlace"
+      claudeProject: "PrintPlace",
+      commits: 12,
+      sessions: 4,
+
+      evolution: [
+        { label: "The idea", text: "Before printing something, see it on the desk where it'll go, at its real size." },
+        { label: "First build", text: "A library of STL and 3MF files and a 3D preview you can spin. The AR button was there from day one, but did nothing." },
+        { label: "What got in the way", text: "AR can't run on my laptop's emulator, so the AR code was written blind. The first time it ran on my phone, it crashed." },
+        { label: "Change of direction", text: "Each fix goes onto my phone as an APK, and what I see there decides the next fix. The app now says on screen which step it's stuck on." },
+        { label: "Now", text: "AR opens and shows the camera. Tapping to put a model on the table is the next thing to test." }
+      ],
+
+      events: [
+        {
+          id: "library",
+          date: "2026-08-07",
+          type: "milestone",
+          title: "A library of print files",
+          summary: "The first version could import, list and delete model files. It was already called AR Print Preview, with a View in AR button on every model.",
+          context: "The button didn't do anything yet. The plan was to build the app in numbered milestones, and AR was the last one.",
+          sources: [
+            { type: "git", ref: "a27ba71", label: "First template version" },
+            { type: "git", ref: "96163c2", label: "Gradle fixes" }
+          ]
+        },
+        {
+          id: "preview",
+          date: "2026-08-27",
+          type: "milestone",
+          title: "Reading STL and 3MF, and a 3D preview",
+          summary: "The app learned to read the shapes inside STL and 3MF files, measure them in millimetres, and show them in a 3D preview you spin with a finger.",
+          context: "Everything inside the app is in millimetres, because that's what slicers use. The preview draws with Filament, Google's 3D engine, straight from the app's own mesh code.",
+          outcome: "In September it went up again with its first tests: the camera maths, the file checks and the parsers.",
+          sources: [
+            { type: "git", ref: "08d44e0", label: "Importers and preview" },
+            { type: "git", ref: "b10628f", label: "With tests" }
+          ]
+        },
+        {
+          id: "lost-doc",
+          date: "2026-09-20",
+          type: "problem",
+          title: "The plan it was built from was gone",
+          summary: "Comments all over the code pointed to sections of a numbered design doc. That doc was never committed, and there's no copy anywhere.",
+          context: "I asked where PrintPlace was up to. The code was the only record of the plan.",
+          options: [
+            { text: "Keep looking for the old doc", chosen: false, note: "It wasn't in git history or anywhere on the laptop." },
+            { text: "Rebuild the docs from the code", chosen: true, note: "Loses whatever the old doc said that the code doesn't show." }
+          ],
+          why: "The code already showed the important choices: millimetres everywhere, no extra libraries for the 3D side, the database holding only file details.",
+          outcome: "A new README, an architecture doc and a milestones doc, all in the repo. They're now the source of truth, and every fix since is written up there.",
+          lesson: "If the plan only lives in a chat or on one laptop, one day it's gone.",
+          sources: [
+            { type: "git", ref: "c56d25a", label: "Docs and AR" },
+            { type: "note", ref: "docs/MILESTONES.md", label: "Milestones" },
+            { type: "claude", ref: "2026-09-20-printplace-docs-and-ar-milestone", label: "Docs and AR placement" }
+          ]
+        },
+        {
+          id: "raw-arcore",
+          date: "2026-09-20",
+          type: "decision",
+          key: true,
+          title: "AR built on ARCore directly",
+          summary: "AR placement got built: find a flat surface, tap to place the model at real size, then drag, twist and pinch it.",
+          context: "The 3D preview already worked with Filament. AR had to draw the camera feed behind the model in that same scene.",
+          options: [
+            { text: "A ready-made AR library (SceneView)", chosen: false, note: "Less code, but it brings its own older Filament, which could quietly break the preview that already worked." },
+            { text: "Google's ARCore with my own Filament code", chosen: true, note: "More code to write, but the preview and AR share one engine and one mesh builder." }
+          ],
+          why: "A broken preview might not show until it was on a phone. Every ARCore and Filament call was checked against the real libraries before writing code for it, not guessed.",
+          outcome: "Pinching is limited to between 2 cm and 5 m in real size, not a percentage, because 100% of a keychain and 10% of a big print are both useless.",
+          sources: [
+            { type: "git", ref: "c56d25a", label: "AR placement" },
+            { type: "note", ref: "docs/ARCHITECTURE.md", label: "Architecture" },
+            { type: "claude", ref: "2026-09-20-printplace-docs-and-ar-milestone", label: "Docs and AR placement" }
+          ]
+        },
+        {
+          id: "ar-optional",
+          date: "2026-09-20",
+          type: "decision",
+          title: "AR is a bonus, not a requirement",
+          summary: "On a phone without AR, the app says so and offers the 3D preview instead.",
+          options: [
+            { text: "Require AR", chosen: false, note: "Phones without it couldn't even install the app." },
+            { text: "Make AR optional", chosen: true, note: "One more screen to build: the fallback." }
+          ],
+          why: "The library and the preview are useful on their own, so the app shouldn't hide from phones that can't do AR.",
+          sources: [
+            { type: "claude", ref: "2026-09-20-printplace-docs-and-ar-milestone", label: "Docs and AR placement" }
+          ]
+        },
+        {
+          id: "checking-forever",
+          date: "2026-09-20",
+          type: "problem",
+          title: "Stuck on \"Checking...\" forever",
+          summary: "Running the app on the emulator found a bug the build couldn't: the AR screen spun forever.",
+          context: "ARCore's first answer to \"does this phone support AR?\" is often \"still checking\". The app asked once and waited for good.",
+          outcome: "It now asks every 0.2 seconds for up to 10 seconds, then falls back to the 3D preview. A unit test caught a second bug before that: models would have stood upside down.",
+          lesson: "Running it found what compiling couldn't. But the emulator can't do real AR, so the real test was still to come.",
+          sources: [
+            { type: "git", ref: "c56d25a", label: "AR placement" },
+            { type: "claude", ref: "2026-09-20-printplace-docs-and-ar-milestone", label: "Docs and AR placement" }
+          ]
+        },
+        {
+          id: "apk-folder",
+          date: "2026-10-06",
+          type: "milestone",
+          title: "An APK to put on my phone",
+          summary: "Every Android project's installable APK went into one folder, so I could try PrintPlace on my own phone.",
+          context: "I asked whether PrintPlace was finished. It wasn't: the AR had never run on real hardware.",
+          outcome: "I also found GitHub's main branch doesn't have the AR work. It's only on master, and merging them is still to do.",
+          sources: [
+            { type: "claude", ref: "2026-10-06-latest-android-apks", label: "Android APKs" }
+          ]
+        },
+        {
+          id: "bambu-3mf",
+          date: "2026-10-07",
+          type: "problem",
+          title: "My Bambu Studio files wouldn't open",
+          summary: "Every file in my to-print folder said \"No printable geometry was found in this file.\"",
+          context: "Bambu Studio saves each object as pieces that point to other files inside the 3MF. The parser only read shapes stored directly, and the made-up test files never had pieces.",
+          options: [
+            { text: "A quick patch for these files", chosen: false, note: "Faster, but the next slicer file would break it." },
+            { text: "A proper fix", chosen: true, note: "Pieces inside pieces, reused pieces, their positions, and parts not meant to print." }
+          ],
+          why: "I asked for a proper fix. The parser also reads files as a stream now, because the real ones go past 500,000 triangles, too big to load whole on a phone.",
+          outcome: "A new test opens all seven of my real files. Projects with several print plates still show every plate side by side.",
+          lesson: "Test with real files. Made-up ones only test what you already thought of.",
+          sources: [
+            { type: "git", ref: "256d3df", label: "Bambu Studio 3MF" },
+            { type: "claude", ref: "2026-10-07-remote-sync", label: "3MF and AR fixes" }
+          ]
+        },
+        {
+          id: "ar-crash",
+          date: "2026-10-07",
+          type: "problem",
+          key: true,
+          title: "AR crashed the moment it opened",
+          summary: "The first time AR ran on my phone, with a dragon model, the app crashed straight away.",
+          context: "The dragon was fine in the 3D preview, so it looked like the model's fault.",
+          why: "It wasn't the model: any model would have crashed. ARCore needs a drawing context on the thread that calls it, and that thread had none, because Filament keeps its own.",
+          outcome: "Now the two share one context, and any other AR error shows a message instead of crashing.",
+          lesson: "Code that's never touched hardware isn't finished, however many tests it passes.",
+          sources: [
+            { type: "git", ref: "d985d4e", label: "AR crash fix" },
+            { type: "claude", ref: "2026-10-07-remote-sync", label: "3MF and AR fixes" }
+          ]
+        },
+        {
+          id: "mirrored-feed",
+          date: "2026-10-13",
+          type: "problem",
+          title: "A flipped camera and no model",
+          summary: "The crash fix worked: AR opened and showed the camera. But the picture was flipped, and no model appeared on the table.",
+          context: "None of this code had run on a phone before, so it was read line by line for anything that only shows up on hardware.",
+          outcome: "Three causes. The camera image was flipped by a setting meant for other files. Any wobble of a finger counted as a drag, so taps almost never placed anything. The 3D camera used the sensor's sideways angle, not the screen's. All three are fixed, with hints on screen for each step, but not tested on the phone yet.",
+          lesson: "When a test fails silently, make the app say where it stopped. Now the next test will tell me.",
+          sources: [
+            { type: "note", ref: "docs/MILESTONES.md", label: "Milestones" },
+            { type: "claude", ref: "2026-10-13-printplace-ar-flipped-no-model", label: "Flipped feed, no model" }
+          ]
+        }
+      ],
+
+      lessons: [
+        { title: "The phone is the real test", text: "Dozens of unit tests passed. The first real run crashed, and the second showed a flipped camera." },
+        { title: "Write the plan in the repo", text: "The original design doc lived somewhere else, and it's gone. The docs are in the repo now." },
+        { title: "Test with real files", text: "Slicer files used a part of 3MF my test files never did." },
+        { title: "Make failures talk", text: "On-screen hints turn \"it didn't work\" into which step it stopped at." }
+      ],
+
+      focus: "Trying the latest AR fixes on my phone: does the camera look right, and does a tap put the model on the table?",
+      next: [
+        "Test the AR fixes on my phone, then commit them",
+        "Show where ARCore has found a surface, if tapping is still hard",
+        "Pick one plate from a project with several",
+        "Get the AR work onto GitHub's main branch"
+      ]
     },
     {
       slug: "novadiagnostics",
@@ -623,13 +808,174 @@ const PROJECTS_DATA = {
       icon: "📊",
       hue: 330,
       tagline: "A dashboard for what an Android phone is doing under the hood.",
+      summary: "A calm dashboard of what an Android phone is really doing: CPU, memory, storage, battery, network, heat and sensors, live and over time, plus tools and troubleshooting guides. Android keeps a lot of this from normal apps, so anything it can't read says Unavailable, and why, instead of a made-up number. It's paused, and has only run on emulators so far.",
       status: "paused",
+      featured: true,
       kind: "Personal",
       categories: ["Android"],
       started: "2026-08-07",
-      technologies: ["Kotlin", "Jetpack Compose", "Material 3"],
+      technologies: ["Kotlin", "Jetpack Compose", "Material 3", "Coroutines", "DataStore"],
       repo: { name: "Partypants16/NovaDiagnostics", private: false },
-      claudeProject: "NovaDiagnostics"
+      claudeProject: "NovaDiagnostics",
+      commits: 4,
+
+      evolution: [
+        { label: "The idea", text: "See what my phone is doing under the hood, in a calm dashboard rather than a gamer HUD." },
+        { label: "First build", text: "SysScope: four tabs reading real Android data, with a demo mode for the emulator." },
+        { label: "What got in the way", text: "Android keeps a lot from normal apps: CPU use on many phones, temperatures, even the chip's name." },
+        { label: "Change of direction", text: "Show every reading it can't get as Unavailable, with the reason. Build tools and guides around the rest." },
+        { label: "Now", text: "Paused. It works on emulators and has an APK, but it's never been tried on a real phone." }
+      ],
+
+      events: [
+        {
+          id: "sysscope",
+          date: "2026-08-07",
+          type: "milestone",
+          title: "It started as SysScope",
+          summary: "The first commit was an app called SysScope, with four tabs: Overview, Monitor, History and Tools.",
+          context: "It had two sources of data from the start: the phone's real readings, and a demo source with made-up ones. Next to the code sat a pile of backup copies, one for each time a file was edited.",
+          sources: [
+            { type: "git", ref: "75cb85a", label: "First commit" }
+          ]
+        },
+        {
+          id: "first-test-version",
+          date: "2026-08-08",
+          type: "milestone",
+          title: "A first version to test",
+          summary: "A day later it was NovaDiagnostics, with settings, battery and network details, a live sensor viewer, app usage, and tests for vibration, the torch, the screen and touch.",
+          context: "It asks for almost nothing: no storage, location, camera or contacts. App usage only works if you turn it on yourself in Android's settings.",
+          outcome: "It ran without a crash on an Android 14 emulator, with JVM tests for the maths, the buffers and the demo data.",
+          sources: [
+            { type: "git", ref: "2ab1056", label: "First version for testing" },
+            { type: "note", ref: "README.md", label: "README" }
+          ]
+        },
+        {
+          id: "unavailable",
+          date: "2026-08-08",
+          type: "decision",
+          key: true,
+          title: "Unavailable, never a fake zero",
+          summary: "Any reading the phone won't give says Unavailable, with the reason, instead of 0 or a guess.",
+          context: "A normal Android app can't read CPU use on many real phones. There's no public way to get CPU or GPU temperature, or the chip's marketing name. Emulators often hide battery current too.",
+          options: [
+            { text: "Show 0, or a best guess", chosen: false, note: "Always looks full, but some of the numbers are lies." },
+            { text: "Say Unavailable, and why", chosen: true, note: "More blank spots, especially on real phones." }
+          ],
+          why: "A diagnostics app that makes numbers up is worse than none. 0% CPU and \"we can't read CPU here\" mean very different things.",
+          outcome: "Every reading is either Available or Unavailable with a reason, so a gap can't quietly turn into a zero. Network totals say they're for the whole phone since it started, not just this app.",
+          sources: [
+            { type: "git", ref: "2ab1056", label: "First version for testing" },
+            { type: "note", ref: "README.md", label: "Android limitations" }
+          ]
+        },
+        {
+          id: "demo-mode",
+          date: "2026-08-08",
+          type: "decision",
+          key: true,
+          title: "A demo mode you can't mistake for real",
+          summary: "Demo mode fills every screen with believable made-up readings, so the whole app can be tried on an emulator.",
+          context: "An emulator has very little real data to show, which leaves most of the charts empty.",
+          why: "Fake data is only safe if nobody could take it for real. So demo mode is off by default, every screen gets a green SIMULATED DATA banner, and the phone becomes \"Nova Simulated Devices, Simulator X9\".",
+          outcome: "The sensor list ignores demo mode and always shows the real ones, because whether a sensor exists isn't a reading.",
+          sources: [
+            { type: "git", ref: "2ab1056", label: "First version for testing" },
+            { type: "note", ref: "README.md", label: "Demo mode" }
+          ]
+        },
+        {
+          id: "history-in-memory",
+          date: "2026-08-08",
+          type: "decision",
+          title: "History only while the app runs",
+          summary: "History charts cover up to 24 hours, but only from what the app collected while it was open.",
+          options: [
+            { text: "A background recorder and a database", chosen: false, note: "A real 24 hours, but a lot to get right: battery use, storage, cleaning up." },
+            { text: "A capped in-memory buffer", chosen: true, note: "Simple and safe, but it's gone when the app closes." }
+          ],
+          why: "A correct small version beat a rushed database. The History screen says how it works, and two minutes of data shows as two minutes, never filled in.",
+          outcome: "The same thinking kept out a dependency-injection framework and a chart library: an app this size and 90-point charts didn't need them.",
+          sources: [
+            { type: "git", ref: "2ab1056", label: "First version for testing" },
+            { type: "note", ref: "README.md", label: "History behaviour" }
+          ]
+        },
+        {
+          id: "troubleshooting",
+          date: "2026-08-27",
+          type: "milestone",
+          title: "Troubleshooting guides, and Android 16",
+          summary: "Tools got a library of 13 common Android problems, each with step-by-step fixes and a link to Google's own help page.",
+          context: "The app moved up to target Android 16 at the same time.",
+          sources: [
+            { type: "git", ref: "68debae", label: "Troubleshooting and Android 16" }
+          ]
+        },
+        {
+          id: "three-copies",
+          date: "2026-09-14",
+          type: "problem",
+          key: true,
+          title: "Three copies that didn't match",
+          summary: "GitHub's main branch had the 8 August version, master had 27 August's, and the laptop I build on had its own newer one.",
+          context: "All three grew from the same first commit and went separate ways.",
+          options: [
+            { text: "Start again from GitHub's version", chosen: false, note: "Loses the newer tools and fixes on the laptop." },
+            { text: "Merge, and keep the laptop's version where they clash", chosen: true, note: "Master becomes the real one, but main stays behind." }
+          ],
+          why: "The laptop's copy had the newest build tools and fixes. The same day, SysScope's old package name finally went, and so did the pile of backup files.",
+          outcome: "Master is the real app now. In October, merging it into main hit 17 clashes and wasn't pushed, so GitHub still shows the August version first.",
+          lesson: "Keep one main branch. Copies left alone drift apart.",
+          sources: [
+            { type: "git", ref: "5637f27", label: "Rename, wrapper, no backups" },
+            { type: "git", ref: "22df265", label: "Merge" },
+            { type: "claude", ref: "2026-10-06-latest-android-apks", label: "The main branch" }
+          ]
+        },
+        {
+          id: "empty-display",
+          date: "2026-09-14",
+          type: "problem",
+          title: "Display info was always empty",
+          summary: "On a fresh Android 16 emulator, the Display section showed nothing, and the app never said why.",
+          context: "The code asked for the display in a way Android only allows from a screen, not from the app as a whole. The error was caught and logged, so the app never crashed. It just quietly showed nothing.",
+          outcome: "It asks Android's display service instead, which works from anywhere. Resting CPU cores that report 0 MHz are now left out instead of shown as \"0 MHz\".",
+          lesson: "Catching every error keeps an app alive, but it hides bugs too. Only the logs showed this one.",
+          sources: [
+            { type: "git", ref: "5637f27", label: "Android 16 fixes" },
+            { type: "note", ref: "README.md", label: "Emulator behaviour" }
+          ]
+        },
+        {
+          id: "paused",
+          date: "2026-10-06",
+          type: "pause",
+          title: "Paused, never on a real phone",
+          summary: "Its APK went into one folder with my other Android apps, but there's been no new work since September.",
+          context: "Everything so far is from emulators. A real phone should block more of the CPU readings and show far more sensors.",
+          sources: [
+            { type: "claude", ref: "2026-10-06-latest-android-apks", label: "Android APKs" }
+          ]
+        }
+      ],
+
+      lessons: [
+        { title: "Honest gaps beat fake numbers", text: "Unavailable, with a reason, tells you more than a zero that isn't true." },
+        { title: "Label fake data loudly", text: "Demo mode is only safe because nobody could mistake it for real." },
+        { title: "Keep one main branch", text: "Three copies of the same app drifted apart in a month." },
+        { title: "A silent catch hides bugs", text: "The app never crashed. It just showed nothing, and only the logs said why." }
+      ],
+
+      focus: "Paused since September. The next step, when I come back, is trying it on a real phone.",
+      next: [
+        "Install the APK on my phone and see which readings Android blocks",
+        "Make master GitHub's main branch, so the repo shows the current app",
+        "Keep History between launches with a database",
+        "A home-screen widget with one or two readings"
+      ]
     },
     {
       slug: "loveless",
