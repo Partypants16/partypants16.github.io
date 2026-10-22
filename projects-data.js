@@ -1,10 +1,10 @@
 // The projects shown on projects.html and project.html (projects.js draws them).
 //
-// SAMPLE DATA, for getting the layout right. The four stories (PAT-AI, Apex
-// Dash, LOVELESS book, Sonic laptop) are simplified versions of their real
-// history (git, session logs and project docs), but Parth hasn't reviewed them
-// yet, and the pages say so while `sample` is true. Later this file will be
-// generated from the project history files (see the 2026-10-21 plan in
+// The four stories (PAT-AI, Apex Dash, LOVELESS book, Sonic laptop) are
+// simplified versions of their real history (git, session logs and project
+// docs). Parth approved the layout on 2026-10-22, so `sample` is off; setting
+// it to true brings back the "Sample data" note and badges. Later this file
+// will be generated from the project history files (see the 2026-10-21 plan in
 // parth_project/_workspace/context/sessions/), and must not be hand-edited then.
 //
 // Everything here is public: this repo is the public website. Never put Coles
@@ -25,7 +25,7 @@
 //   ([{ type: "git" | "claude" | "note", ref, label }]).
 
 const PROJECTS_DATA = {
-  sample: true,
+  sample: false,
   projects: [
     {
       slug: "pat-ai",
