@@ -1548,6 +1548,50 @@ a.evidence-chip:hover {
   color: var(--ev-milestone);
 }
 
+/* Photos */
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+}
+
+.photo-card {
+  margin: 0;
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  box-shadow: var(--pj-shadow);
+}
+
+.photo-card a {
+  display: block;
+}
+
+.photo-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  transition: transform .3s ease;
+}
+
+.photo-card a:hover img,
+.photo-card a:focus-visible img {
+  transform: scale(1.03);
+}
+
+.photo-card figcaption {
+  padding: .85rem 1.1rem 1rem;
+  color: var(--muted-text);
+  font-size: .92rem;
+  line-height: 1.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .photo-card img { transition: none; }
+}
+
 /* What I learned */
 .lesson-card {
   padding: 1.4rem 1.5rem;

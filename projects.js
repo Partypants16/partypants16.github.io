@@ -339,6 +339,9 @@
 
     // [id, label in the jump bar, heading, line under it, what goes in it]
     const sections = [];
+    if ((p.photos || []).length) {
+      sections.push(["photos", "Photos", "Photos", "What it actually looks like.", () => photos(p.photos)]);
+    }
     if ((p.evolution || []).length) {
       sections.push(["journey", "Journey", "The journey", "How the idea turned into what it is now.", () => journey(p)]);
     }
@@ -697,6 +700,24 @@
       }
       card.append(timelineLink(e));
       grid.append(card);
+    });
+    return grid;
+  }
+
+  // Each photo opens full size in a new tab.
+  function photos(items) {
+    const grid = el("div", "photo-grid");
+    items.forEach(photo => {
+      const figure = el("figure", "photo-card");
+      const link = el("a");
+      externalLink(link, photo.src);
+      const img = el("img");
+      img.src = photo.src;
+      img.alt = photo.alt || "";
+      link.append(img);
+      figure.append(link);
+      if (photo.caption) figure.append(data("figcaption", "", photo.caption));
+      grid.append(figure);
     });
     return grid;
   }

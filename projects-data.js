@@ -17,6 +17,8 @@
 //   technologies, repo ({ name, private } or null; a private one can leave out
 //   its name), claudeProject (its name on the Claude page, or null). A project
 //   with `events` gets a full story page; the others are rows in the archive.
+//   Optional `photos` ([{ src, alt, caption }], files in images/projects/<slug>/,
+//   resized and with their metadata stripped) adds a Photos section to the story.
 //
 // Event fields: id, date, type (milestone | decision | experiment | problem |
 //   deadend | refactor | direction | release | pause | resume), title, summary,
@@ -331,6 +333,12 @@ const PROJECTS_DATA = {
       claudeProject: "Physical projects",
       commits: 4,
       sessions: 4,
+
+      photos: [
+        { src: "images/projects/loveless/finished.jpg", alt: "The finished LOVELESS book standing up: black damask cover on kraft paper, a white front label with the title and an engraved pair of wings, and a spine label.", caption: "The finished book: the booklet stapled into its damask cover, with the front and spine labels." },
+        { src: "images/projects/loveless/booklet-in-cover.jpg", alt: "The folded white booklet, title page showing, lying inside the open kraft-paper cover.", caption: "29 Sep: the printed booklet sitting in the open cover, with the staples that buckled beside the fold." },
+        { src: "images/projects/loveless/cover-outside.jpg", alt: "The soft cover wrap from outside: black damask pattern printed on kraft paper.", caption: "29 Sep: the soft cover from outside, black damask on kraft, before the labels went on." }
+      ],
 
       evolution: [
         { label: "The idea", text: "An in-universe copy of LOVELESS, the kind Genesis could carry, bound by hand." },

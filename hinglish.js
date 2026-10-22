@@ -256,6 +256,8 @@ const HINGLISH = {
     "Claude sessions": "Claude sessions",
     "Claude session": "Claude session",
     "Journey": "Safar",
+    "Photos": "Photos",
+    "What it actually looks like.": "Asal mein yeh aisa dikhta hai.",
     "The journey": "Safar",
     "How the idea turned into what it is now.": "Idea kaise badal kar aaj jaisa bana.",
     "Big calls": "Bade faisle",
