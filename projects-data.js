@@ -7,7 +7,8 @@
 // Later this file will be generated from the project history files (see the
 // 2026-10-21 plan in parth_project/_workspace/context/sessions/), and must not
 // be hand-edited then. Parth's original proposal for this section is
-// docs/personal_website_project_history_idea.md.
+// _docs/personal_website_project_history_idea.md (in the repo, but not on the
+// site: GitHub Pages builds with Jekyll, which skips folders starting with "_").
 //
 // Everything here is public: this repo is the public website. Never put Coles
 // work, LAN addresses or local paths in it. Apex Dash's trailer and screenshots
