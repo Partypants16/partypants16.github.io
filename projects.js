@@ -338,7 +338,7 @@
     const events = sortEvents(p.events);
 
     if (DATA.sample) root.append(sampleNote());
-    root.append(hero(p));
+    root.append(p.showcase ? storePage(p) : hero(p));
 
     // [id, label in the jump bar, heading, line under it, what goes in it]
     const sections = [];
@@ -723,6 +723,178 @@
       grid.append(figure);
     });
     return grid;
+  }
+
+  // ---------- a game's store page (projects with `showcase`) ----------
+  // Shown in place of the hero, laid out like a Steam store page: media viewer
+  // and info panel, then a status box, "About this game" and requirements.
+
+  function storePage(p) {
+    const s = p.showcase;
+    const page = el("header", "store");
+
+    const crumbs = el("div", "store-crumbs"); // not a <nav>: the site styles every nav as its top bar
+    crumbs.setAttribute("role", "navigation");
+    crumbs.setAttribute("aria-label", "Breadcrumb");
+    const home = el("a", "", "Projects");
+    home.href = "projects.html";
+    crumbs.append(home);
+    (s.breadcrumb || []).forEach(part => crumbs.append(el("span", "store-sep", "›"), data("span", "", part)));
+    crumbs.append(el("span", "store-sep", "›"), data("span", "", p.name));
+    page.append(crumbs, data("h1", "store-title", p.name));
+
+    const top = el("div", "store-top");
+    top.append(storeMedia(s, p.name), storeInfo(p));
+    page.append(top, storeStatus(p));
+
+    const lower = el("div", "store-lower");
+    const about = el("section", "store-about");
+    about.append(el("h2", "store-heading", "About this game"));
+    if (p.summary) about.append(data("p", "", p.summary));
+    if ((s.features || []).length) {
+      const list = data("ul", "store-features");
+      s.features.forEach(item => list.append(el("li", "", item)));
+      about.append(list);
+    }
+    lower.append(about);
+    if ((s.requirements || []).length) {
+      const req = el("section", "store-req");
+      req.append(el("h2", "store-heading", "System requirements"));
+      const cols = el("div", "store-req-cols");
+      s.requirements.forEach(group => {
+        const col = el("div");
+        col.append(data("h3", "", group.label));
+        const dl = el("dl");
+        group.items.forEach(([label, value]) => dl.append(data("dt", "", label), data("dd", "", value)));
+        col.append(dl);
+        cols.append(col);
+      });
+      req.append(cols);
+      lower.append(req);
+    }
+    page.append(lower);
+    return page;
+  }
+
+  // The big viewer plus a strip of thumbnails; the trailer (if any) comes first.
+  function storeMedia(s, name) {
+    const wrap = el("div", "store-media");
+    const screen = el("div", "store-stage");
+    const video = el("video");
+    const image = el("img");
+    image.alt = "";
+    screen.append(video, image);
+
+    const items = [];
+    if (s.trailer) items.push({ kind: "video", src: s.trailer.src, thumb: s.trailer.poster, alt: name + " trailer" });
+    (s.screenshots || []).forEach(shot => items.push({ kind: "image", src: shot.src, thumb: shot.thumb || shot.src, alt: shot.alt || "" }));
+    if (s.trailer) {
+      video.src = s.trailer.src;
+      video.poster = s.trailer.poster || "";
+      video.controls = true;
+      video.preload = "metadata";
+      video.playsInline = true;
+      video.setAttribute("aria-label", name + " trailer");
+    }
+
+    const strip = el("div", "store-strip");
+    const track = el("div", "store-thumbs");
+    track.setAttribute("role", "group");
+    track.setAttribute("aria-label", "Trailer and screenshots");
+    const thumbs = items.map((item, index) => {
+      const btn = el("button", "store-thumb" + (item.kind === "video" ? " is-video" : ""));
+      btn.type = "button";
+      btn.setAttribute("aria-label", item.kind === "video" ? "Trailer" : "Screenshot " + (s.trailer ? index : index + 1));
+      const img = el("img");
+      img.src = item.thumb;
+      img.alt = "";
+      btn.append(img);
+      if (item.kind === "video") btn.append(icon("resume"));
+      btn.addEventListener("click", () => show(index));
+      track.append(btn);
+      return btn;
+    });
+    const prev = el("button", "store-arrow store-arrow--prev");
+    prev.type = "button";
+    prev.setAttribute("aria-label", "Previous");
+    prev.append(icon("chevron"));
+    const next = el("button", "store-arrow");
+    next.type = "button";
+    next.setAttribute("aria-label", "Next");
+    next.append(icon("chevron"));
+    strip.append(prev, track, next);
+    wrap.append(screen, strip);
+
+    let current = 0;
+    function show(index) {
+      current = (index + items.length) % items.length;
+      const item = items[current];
+      const isVideo = item.kind === "video";
+      if (!isVideo) {
+        video.pause();
+        image.src = item.src;
+        image.alt = item.alt;
+      }
+      video.hidden = !isVideo;
+      image.hidden = isVideo;
+      thumbs.forEach((btn, i) => btn.setAttribute("aria-pressed", String(i === current)));
+      const thumb = thumbs[current]; // scroll the strip only, never the page
+      track.scrollTo({ left: thumb.offsetLeft - (track.clientWidth - thumb.offsetWidth) / 2, behavior: "smooth" });
+    }
+    prev.addEventListener("click", () => show(current - 1));
+    next.addEventListener("click", () => show(current + 1));
+    if (items.length) {
+      video.hidden = items[0].kind !== "video";
+      image.hidden = !video.hidden;
+      if (image.hidden === false) { image.src = items[0].src; image.alt = items[0].alt; }
+      thumbs.forEach((btn, i) => btn.setAttribute("aria-pressed", String(i === 0)));
+    }
+    return wrap;
+  }
+
+  function storeInfo(p) {
+    const s = p.showcase;
+    const side = el("aside", "store-info");
+    if (s.header) {
+      const img = el("img", "store-capsule");
+      img.src = s.header;
+      img.alt = "";
+      side.append(img);
+    }
+    side.append(data("p", "store-blurb", p.tagline));
+    const dl = el("dl", "store-details");
+    const row = (label, value) => {
+      dl.append(el("dt", "", label));
+      const dd = el("dd");
+      dd.append(value);
+      dl.append(dd);
+    };
+    row("Release date", el("span", "", p.status === "complete" ? "Released" : "In development"));
+    row("Started", data("span", "", longDate(p.started)));
+    row("Last update", data("span", "", longDate(lastUpdate(p))));
+    if (s.developer) row("Developer", data("span", "", s.developer));
+    row("Built with", data("span", "", (p.technologies || []).join(", ")));
+    side.append(dl);
+    if ((s.tags || []).length) {
+      side.append(el("p", "store-tags-label", "Tags"));
+      const tags = data("ul", "store-tags");
+      s.tags.forEach(tag => tags.append(el("li", "", tag)));
+      side.append(tags);
+    }
+    return side;
+  }
+
+  // Where Steam has the buy box: how far along it is, and the links.
+  function storeStatus(p) {
+    const box = el("div", "store-status");
+    const text = el("div");
+    const heading = el("h2");
+    heading.append(el("span", "", p.status === "complete" ? "Finished" : "In development"), ": ",
+                   el("span", "", stage(p)[0]));
+    text.append(heading);
+    if (p.focus) text.append(data("p", "", p.focus));
+    box.append(text, lifecycle(p), actions(p));
+    return box;
   }
 
   function lessons(items) {

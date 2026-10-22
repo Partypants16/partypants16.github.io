@@ -8,7 +8,9 @@
 // parth_project/_workspace/context/sessions/), and must not be hand-edited then.
 //
 // Everything here is public: this repo is the public website. Never put Coles
-// work, Apex Dash art, LAN addresses or local paths in it.
+// work, LAN addresses or local paths in it. Apex Dash's trailer and screenshots
+// (which show Ring Racers art) are here because Parth chose to publish them on
+// 2026-10-22; the game itself and its raw assets still never go here.
 //
 // Project fields:
 //   slug, name, icon (emoji), hue (0-360, the project's colour), tagline,
@@ -19,6 +21,10 @@
 //   with `events` gets a full story page; the others are rows in the archive.
 //   Optional `photos` ([{ src, alt, caption }], files in images/projects/<slug>/,
 //   resized and with their metadata stripped) adds a Photos section to the story.
+//   Optional `showcase` (games) swaps the story's hero for a Steam-style store
+//   page: { breadcrumb, developer, header, trailer: { src, poster },
+//   screenshots: [{ src, thumb, alt }], tags, features, requirements:
+//   [{ label, items: [[label, value]] }] }.
 //
 // Event fields: id, date, type (milestone | decision | experiment | problem |
 //   deadend | refactor | direction | release | pause | resume), title, summary,
@@ -1139,6 +1145,47 @@ const PROJECTS_DATA = {
       technologies: ["TypeScript", "Three.js", "Vite", "Kotlin"],
       repo: null,
       claudeProject: "Apex Dash",
+      showcase: {
+        breadcrumb: ["Games", "Racing"],
+        developer: "Parth",
+        header: "images/projects/apex-dash/header.jpg",
+        trailer: { src: "images/projects/apex-dash/trailer.mp4", poster: "images/projects/apex-dash/poster.jpg" },
+        screenshots: [
+          { src: "images/projects/apex-dash/shot-01.jpg", thumb: "images/projects/apex-dash/shot-01-thumb.jpg", alt: "Rocket start on Palm Coast: the countdown hits 1, with the player's blue car on the grid and the Apex Dash start gantry ahead." },
+          { src: "images/projects/apex-dash/shot-02.jpg", thumb: "images/projects/apex-dash/shot-02-thumb.jpg", alt: "Driver select: ten driver portraits, Sonic picked, with his stats and his car on a glowing turntable." },
+          { src: "images/projects/apex-dash/shot-03.jpg", thumb: "images/projects/apex-dash/shot-03-thumb.jpg", alt: "Night racing through the neon city of Neon Boulevard, with pixel-art billboards on the buildings." },
+          { src: "images/projects/apex-dash/shot-04.jpg", thumb: "images/projects/apex-dash/shot-04-thumb.jpg", alt: "Frostbite Pass: a pink car on a snowy mountain road, the low-grip circuit." },
+          { src: "images/projects/apex-dash/shot-05.jpg", thumb: "images/projects/apex-dash/shot-05-thumb.jpg", alt: "Magma Ridge: racing at night beside a lava sea under a red sky." },
+          { src: "images/projects/apex-dash/shot-06.jpg", thumb: "images/projects/apex-dash/shot-06-thumb.jpg", alt: "Mushroom Grove: a forest track lined with giant pixel-art mushrooms." },
+          { src: "images/projects/apex-dash/shot-07.jpg", thumb: "images/projects/apex-dash/shot-07-thumb.jpg", alt: "Starlight Orbit: a space-station ring at night, with glowing rings beside the track." },
+          { src: "images/projects/apex-dash/shot-08.jpg", thumb: "images/projects/apex-dash/shot-08-thumb.jpg", alt: "Sunset Speedway: the grand-prix circuit at golden hour, between grandstands." },
+          { src: "images/projects/apex-dash/shot-09.jpg", thumb: "images/projects/apex-dash/shot-09-thumb.jpg", alt: "Grand Prix results: the champion podium and the final points table." },
+          { src: "images/projects/apex-dash/shot-10.jpg", thumb: "images/projects/apex-dash/shot-10-thumb.jpg", alt: "The Android version: the same race on a phone, with a steering stick and GAS, BRAKE and DRIFT pads." }
+        ],
+        tags: ["Racing", "Arcade", "Drifting", "3D", "Singleplayer", "Browser", "Android", "Controller support"],
+        features: [
+          "Ten drivers, each with their own car and stats. Average lap times are within 1.6% of each other.",
+          "Ten circuits, each with its own look and music: seaside, countryside, a neon city, casino night, desert, snow, a volcano, a mushroom forest, a space station and a grand-prix speedway.",
+          "Drift to charge a boost that goes blue, orange, then purple. Let go to fire it.",
+          "Rocket start: hit the accelerator in the last half-second before GO. Too early and you stall.",
+          "Grand Prix (two five-race cups), Quick Race on any circuit at easy, normal or hard, and Time Trial with your best laps saved.",
+          "Seven AI rivals that follow a racing line, brake for corners and pick a side to pass.",
+          "Play with a keyboard, a gamepad, or touch on Android."
+        ],
+        requirements: [
+          { label: "PC", items: [
+            ["OS", "Windows, macOS or Linux"],
+            ["Browser", "A recent Edge, Chrome or Firefox"],
+            ["Graphics", "Built-in graphics are enough (41 to 61 fps in testing on a laptop with no graphics card)"],
+            ["Input", "Keyboard or gamepad"]
+          ] },
+          { label: "Android", items: [
+            ["App", "The Apex Dash app (APK)"],
+            ["Input", "Touch: steering stick, buttons or tilt, plus GAS, BRAKE and DRIFT pads"],
+            ["Network", "None needed: it runs fully offline"]
+          ] }
+        ]
+      },
       commits: 8,
       sessions: 5,
 

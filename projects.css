@@ -806,6 +806,357 @@ a.archive-row:focus-visible {
 
 /* ---------- One project's story (project.html) ---------- */
 
+/* A game's store page (projects with `showcase`): laid out like a Steam page,
+   and always dark, whatever the site theme. */
+.store {
+  --store-bg: #1b2838;
+  --store-panel: #16202d;
+  --store-text: #c7d5e0;
+  --store-dim: #8f98a0;
+  --store-accent: #66c0f4;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  padding: 1.75rem 1.75rem 2rem;
+  border-radius: 22px;
+  color: var(--store-text);
+  background:
+    radial-gradient(70% 50% at 50% 0%, rgba(102, 192, 244, .14), transparent 70%),
+    linear-gradient(180deg, #1f3448 0%, var(--store-bg) 320px);
+  box-shadow: var(--pj-shadow-lift);
+}
+
+.store-crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+  color: var(--store-dim);
+  font-size: .85rem;
+}
+
+.store-crumbs a {
+  color: var(--store-dim);
+}
+
+.store-crumbs a:hover {
+  color: #fff;
+}
+
+.store-title {
+  margin: .35rem 0 1.25rem;
+  color: #fff;
+  font-size: clamp(1.8rem, 4.5vw, 2.6rem);
+  line-height: 1.1;
+}
+
+.store-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1.85fr) minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.store-stage {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #000;
+}
+
+.store-stage video,
+.store-stage img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.store-stage [hidden] {
+  display: none;
+}
+
+.store-strip {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  margin-top: .5rem;
+}
+
+.store-thumbs {
+  position: relative;
+  display: flex;
+  flex: 1;
+  gap: .4rem;
+  overflow-x: auto;
+  padding: .3rem 0 .45rem;
+  scrollbar-width: thin;
+  scrollbar-color: #3d5266 transparent;
+}
+
+.store-thumb {
+  position: relative;
+  flex: 0 0 auto;
+  width: 116px;
+  aspect-ratio: 16 / 9;
+  padding: 0;
+  border: 2px solid transparent;
+  background: #000;
+  cursor: pointer;
+  opacity: .62;
+  transition: opacity .15s ease, border-color .15s ease;
+}
+
+.store-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.store-thumb:hover,
+.store-thumb:focus-visible {
+  opacity: 1;
+}
+
+.store-thumb[aria-pressed="true"] {
+  border-color: #fff;
+  opacity: 1;
+}
+
+.store-thumb.is-video .pj-icon {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 30px;
+  height: 30px;
+  padding: 7px 6px 7px 8px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, .65);
+  color: #fff;
+  fill: #fff;
+}
+
+.store-arrow {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 30px;
+  height: 66px;
+  border: 0;
+  border-radius: 3px;
+  background: rgba(103, 193, 245, .14);
+  color: var(--store-accent);
+  cursor: pointer;
+}
+
+.store-arrow:hover,
+.store-arrow:focus-visible {
+  background: var(--store-accent);
+  color: #fff;
+}
+
+.store-arrow--prev .pj-icon {
+  transform: scaleX(-1);
+}
+
+.store-info {
+  display: flex;
+  flex-direction: column;
+  gap: .9rem;
+  font-size: .9rem;
+}
+
+.store-capsule {
+  display: block;
+  width: 100%;
+  aspect-ratio: 460 / 215;
+  object-fit: cover;
+}
+
+.store-blurb {
+  color: var(--store-text);
+  line-height: 1.55;
+}
+
+.store-details {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: .4rem 1rem;
+  margin: 0;
+  font-size: .8rem;
+}
+
+.store-details dt {
+  color: var(--store-dim);
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+
+.store-details dd {
+  margin: 0;
+  color: var(--store-accent);
+}
+
+.store-tags-label {
+  color: var(--store-dim);
+  font-size: .8rem;
+}
+
+.store-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .3rem;
+  margin: -.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.store-tags li {
+  padding: .2rem .55rem;
+  border-radius: 2px;
+  background: rgba(103, 193, 245, .2);
+  color: var(--store-accent);
+  font-size: .78rem;
+}
+
+/* The Steam buy box, used for how far along it is */
+.store-status {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: .5rem 2rem;
+  align-items: center;
+  margin-top: 1.75rem;
+  padding: 1.25rem 1.5rem 1.4rem;
+  border-radius: 4px;
+  color: #fff;
+  background: linear-gradient(-60deg, rgba(226, 244, 255, .3) 5%, rgba(84, 107, 115, .2) 95%);
+}
+
+.store-status h2 {
+  font-size: 1.3rem;
+}
+
+.store-status p {
+  margin-top: .3rem;
+  color: var(--store-text);
+  font-size: .9rem;
+  line-height: 1.5;
+}
+
+.store-status .lifecycle {
+  margin-top: 0;
+}
+
+.store-status .story-actions {
+  grid-column: 1 / -1;
+  margin-top: .75rem;
+}
+
+.store-status .pj-btn--ghost {
+  border-color: transparent;
+  background: linear-gradient(to right, #75b022 5%, #588a1b 95%);
+  color: #d2efa9;
+}
+
+.store-status .pj-btn--ghost:hover {
+  background: linear-gradient(to right, #8ed629 5%, #6aa621 95%);
+  color: #fff;
+}
+
+.store-lower {
+  display: grid;
+  grid-template-columns: minmax(0, 1.85fr) minmax(0, 1fr);
+  gap: 1.25rem 2rem;
+  margin-top: 1.75rem;
+}
+
+.store-heading {
+  margin-bottom: .75rem;
+  padding-bottom: .35rem;
+  border-bottom: 1px solid rgba(255, 255, 255, .12);
+  color: #fff;
+  font-size: .85rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.store-about p {
+  line-height: 1.65;
+}
+
+.store-features {
+  display: grid;
+  gap: .45rem;
+  margin: 1rem 0 0;
+  padding-left: 1.2rem;
+  line-height: 1.5;
+}
+
+.store-features li::marker {
+  color: var(--store-accent);
+}
+
+.store-req-cols {
+  display: grid;
+  gap: 1.1rem;
+  font-size: .85rem;
+}
+
+.store-req h3 {
+  margin-bottom: .4rem;
+  color: #fff;
+  font-size: .8rem;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.store-req dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: .3rem .8rem;
+  margin: 0;
+}
+
+.store-req dt {
+  color: var(--store-dim);
+}
+
+.store-req dd {
+  margin: 0;
+}
+
+@media (max-width: 860px) {
+  .store-top,
+  .store-lower,
+  .store-status {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .store-capsule {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .store {
+    margin-inline: -.25rem;
+    padding: 1.1rem 1rem 1.4rem;
+    border-radius: 16px;
+  }
+
+  .store-thumb {
+    width: 88px;
+  }
+
+  .store-arrow {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .store-thumb { transition: none; }
+}
+
+
 .back-link .pj-icon {
   vertical-align: -.15em;
 }
