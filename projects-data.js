@@ -13,9 +13,9 @@
 //   slug, name, icon (emoji), hue (0-360, the project's colour), tagline,
 //   summary, status (idea | planning | building | usable | improving | paused |
 //   complete | archived), featured, kind, categories, started (YYYY-MM-DD),
-//   technologies, repo ({ name, private } or null), claudeProject (its name on
-//   the Claude page, or null). A project with `events` gets a full story page;
-//   the others are rows in the archive.
+//   technologies, repo ({ name, private } or null; a private one can leave out
+//   its name), claudeProject (its name on the Claude page, or null). A project
+//   with `events` gets a full story page; the others are rows in the archive.
 //
 // Event fields: id, date, type (milestone | decision | experiment | problem |
 //   deadend | refactor | direction | release | pause | resume), title, summary,
@@ -382,6 +382,104 @@ const PROJECTS_DATA = {
       technologies: ["ESP32"],
       repo: null,
       claudeProject: "Physical projects"
+    },
+    {
+      slug: "claire",
+      name: "Claire",
+      icon: "💜",
+      hue: 345,
+      tagline: "A local AI companion with her own memory, a voice and a 3D avatar. Nothing leaves my laptop.",
+      status: "improving",
+      kind: "Personal",
+      categories: ["AI"],
+      started: "2026-09-21",
+      technologies: ["Python", "Ollama", "Flask", "faster-whisper", "Kokoro", "VRM"],
+      repo: { private: true },
+      claudeProject: "Claire"
+    },
+    {
+      slug: "iris",
+      name: "Iris",
+      icon: "🎙️",
+      hue: 300,
+      tagline: "A real-time voice assistant: you talk, she answers out loud, and you can cut her off mid-sentence. Runs fully offline.",
+      status: "usable",
+      kind: "Personal",
+      categories: ["AI"],
+      started: "2026-09-23",
+      technologies: ["Python", "Pipecat", "Whisper", "Ollama", "Kokoro"],
+      repo: { private: true },
+      claudeProject: "Iris"
+    },
+    {
+      slug: "sonic",
+      name: "Sonic",
+      icon: "🦔",
+      hue: 240,
+      tagline: "My own assistant on the home server. It wakes up when I open it and goes back to sleep after ten idle minutes.",
+      status: "usable",
+      kind: "Personal",
+      categories: ["AI"],
+      started: "2026-09-20",
+      technologies: ["Python", "FastAPI", "Ollama", "systemd"],
+      repo: null,
+      claudeProject: "Sonic"
+    },
+    {
+      slug: "gaming-archive",
+      name: "SONIC Gaming Archive",
+      icon: "🎮",
+      hue: 120,
+      tagline: "My PS5 streams, transcribed and summarised overnight by the home server into a gaming journal.",
+      status: "paused",
+      kind: "Personal",
+      categories: ["AI", "Gaming"],
+      started: "2026-10-21",
+      technologies: ["Python", "faster-whisper", "RapidOCR", "Ollama"],
+      repo: null,
+      claudeProject: "Gaming Archive"
+    },
+    {
+      slug: "apex-dash",
+      name: "Apex Dash",
+      icon: "🏎️",
+      hue: 8,
+      tagline: "An arcade racer built from scratch in the browser: ten drivers, ten circuits, no power-ups, just grip and drift boosts.",
+      status: "building",
+      kind: "Personal",
+      categories: ["Game", "Web", "Android"],
+      started: "2026-10-13",
+      technologies: ["JavaScript", "Three.js", "Vite"],
+      repo: null,
+      claudeProject: "Apex Dash"
+    },
+    {
+      slug: "staysafe",
+      name: "StaySafe",
+      icon: "🛡️",
+      hue: 55,
+      tagline: "Predicted crime risk and live incident reports across Victoria, built as a team. I added a version that runs fully offline.",
+      status: "usable",
+      kind: "Team",
+      categories: ["Web"],
+      started: "2026-03-14",
+      technologies: ["React", "Vite", "Leaflet", "Docker"],
+      repo: { name: "Vidunixel/StaySafe", private: false },
+      claudeProject: "StaySafe"
+    },
+    {
+      slug: "music",
+      name: "Singing and music",
+      icon: "🎤",
+      hue: 315,
+      tagline: "Covers of Hindi songs over backing tracks I make myself, and now my first songs of my own.",
+      status: "improving",
+      kind: "Personal",
+      categories: ["Music"],
+      started: "2026-09-26",
+      technologies: ["Audacity", "LMMS", "Python", "PowerShell"],
+      repo: { name: "Partypants16/music_singing", private: true },
+      claudeProject: "Music"
     }
   ]
 };
