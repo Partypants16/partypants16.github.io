@@ -140,23 +140,6 @@ main.projects {
   outline-offset: 2px;
 }
 
-.tab-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: .3rem;
-  font-size: .72rem;
-  font-weight: 700;
-  padding: .12rem .5rem;
-  border-radius: 999px;
-  background: var(--chip-bg);
-  color: var(--muted-text);
-}
-
-.section-tabs a[aria-current="page"] .tab-badge {
-  background: rgba(255, 255, 255, .2);
-  color: #fff;
-}
-
 /* ---------- Gateway pages (claude.html, todo.html) ----------
    They send visitors to the home server, or say to connect to home Wi-Fi
    (lan-gateway.js). */
@@ -819,91 +802,6 @@ a.archive-row:focus-visible {
 .archive-action.is-muted {
   color: var(--muted-text);
   font-weight: 600;
-}
-
-/* Claude: behind the scenes (home Wi-Fi only) */
-.claude-promo {
-  display: grid;
-  grid-template-columns: 1fr 1.3fr;
-  align-items: center;
-  gap: 2.5rem;
-  overflow: hidden;
-  padding: 2.5rem;
-  border-radius: 22px;
-  border: 1px solid #3a3330;
-  color: #f5efe8;
-  background:
-    radial-gradient(80% 120% at 0% 100%, rgba(217, 119, 87, .32), transparent 60%),
-    radial-gradient(60% 80% at 100% 0%, rgba(232, 168, 124, .16), transparent 60%),
-    linear-gradient(150deg, #201c1a, #141211);
-  box-shadow: var(--pj-shadow);
-}
-
-.promo-art {
-  position: relative;
-  height: 196px;
-}
-
-.promo-card {
-  position: absolute;
-  left: 8%;
-  right: 8%;
-  display: flex;
-  flex-direction: column;
-  gap: .45rem;
-  height: 66px;
-  padding: .8rem 1rem;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, .13);
-  background: rgba(255, 255, 255, .06);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, .3);
-}
-
-.promo-card:nth-child(1) { top: 0; transform: rotate(-4deg) translateX(-5%); }
-.promo-card:nth-child(2) { top: 62px; transform: rotate(2.5deg) translateX(5%); }
-.promo-card:nth-child(3) { top: 124px; transform: rotate(-1deg); background: rgba(255, 255, 255, .1); }
-
-.promo-card i {
-  display: block;
-  height: 8px;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, .2);
-}
-
-.promo-card i:nth-child(1) { width: 38%; background: #e8a87c; }
-.promo-card i:nth-child(2) { width: 88%; }
-.promo-card i:nth-child(3) { width: 64%; }
-
-.claude-promo .pj-eyebrow {
-  color: #e8a87c;
-}
-
-.claude-promo h2 {
-  font-size: 2rem;
-  margin-bottom: .6rem;
-}
-
-.claude-promo p {
-  color: rgba(245, 239, 232, .82);
-  line-height: 1.65;
-}
-
-.lan-note {
-  display: flex;
-  align-items: center;
-  gap: .5rem;
-  margin: 1rem 0 1.5rem;
-  font-size: .92rem;
-  font-weight: 600;
-}
-
-.lan-note .pj-icon {
-  color: #e8a87c;
-}
-
-.claude-promo .pj-btn {
-  background: #f5efe8;
-  color: #1a1614;
 }
 
 /* ---------- One project's story (project.html) ---------- */
@@ -1833,20 +1731,6 @@ a.proof-tile:hover {
     padding: 1.5rem;
   }
 
-  .claude-promo {
-    grid-template-columns: 1fr;
-    gap: 1.75rem;
-  }
-
-  .promo-art {
-    height: 150px;
-    max-width: 380px;
-  }
-
-  .promo-card { height: 54px; }
-  .promo-card:nth-child(2) { top: 48px; }
-  .promo-card:nth-child(3) { top: 96px; }
-
   .journey {
     grid-template-columns: 1fr;
     gap: 0;
@@ -1907,28 +1791,11 @@ a.proof-tile:hover {
     padding: 2rem 1rem;
   }
 
-  /* Three tabs fit at 360px once the Wi-Fi badges are just the icon (the
-     words stay for screen readers, and the badge's tooltip says it too) */
   .section-tabs a {
-    gap: .35rem;
     padding: .45rem .75rem;
   }
 
-  .tab-badge {
-    padding: .15rem .3rem;
-  }
-
-  .tab-badge-text {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-  }
-
-  .feature-body,
-  .claude-promo {
+  .feature-body {
     padding: 1.5rem;
   }
 

@@ -459,7 +459,7 @@
       row.append(locked);
     }
     if (p.claudeProject) {
-      const claude = button("pj-btn--ghost", "chat", "Claude sessions", "Home Wi-Fi only");
+      const claude = button("pj-btn--ghost", "chat", "Claude sessions");
       claude.href = claudeUrl(p);
       row.append(claude);
     }
@@ -673,8 +673,7 @@
       } else if (source.type === "claude") {
         chip = el("a", "evidence-chip");
         chip.href = "claude.html#" + encodeURIComponent(source.ref);
-        chip.append(icon("chat"), el("span", "", "Claude session"), data("span", "", "· " + (source.label || source.ref)),
-                    el("small", "", "Home Wi-Fi only"));
+        chip.append(icon("chat"), el("span", "", "Claude session"), data("span", "", "· " + (source.label || source.ref)));
       } else {
         chip = el("span", "evidence-chip");
         chip.append(icon("note"), data("span", "", source.label || source.ref));
@@ -750,7 +749,7 @@
       if (repo) externalLink(commits, repo + "/commits");
     }
     if (p.sessions && p.claudeProject) {
-      tile("a", "chat", p.sessions, "Claude sessions", "Home Wi-Fi only").href = claudeUrl(p);
+      tile("a", "chat", p.sessions, "Claude sessions", "On the Claude page").href = claudeUrl(p);
     }
     tile("div", "history", events.length, "Moments on the timeline", "Grouped from the commits and sessions");
 

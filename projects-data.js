@@ -340,6 +340,48 @@ const PROJECTS_DATA = {
       technologies: ["ESP32"],
       repo: null,
       claudeProject: "Physical projects"
+    },
+    {
+      slug: "sonic-laptop",
+      name: "Sonic laptop",
+      icon: "💍",
+      hue: 220,
+      tagline: "An old Dell laptop turned into a Sonic show piece, themed from boot screen to terminal. A lid display and LED underglow are next.",
+      status: "building",
+      kind: "Personal",
+      categories: ["Hardware", "Linux"],
+      started: "2026-09-29",
+      technologies: ["MX Linux", "Bash", "Python", "QML", "ESP32-S3"],
+      repo: null,
+      claudeProject: "Physical projects"
+    },
+    {
+      slug: "book-computer",
+      name: "Book computer",
+      icon: "📚",
+      hue: 95,
+      tagline: "A small Linux tablet hidden in a cardboard book: touchscreen on one page, computer and battery in the other.",
+      status: "idea",
+      kind: "Personal",
+      categories: ["Hardware"],
+      started: "2026-09-29",
+      technologies: ["Raspberry Pi", "Linux"],
+      repo: null,
+      claudeProject: "Physical projects"
+    },
+    {
+      slug: "smart-glasses",
+      name: "Smart glasses",
+      icon: "👓",
+      hue: 175,
+      tagline: "See-through text HUD glasses driven by my assistant, Sonic, on a hard A$100 budget. Still researching.",
+      status: "idea",
+      kind: "Personal",
+      categories: ["Hardware", "AI"],
+      started: "2026-10-01",
+      technologies: ["ESP32"],
+      repo: null,
+      claudeProject: "Physical projects"
     }
   ]
 };

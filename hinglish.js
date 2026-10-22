@@ -205,10 +205,6 @@ const HINGLISH = {
     "Big and small, finished and not.": "Bade aur chhote, poore aur adhoore.",
     "Filter projects": "Projects filter karo",
     "No projects here yet.": "Yahan abhi koi project nahi hai.",
-    "Behind the scenes": "Parde ke peeche",
-    "Every session with Claude behind these projects, as a timeline: what I asked for, what got decided, and the raw logs if you want every detail.": "In projects ke peeche Claude ke saath har session, ek timeline mein: maine kya maanga, kya decide hua, aur har detail chahiye toh raw logs bhi.",
-    "It lives on my home server, so it only opens on home Wi-Fi.": "Yeh mere home server pe rehta hai, isliye sirf ghar ke Wi-Fi pe khulta hai.",
-    "Open the Claude timeline": "Claude ki timeline kholo",
     "Turn on JavaScript to see the projects.": "Projects dekhne ke liye JavaScript on karo.",
     "Turn on JavaScript to see this project's story.": "Is project ki kahaani dekhne ke liye JavaScript on karo.",
     "The story so far": "Ab tak ki kahaani",
@@ -309,7 +305,6 @@ const HINGLISH = {
     // ---------- To do (todo.html, and the page on the home server) ----------
     "To do": "Karna hai",
     "To do | Parth": "Karna hai | Parth",
-    "Home Wi-Fi": "Ghar ka Wi-Fi",
     "Git checked": "Git check hua",
     "Couldn't load the to-do list. Try reloading the page.": "To-do list load nahi hui. Page reload karke dekho.",
     "What's waiting on Parth across his projects. It lives on the home server, so it only opens on home Wi-Fi.": "Parth ke projects mein kya baaki hai. Yeh home server pe rehta hai, isliye sirf ghar ke Wi-Fi pe khulta hai.",
@@ -424,6 +419,7 @@ const HINGLISH = {
     "This site": "Yeh site",
     "Home server": "Ghar ka server",
     "Home Wi-Fi only": "Sirf ghar ke Wi-Fi pe",
+    "On the Claude page": "Claude wale page pe",
     "Elsewhere": "Baaki jagah",
     "Search with": "Kisse dhoondein",
     // Focus
