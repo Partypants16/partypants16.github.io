@@ -118,6 +118,8 @@
 
   const stage = p => STAGES[p.status] || STAGES.idea;
   const hasStory = p => Array.isArray(p.events) && p.events.length > 0;
+  // Featured projects get a card in "The full story"; the rest are rows under "Other projects".
+  const isFeatured = p => p.featured && hasStory(p);
   const repoUrl = p => (p.repo && !p.repo.private ? "https://github.com/" + p.repo.name : null);
   const storyUrl = p => "project.html?p=" + encodeURIComponent(p.slug);
   const claudeUrl = p => "claude.html?project=" + encodeURIComponent(p.claudeProject);
@@ -176,7 +178,7 @@
       $("stats").append(tile);
     });
 
-    const featured = PROJECTS.filter(p => p.featured && hasStory(p));
+    const featured = PROJECTS.filter(isFeatured);
     $("featured").hidden = featured.length === 0;
     featured.forEach(p => $("featured-list").append(featureCard(p)));
 
@@ -234,8 +236,9 @@
   }
 
   function renderArchive(list, filters, empty) {
-    // Newest start first, in one block per year.
-    const sorted = PROJECTS.slice().sort((a, b) => String(b.started).localeCompare(String(a.started)));
+    // Only the projects without a featured story. Newest start first, in one block per year.
+    const others = PROJECTS.filter(p => !isFeatured(p));
+    const sorted = others.slice().sort((a, b) => String(b.started).localeCompare(String(a.started)));
     const years = new Map();
     sorted.forEach(p => {
       const year = String(p.started).slice(0, 4);
@@ -251,13 +254,13 @@
     });
 
     const counts = {};
-    PROJECTS.forEach(p => { counts[stage(p)[1]] = (counts[stage(p)[1]] || 0) + 1; });
+    others.forEach(p => { counts[stage(p)[1]] = (counts[stage(p)[1]] || 0) + 1; });
     let current = new URLSearchParams(location.search).get("status") || "all";
     if (current !== "all" && !counts[current]) current = "all";
 
     const chips = [];
     GROUPS.forEach(([id, label]) => {
-      const number = id === "all" ? PROJECTS.length : counts[id];
+      const number = id === "all" ? others.length : counts[id];
       if (!number) return;
       const chip = el("button", "pj-chip");
       chip.type = "button";
