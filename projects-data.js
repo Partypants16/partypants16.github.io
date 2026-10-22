@@ -1,11 +1,12 @@
 // The projects shown on projects.html and project.html (projects.js draws them).
 //
-// The five stories (PAT-AI, Claire, Apex Dash, LOVELESS book, Sonic laptop)
-// are simplified versions of their real history (git, session logs and project
-// docs). Parth approved the layout on 2026-10-22, so `sample` is off; setting
-// it to true brings back the "Sample data" note and badges. Later this file
-// will be generated from the project history files (see the 2026-10-21 plan in
-// parth_project/_workspace/context/sessions/), and must not be hand-edited then.
+// The six stories (PAT-AI, Claire, Apex Dash, LOVELESS book, Sonic laptop,
+// Parth's Palace) are simplified versions of their real history (git, session
+// logs and project docs). Parth approved the layout on 2026-10-22, so `sample`
+// is off; setting it to true brings back the "Sample data" note and badges.
+// Later this file will be generated from the project history files (see the
+// 2026-10-21 plan in parth_project/_workspace/context/sessions/), and must not
+// be hand-edited then.
 //
 // Everything here is public: this repo is the public website. Never put Coles
 // work, LAN addresses or local paths in it. Apex Dash's trailer and screenshots
@@ -258,13 +259,319 @@ const PROJECTS_DATA = {
       icon: "🏰",
       hue: 210,
       tagline: "This website: home-server cards, wallpapers, Hinglish, and this page.",
+      summary: "My own website. I started it in March to learn web development, and it grew into a launcher for everything on my home server, with live Online/Offline dots. It also has wallpapers, movie lists, a Hinglish version and this Projects page. The full history of how it's built stays on the home Wi-Fi.",
       status: "improving",
+      featured: true,
       kind: "Personal",
       categories: ["Web"],
       started: "2026-03-04",
-      technologies: ["HTML", "CSS", "JavaScript", "GitHub Pages"],
+      technologies: ["HTML", "CSS", "JavaScript", "Python", "GitHub Pages", "GitHub Gists", "Docker", "Caddy"],
       repo: { name: "Partypants16/partypants16.github.io", private: false },
-      claudeProject: "Website"
+      claudeProject: "Website",
+      commits: 59,
+      sessions: 14,
+
+      evolution: [
+        { label: "The idea", text: "A small site to learn web development on, with a profile page and my certificates." },
+        { label: "First build", text: "A home page of cards for things I host at home, a video wallpaper page and a games page." },
+        { label: "What got in the way", text: "The site is public and on HTTPS. My home server is plain HTTP on the home Wi-Fi, so the site can't reach it." },
+        { label: "Change of direction", text: "The home server does the checking and the site reads the result, or hands visitors over to it." },
+        { label: "Now", text: "A launcher for my home server and a showcase of my projects, with settings, wallpapers and Hinglish on every page." }
+      ],
+
+      events: [
+        {
+          id: "first-page",
+          date: "2026-03-04",
+          type: "milestone",
+          title: "The first page",
+          summary: "One page: hello, about me, skills, contact. The next day it got a profile page, and soon my certificates.",
+          context: "The first version said I was learning web development and wanted to build clean, accessible pages. I didn't keep notes back then, so for March the commits are all there is: they show what changed, not why.",
+          sources: [
+            { type: "git", ref: "e94958e", label: "Initial commit" },
+            { type: "git", ref: "1069869", label: "Added profile page" },
+            { type: "git", ref: "36073ad", label: "Responsive Web Design certificates" }
+          ]
+        },
+        {
+          id: "home-server-cards",
+          date: "2026-03-05",
+          type: "direction",
+          title: "Cards for things running at home",
+          summary: "The home page became a set of cards. Two of them, Jellyfin and Navidrome, opened services on my home server.",
+          context: "Each of those cards said it needed the home Wi-Fi. A notetaking card went up the same day as a placeholder.",
+          outcome: "That shape stuck. Most of the cards on the home page today open something I host at home.",
+          sources: [
+            { type: "git", ref: "ef62207", label: "Make homepage consistent" },
+            { type: "git", ref: "4975c47", label: "Notetaking card" },
+            { type: "git", ref: "6844344", label: "Jellyfin and Navidrome cards" }
+          ]
+        },
+        {
+          id: "video-wallpapers",
+          date: "2026-03-06",
+          type: "milestone",
+          title: "A wallpaper page and a games page",
+          summary: "A full-screen looping video with a clock, and a switch between two videos: a snowy forest and FF7 Remake. A games page with my platforms went up the same day.",
+          outcome: "The wallpaper page stayed like that until October, when it became fifteen wallpapers.",
+          sources: [
+            { type: "git", ref: "95feae7", label: "Wallpaper switching" },
+            { type: "git", ref: "029d6c6", label: "Started gaming" },
+            { type: "git", ref: "abbe5c4", label: "Gaming links" }
+          ]
+        },
+        {
+          id: "vibe-zone",
+          date: "2026-03-16",
+          type: "experiment",
+          title: "The Vibe Testing Zone",
+          summary: "A corner of the site for trying new things, \"no fleshed out products\". The first things in it included a tourism dashboard.",
+          context: "The same day, the home page got a card for StaySafe, a team project.",
+          outcome: "After this the site went quiet. One commit in July added SkyWardrobe and a Family Tree card marked Coming Soon, then nothing until September.",
+          sources: [
+            { type: "git", ref: "dff443c", label: "StaySafe and Vibe Coding Zone" },
+            { type: "git", ref: "52bc749", label: "Tourism dashboard" },
+            { type: "git", ref: "4782ba2", label: "SkyWardrobe and Family Tree" }
+          ]
+        },
+        {
+          id: "push-every-change",
+          date: "2026-10-13",
+          type: "decision",
+          title: "Every change goes live straight away",
+          summary: "The cards now point at the real services on my home server, and every change to the site is committed and pushed as soon as it's made.",
+          context: "Some cards pointed at things that were gone or never linked: SkyWardrobe's old online host, StaySafe's original online version, and a Navidrome card that went to an \"under development\" page.",
+          options: [
+            { text: "Try changes on the laptop first", chosen: false, note: "Safer, but I'd have to run the site locally to see anything." },
+            { text: "Push every change, check it live", chosen: true, note: "Mistakes are public for a few minutes, but I see exactly what visitors see." }
+          ],
+          why: "I'd rather see a change on the real site than run the site on my laptop to check it.",
+          outcome: "It's been the rule ever since, so the site's history is one commit per change.",
+          sources: [
+            { type: "git", ref: "b6adb6d", label: "SkyWardrobe to the home server" },
+            { type: "git", ref: "c67d472", label: "Cards to the live services" },
+            { type: "git", ref: "0d50add", label: "StaySafe local copy" },
+            { type: "claude", ref: "2026-10-13-website-movie-list", label: "Movie List" },
+            { type: "claude", ref: "2026-10-13-website-service-links", label: "Service links" }
+          ]
+        },
+        {
+          id: "franchise-tracker",
+          date: "2026-10-20",
+          type: "decision",
+          title: "Movie lists, then a franchise tracker",
+          summary: "Movie List started as shareable recommendation lists. Then a group spreadsheet of who has watched which Marvel film became its own page.",
+          context: "The spreadsheet marks each person's status only with the cell's colour. There's no text in those cells at all.",
+          options: [
+            { text: "Read the spreadsheet in the browser", chosen: false, note: "No build step, but browser libraries handle cell colours badly." },
+            { text: "A script turns it into a data file", chosen: true, note: "One extra step on each update, and it stops with an error if the format changes." }
+          ],
+          why: "A clear error beats a page that quietly shows the wrong thing. It also means only the generated data is public, not the raw spreadsheet.",
+          outcome: "76 titles, progress bars per person, and filters kept in the link, so a view like \"my to-watch list\" can be shared.",
+          sources: [
+            { type: "git", ref: "4b15f7f", label: "Movie List" },
+            { type: "git", ref: "3b67934", label: "Franchise Trackers" },
+            { type: "claude", ref: "2026-10-20-website-franchise-tracker", label: "Franchise tracker" }
+          ]
+        },
+        {
+          id: "status-dots",
+          date: "2026-10-20",
+          type: "decision",
+          key: true,
+          title: "Online and Offline dots from the home server",
+          summary: "Every home-server card shows whether that service is up. The home server checks, and the site reads the result.",
+          context: "GitHub Pages can run JavaScript in the visitor's browser, so being static wasn't really the problem. The problem was that my services are only on the home Wi-Fi, where GitHub can never see them.",
+          options: [
+            { text: "The browser checks each service", chosen: false, note: "A secure page calling plain HTTP is blocked, or needs a permission prompt. Some browsers can't at all, and it only works at home." },
+            { text: "Commit the status to the website repo", chosen: false, note: "Would rebuild the site about 288 times a day." },
+            { text: "The home server publishes to a secret Gist", chosen: true, note: "Works from anywhere, in any browser. If the server dies, the time just goes stale." }
+          ],
+          why: "It's the only option that works for every visitor everywhere. The script checks every 5 minutes but only publishes on a change or every 15 minutes, and the page shows Unknown when the result is too old.",
+          outcome: "All 7 cards showed Online on the first live check. The same pattern later fed the Start Page wallpaper.",
+          sources: [
+            { type: "git", ref: "58cf308", label: "Service status dots" },
+            { type: "git", ref: "c99f725", label: "Point at the Gist" },
+            { type: "note", ref: "tools/service-status/README.md", label: "Service status README" },
+            { type: "claude", ref: "2026-10-20-website-service-status", label: "Service status" }
+          ]
+        },
+        {
+          id: "settings-panel",
+          date: "2026-10-20",
+          type: "milestone",
+          title: "A settings panel, and four levels of motion",
+          summary: "The dark mode button became a gear that opens a settings panel. Its first new setting was page transitions: Off, Subtle, Full and Extreme.",
+          context: "Dark mode came from a restyle in September. I wanted one panel where every future option could go.",
+          why: "Subtle is the default because it only adds small touches. Extreme has no practical purpose: it's there to show off.",
+          outcome: "One bug only showed up when I looked at the animation frame by frame: with the dark-mode wipe on, the switch kept saying Off.",
+          lesson: "Looking at the frames found what the checks passed.",
+          sources: [
+            { type: "git", ref: "42a2245", label: "Restyle and dark mode" },
+            { type: "git", ref: "0b27f63", label: "Settings panel" },
+            { type: "git", ref: "45fcf87", label: "Transition levels" },
+            { type: "claude", ref: "2026-10-20-website-settings-panel", label: "Settings panel" }
+          ]
+        },
+        {
+          id: "fifteen-wallpapers",
+          date: "2026-10-21",
+          type: "decision",
+          title: "Fifteen wallpapers, drawn in code",
+          summary: "The two videos became fifteen wallpapers: live weather, the real sun and moon, an F1 countdown, drawn scenes, my LOVELESS engravings and a focus timer.",
+          context: "I brainstormed ideas and then asked for all of them, one wallpaper each. The picker needed a live preview of every one.",
+          options: [
+            { text: "WebGL", chosen: false, note: "Fancier effects, but fifteen previews at once would run out of WebGL contexts." },
+            { text: "Canvas 2D", chosen: true, note: "Simpler, and every preview can draw its scene." }
+          ],
+          why: "Previews that always match the real thing mattered more than effects. Weather, F1 and music use public services that allow browser calls, so none of them need a server.",
+          outcome: "Thirteen work. Now Playing and Now Listening are built but not connected yet.",
+          sources: [
+            { type: "git", ref: "0eb37a5", label: "Fifteen wallpapers" },
+            { type: "claude", ref: "2026-10-20-website-wallpaper-ideas", label: "Wallpaper ideas" }
+          ]
+        },
+        {
+          id: "hinglish",
+          date: "2026-10-21",
+          type: "decision",
+          key: true,
+          title: "A Hinglish version of the whole site",
+          summary: "An EN/HI toggle switches every page to Hinglish in English letters. Since then, every new bit of text needs its Hinglish line.",
+          context: "It came with more settings: Auto/Light/Dark, accent colours, a 12/24-hour clock, and a wallpaper behind every page.",
+          options: [
+            { text: "A translation key in every script", chosen: false, note: "Precise, but touches everything and it's easy to miss a string." },
+            { text: "One translator that watches the page", chosen: true, note: "Swaps any text that has a Hinglish line, including text scripts add later." }
+          ],
+          why: "The app code barely had to change, and anything without a line just stays English instead of breaking. Names, titles and other people's words are marked to stay as written.",
+          outcome: "About 300 phrases and 50 patterns for text with numbers in it. A test caught \"1 min update hua pehle\", where the word order came out wrong.",
+          lesson: "A coverage check is only useful if it runs. A later test found mine never had.",
+          sources: [
+            { type: "git", ref: "ccc587a", label: "Hinglish and more settings" },
+            { type: "note", ref: "hinglish.js", label: "The Hinglish lines" },
+            { type: "claude", ref: "2026-10-21-website-hinglish-and-settings", label: "Hinglish and settings" }
+          ]
+        },
+        {
+          id: "claude-page",
+          date: "2026-10-21",
+          type: "decision",
+          key: true,
+          title: "The Claude page stays on the home Wi-Fi",
+          summary: "A timeline of every session log where I build things with Claude, served from my home server instead of this site.",
+          context: "The logs are full of things that can't be public: work notes, logins, family details. A public page would have needed hand-written summaries and masking for every log.",
+          options: [
+            { text: "Public, with logs masked or hidden", chosen: false, note: "Anyone could see it, but every log needs checking, forever." },
+            { text: "Only on the home server", chosen: true, note: "Nothing has to be hidden, but it only opens at home." }
+          ],
+          why: "At home, nothing has to be hidden or masked, and every card can open to its raw log.",
+          outcome: "A secure page can't check whether a home address answers, so the site's Claude link just tries. At home it opens straight away. Anywhere else it stops after 3 seconds and says to connect to the home Wi-Fi.",
+          sources: [
+            { type: "git", ref: "f4a4ddd", label: "The Claude page" },
+            { type: "git", ref: "8ee5d6b", label: "Times on the cards" },
+            { type: "note", ref: "tools/claude-timeline/README.md", label: "Claude page README" },
+            { type: "claude", ref: "2026-10-21-website-claude-timeline-design", label: "Claude page design" }
+          ]
+        },
+        {
+          id: "https-wall",
+          date: "2026-10-21",
+          type: "problem",
+          title: "The site can't talk to my home server",
+          summary: "The same wall kept coming back: the website is HTTPS, and the home server is plain HTTP.",
+          context: "It stopped the browser from checking services, stopped Apex Dash from running inside a page, and stopped the Claude page from living here.",
+          outcome: "Each time the answer was the same: the home server does the work, and the site either reads its result or sends you over to it.",
+          lesson: "The wall isn't going away, so the home server is part of the plan from the start.",
+          sources: [
+            { type: "claude", ref: "2026-10-20-website-service-status", label: "Service status" },
+            { type: "claude", ref: "2026-10-21-apex-dash-on-home-server", label: "Apex Dash on the home server" },
+            { type: "note", ref: "lan-gateway.js", label: "The gateway" }
+          ]
+        },
+        {
+          id: "projects-showcase",
+          date: "2026-10-21",
+          type: "direction",
+          key: true,
+          title: "Projects takes the Claude link's place",
+          summary: "A public Projects section became the showcase, with Claude and To do as tabs inside it. The layout came first, with sample data for one project.",
+          context: "I wanted to show the thinking behind my projects, not just the code. The top bar was already full on phones.",
+          options: [
+            { text: "Add Projects as a seventh link", chosen: false, note: "Keeps everything, but the phone top bar would need reworking." },
+            { text: "Projects replaces Claude in the top bar", chosen: true, note: "Claude moves one click deeper." }
+          ],
+          why: "Projects is for everyone and Claude only opens at home, so Projects deserved the slot. Profile left the top bar too: the logo opens it now.",
+          outcome: "Story pages with a timeline, the big calls and what didn't work. The website repo is public, so anything private has to stay out of the data file, not just off the page.",
+          sources: [
+            { type: "git", ref: "f2a4f39", label: "Add Projects" },
+            { type: "claude", ref: "2026-10-21-website-project-history-plan", label: "Projects plan" }
+          ]
+        },
+        {
+          id: "todo-cards",
+          date: "2026-10-21",
+          type: "deadend",
+          title: "The To do tab with cards and filters",
+          summary: "The first To do page had cards, counts, filters and project chips. It was replaced the same night by one short text.",
+          context: "I wanted one place for what's waiting on me across all my projects, kept current after every session. It's on the home Wi-Fi only, for the same reasons as the Claude page.",
+          outcome: "Now it's a short message in plain sections, with \"My pick\" at the end. Only the part about unsaved work is built from git automatically.",
+          lesson: "The first version was too detailed. For a list I just want to read, plain text beat a dashboard.",
+          sources: [
+            { type: "git", ref: "b0f06f2", label: "To do tab" },
+            { type: "git", ref: "319212b", label: "One short text instead" },
+            { type: "claude", ref: "2026-10-21-website-project-history-plan", label: "Projects plan" }
+          ]
+        },
+        {
+          id: "real-stories",
+          date: "2026-10-22",
+          type: "release",
+          title: "Real stories, no sample label",
+          summary: "Every project got a row, five got a full story (this one came next), and the \"Sample data\" label came off.",
+          context: "I liked the layout. I asked for the Home Wi-Fi badges and the Claude promo card to go, and for every project to be listed.",
+          outcome: "The badges and promo card went. The LOVELESS book got photos, and the list under the stories now only holds projects without one.",
+          sources: [
+            { type: "git", ref: "2f08f2c", label: "Drop the badges" },
+            { type: "git", ref: "3b53601", label: "Add the other projects" },
+            { type: "git", ref: "80b396a", label: "Drop the sample label" },
+            { type: "git", ref: "03ca797", label: "Photos" },
+            { type: "claude", ref: "2026-10-22-projects-page-cleanup", label: "Projects page cleanup" }
+          ]
+        },
+        {
+          id: "apex-store-page",
+          date: "2026-10-22",
+          type: "decision",
+          title: "Apex Dash gets a store page, trailer included",
+          summary: "Apex Dash's story opens like a Steam store page, with its trailer and ten screenshots.",
+          context: "Until then nothing from the game went on the public site, because some of its art isn't mine. The trailer and screenshots show that art.",
+          options: [
+            { text: "A store page on the home server only", chosen: false, note: "Keeps the art private, but nobody outside home sees it." },
+            { text: "A public page without the borrowed art", chosen: false, note: "Keeps the art private, but doesn't show the game as it looks." },
+            { text: "Publish the trailer and screenshots here", chosen: true, note: "The art becomes public and stays in the history." }
+          ],
+          why: "I chose this knowing the art and music become public, stay in the history, and carry some risk for the repo. Only the trailer and screenshots are public: the game and its files still aren't.",
+          outcome: "The trailer was squeezed from 347 MB to 45 MB to fit in the repo.",
+          sources: [
+            { type: "git", ref: "ffc3f6c", label: "Steam-style store page" },
+            { type: "claude", ref: "2026-10-22-projects-page-cleanup", label: "Projects page cleanup" }
+          ]
+        }
+      ],
+
+      lessons: [
+        { title: "Let the home server do the work", text: "Status dots, the Claude page and the To do list all work because the server does the part the site can't." },
+        { title: "Public means public", text: "The repo is public, so private things stay out of the files, not just off the page." },
+        { title: "Look at it, not just the tests", text: "The worst bugs were found in screenshots and animation frames, after every check had passed." },
+        { title: "Plain beats clever", text: "The To do tab went from a dashboard to a short text in one night, and it's better for it." }
+      ],
+
+      focus: "Reading the project stories now that they're public, and fixing anything that's off.",
+      next: [
+        "Build this page from the project history files instead of writing it by hand",
+        "Read through the Hinglish and fix what sounds wrong",
+        "Try the Projects pages, Hinglish and the Claude page on my phone"
+      ]
     },
     {
       slug: "skywardrobe",
