@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <script src="{{site}}handoff.js"></script>
+  <script src="{{site}}hinglish.js"></script>
+  <script src="{{site}}i18n.js"></script>
+  <script src="{{site}}settings.js"></script>
+  <script src="{{site}}motion.js"></script>
+  <title>{{tab_title}}</title>
+  <meta name="description" content="{{description}}">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
+  <link rel="stylesheet" href="{{site}}movies.css">
+  <link rel="stylesheet" href="{{site}}projects.css">
+  <link rel="stylesheet" href="{{site}}settings.css">
+  <link rel="stylesheet" href="{{site}}motion.css">
+  <link rel="stylesheet" href="{{root}}pygments.css">
+  <link rel="stylesheet" href="{{root}}encyclopedia.css">
+</head>
+
+<body>
+  <header>
+    <nav>
+      <p class="logo"><a href="https://partypants16.github.io/profile.html" title="Profile">PS</a></p>
+      <ul>
+        <li><a href="https://partypants16.github.io/index.html">Home</a></li>
+        <li><a href="https://partypants16.github.io/wallpaper.html">Wallpaper</a></li>
+        <li><a href="https://partypants16.github.io/gaming.html">Games</a></li>
+        <li><a href="https://partypants16.github.io/movies.html">Movies</a></li>
+        <li><a href="https://partypants16.github.io/projects.html" aria-current="page">Projects</a></li>
+      </ul>
+      <button class="settings-toggle" id="settingsToggle" type="button" aria-label="Settings" title="Settings" aria-haspopup="dialog" aria-expanded="false" aria-controls="settingsPanel"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="3.34 3.34"/><circle cx="12" cy="12" r="5.2" fill="none" stroke="currentColor" stroke-width="4.4"/></svg></button>
+    </nav>
+  </header>
+
+  <main class="projects encyclopedia">
+    <nav class="section-tabs" aria-label="Projects sections">
+      <a href="https://partypants16.github.io/projects.html">Showcase</a>
+      <a href="{{site}}">Claude</a>
+      <a href="{{site}}todo.html">To do</a>
+      <a href="{{root}}index.html" aria-current="page">Encyclopedia</a>
+    </nav>
+
+    <div class="enc-layout">
+      <aside class="enc-side">
+        <button class="enc-nav-toggle" id="enc-nav-toggle" type="button" aria-expanded="false" aria-controls="enc-nav">Contents</button>
+        <div class="enc-search">
+          <label for="enc-search"><span class="sr-only">Search</span></label>
+          <input type="search" id="enc-search" placeholder="Search the encyclopedia" autocomplete="off" spellcheck="false">
+          <ul class="enc-results" id="enc-results" hidden></ul>
+        </div>
+        <nav class="enc-nav" id="enc-nav" aria-label="Encyclopedia contents" translate="no">
+{{nav}}
+        </nav>
+      </aside>
+
+      <article class="enc-article">
+        <p class="enc-crumbs" translate="no">{{crumbs}}</p>
+        <div class="enc-body" translate="no">
+{{content}}
+        </div>
+        <nav class="enc-neighbours" aria-label="Previous and next page">{{neighbours}}</nav>
+        <p class="enc-source"><span>Source</span> <code translate="no">{{source}}</code> · <span>edit the Markdown, then redeploy the Claude page</span></p>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; <span id="year"></span> Parth</p>
+  </footer>
+
+  {{mermaid}}
+  <script src="{{root}}encyclopedia.js"></script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+
+</html>

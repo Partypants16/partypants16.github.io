@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="hinglish.js"></script>
+  <script src="i18n.js"></script>
+  <script src="settings.js"></script>
+  <script src="motion.js"></script>
+  <title>Encyclopedia | Parth</title>
+  <meta name="description" content="Everything about the home server and parth_project, as reference pages. It lives on the home server, so it only opens on home Wi-Fi.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
+  <link rel="stylesheet" href="movies.css">
+  <link rel="stylesheet" href="projects.css">
+  <link rel="stylesheet" href="settings.css">
+  <link rel="stylesheet" href="motion.css">
+</head>
+
+<body>
+  <header>
+    <nav>
+      <p class="logo"><a href="profile.html" title="Profile">PS</a></p>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="wallpaper.html">Wallpaper</a></li>
+        <li><a href="gaming.html">Games</a></li>
+        <li><a href="movies.html">Movies</a></li>
+        <li><a href="projects.html" aria-current="page">Projects</a></li>
+      </ul>
+      <button class="settings-toggle" id="settingsToggle" type="button" aria-label="Settings" title="Settings" aria-haspopup="dialog" aria-expanded="false" aria-controls="settingsPanel"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="3.34 3.34"/><circle cx="12" cy="12" r="5.2" fill="none" stroke="currentColor" stroke-width="4.4"/></svg></button>
+    </nav>
+  </header>
+
+  <main class="gateway" data-lan-url="http://192.168.212.60:8120/encyclopedia/">
+    <nav class="section-tabs" aria-label="Projects sections">
+      <a href="projects.html">Showcase</a>
+      <a href="claude.html">Claude</a>
+      <a href="todo.html">To do</a>
+      <a href="encyclopedia.html" aria-current="page">Encyclopedia</a>
+    </nav>
+
+    <h1>Encyclopedia</h1>
+
+    <div class="gateway-card" id="checking">
+      <span class="gateway-spinner" aria-hidden="true"></span>
+      <p>Opening it from the home server…</p>
+    </div>
+
+    <div class="gateway-card" id="offline" hidden>
+      <div class="gateway-icon" aria-hidden="true">📶</div>
+      <p><strong>Connect to the home Wi-Fi to open this page.</strong></p>
+      <p>It lives on the home server, so it only opens when you're on the home network.</p>
+      <div class="gateway-actions">
+        <button type="button" id="retry">Try again</button>
+        <a id="direct" href="http://192.168.212.60:8120/encyclopedia/">Open the address anyway</a>
+      </div>
+      <p class="gateway-small">On home Wi-Fi and still seeing this? The home server might be off.</p>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; <span id="year"></span> Parth</p>
+  </footer>
+
+  <script src="lan-gateway.js"></script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+
+</html>

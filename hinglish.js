@@ -329,6 +329,18 @@ const HINGLISH = {
     "Written": "Likha gaya",
     "Logged since then:": "Uske baad ke logs:",
 
+    // ---------- Encyclopedia (encyclopedia.html, and the pages on the home server) ----------
+    "Everything about the home server and parth_project, as reference pages. It lives on the home server, so it only opens on home Wi-Fi.": "Home server aur parth_project ke baare mein sab kuch, reference pages ke roop mein. Yeh home server pe rehta hai, isliye sirf ghar ke Wi-Fi pe khulta hai.",
+    "Search the encyclopedia": "Encyclopedia mein dhoondo",
+    "Contents": "Pages ki list",
+    "Encyclopedia contents": "Encyclopedia ke pages",
+    "On this page": "Is page pe",
+    "Previous and next page": "Pichla aur agla page",
+    "Link to this heading": "Is heading ka link",
+    "Copy": "Copy karo",
+    "Copied": "Copy ho gaya",
+    "edit the Markdown, then redeploy the Claude page": "Markdown edit karo, phir Claude page dobara deploy karo",
+
     // ---------- Under development (sports.html) ----------
     "This section": "Yeh section",
     "is under development": "abhi ban raha hai",
@@ -540,6 +552,8 @@ const HINGLISH = {
     [/^Showing (\d+) of (\d+) sessions?$/, "$2 mein se $1 sessions dikh rahe hain"],
     [/^(\d+) words?$/, "$1 shabd"],
     [/^(Built|Improved|Fixed|Ideas|Research|Setup|Sync|Docs|Done|Needs testing|Open|Parked) \((\d+)\)$/, (m, t) => t(m[1]) + " (" + m[2] + ")"],
-    [/^(Needs testing|Open|Parked): (\d+)$/, (m, t) => t(m[1]) + ": " + m[2]]
+    [/^(Needs testing|Open|Parked): (\d+)$/, (m, t) => t(m[1]) + ": " + m[2]],
+    // Encyclopedia search
+    [/^Nothing found for (.+)$/, "$1 ke liye kuch nahi mila"]
   ]
 };

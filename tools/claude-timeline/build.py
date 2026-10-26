@@ -43,6 +43,7 @@ import yaml
 from markdown_it import MarkdownIt
 
 import todo  # the To do page's text (todo.py, next to this file)
+import encyclopedia  # the Encyclopedia tab (encyclopedia.py, next to this file)
 
 HERE = Path(__file__).resolve().parent
 SITE = HERE.parent.parent                     # my-website/
@@ -50,6 +51,7 @@ WORKSPACE = SITE.parent.parent                # parth_project/ (my-website is in
 CONTEXT = WORKSPACE / "_workspace" / "context"
 DISCONTINUED = WORKSPACE / "discontinued"     # dropped projects; their saved pages are served too
 TODO = CONTEXT / "TODO.md"                    # what's waiting on Parth: the To do page (todo.html)
+ENCYCLOPEDIA = WORKSPACE / "_workspace" / "encyclopedia"  # the Encyclopedia's Markdown (since 2026-10-22)
 DIST = HERE / "dist"
 
 # The filter lists show these in this order.
@@ -312,9 +314,12 @@ def build():
     to_do = todo.make(TODO, WORKSPACE, entries, render, warn)
     (DIST / "todo.json").write_text(json.dumps(to_do, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
+    pages = encyclopedia.build(ENCYCLOPEDIA, DIST / "encyclopedia", WORKSPACE, CONTEXT, warn)
+
     size = (DIST / "data.json").stat().st_size
     print(f"{len(entries)} sessions → {DIST.relative_to(SITE)} (data.json {size / 1024:.0f} KB)")
     print(f"To do: TODO.md → todo.json ({len(to_do['html']) / 1024:.0f} KB, git section written now)")
+    print(f"Encyclopedia: {pages} pages → {DIST.relative_to(SITE)}/encyclopedia/")
     return len(entries)
 
 

@@ -62,6 +62,17 @@ for attempt in range(10):  # Caddy takes a moment to start after the recreate
         if size != expected:
             sys.exit("data.json on the box is %d bytes, expected %d" % (size, expected))
         print("live:", URL, page, "· data.json", size, "bytes, matches the build")
+        # The Encyclopedia tab: its front page and search index answer, and the index is this build's.
+        search = os.path.join(DIST, "encyclopedia", "search.json")
+        if os.path.isfile(search):
+            request = urllib.request.Request(URL + "encyclopedia/search.json", headers={"Accept-Encoding": "identity"})
+            with urllib.request.urlopen(request, timeout=15) as response:
+                got = len(response.read())
+            with urllib.request.urlopen(URL + "encyclopedia/", timeout=15) as response:
+                front = response.status
+            if got != os.path.getsize(search):
+                sys.exit("encyclopedia/search.json on the box is %d bytes, expected %d" % (got, os.path.getsize(search)))
+            print("live:", URL + "encyclopedia/", front, "· search.json", got, "bytes, matches the build")
         break
     except OSError:
         time.sleep(1)

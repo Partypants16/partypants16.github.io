@@ -36,17 +36,31 @@ Under the text: when it was last written (the file's time), when git was
 checked, and any session logged since it was written, in case they left
 something that isn't in it yet.
 
+The build also makes the **Encyclopedia** (`encyclopedia/`, since 2026-10-22):
+everything about the home server and `parth_project`, as reference pages, from
+the Markdown in `parth_project/_workspace/encyclopedia/` (`encyclopedia.py`,
+which has the full description at the top). It's the fourth tab of Projects,
+LAN-only like the other two, with the website's `encyclopedia.html` as its
+gateway. One static HTML page per `.md` file, a sidebar of every page, search
+in the browser (`search.json`), code colours from Pygments at build time, and
+Mermaid diagrams from a local copy of `mermaid.min.js` (fetched once into
+`vendor/`, git-ignored). The Markdown is the only thing to edit; the next
+deploy ships it. A link to a page that doesn't exist is a build warning.
+
 ## Files
 
 | File | What it is |
 |---|---|
 | `build.py` | Reads the logs + `_workspace/context/LOG.md` and writes `dist/`: the pages, `data.json`, `todo.json` (from `todo.py`), and copies of the site files it shares (top bar styles, the Projects tabs, settings, Hinglish, transitions, wallpapers). It also copies every `.html` page saved in `parth_project/discontinued/<project>/` to `/discontinued/<project>/`, so pages like Artifact reviews open on the LAN without a Claude sign-in. |
 | `todo.py` | The To do page's text: `_workspace/context/TODO.md`, with section 1 written from what git says about every repo. |
-| `page/` | The pages: `index.html`, `claude.js`, `claude.css` (Claude) and `todo.html`, `todo.js`, `todo.css` (To do). `handoff.js` copies in the settings the website passes along, on both. |
+| `encyclopedia.py` | The Encyclopedia: renders `_workspace/encyclopedia/**/*.md` into `dist/encyclopedia/` (pages, `search.json`, `pygments.css`, Mermaid). |
+| `page/` | The pages: `index.html`, `claude.js`, `claude.css` (Claude) and `todo.html`, `todo.js`, `todo.css` (To do). `handoff.js` copies in the settings the website passes along, on all of them. |
+| `page/encyclopedia/` | The Encyclopedia's template (`_template.html`, filled per page), `encyclopedia.css` and `encyclopedia.js` (search, sidebar on a phone, copy buttons, Mermaid). |
+| `vendor/` | `mermaid.min.js` (3.5 MB), fetched once by the build. Git-ignored. |
 | `deploy.py` | Runs `build.py`, then uploads `dist/` to `~/claude-timeline/` on the box and restarts the container. |
 | `update_site.py`, `Caddyfile`, `docker-compose.yml` | The box side: container `claude-timeline` (`caddy:2-alpine`, port 8120 → 80, `restart: unless-stopped`), same setup as Apex Dash. |
 | `dist/` | The build. **Git-ignored and must never be committed**: it's the full logs and the to-do list, and this repo is public. |
-| `../../claude.html`, `../../todo.html` | The public gateway pages the Claude and To do tabs link to. Both use `../../lan-gateway.js`. |
+| `../../claude.html`, `../../todo.html`, `../../encyclopedia.html` | The public gateway pages the Claude, To do and Encyclopedia tabs link to. All three use `../../lan-gateway.js`. |
 
 ## Updating it
 
@@ -59,7 +73,7 @@ python tools/claude-timeline/build.py           # build only, to look at dist/ l
 python tools/claude-timeline/build.py --strict  # warnings stop the build
 ```
 
-Needs `pip install pyyaml markdown-it-py`, and PuTTY for deploying. The site
+Needs `pip install pyyaml markdown-it-py pygments`, and PuTTY for deploying. The site
 files are copied in at build time, so after changing `settings.js`,
 `hinglish.js`, `movies.css` etc., redeploy here too.
 

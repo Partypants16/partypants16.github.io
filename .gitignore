@@ -5,5 +5,8 @@ Book.xlsx
 # The Claude page build: the full, unfiltered session logs. LAN only, never commit.
 tools/claude-timeline/dist/
 
+# Mermaid for the Encyclopedia tab (3.5 MB): build.py fetches it once (encyclopedia.py)
+tools/claude-timeline/vendor/
+
 # Python bytecode (build.py imports todo.py)
 __pycache__/
