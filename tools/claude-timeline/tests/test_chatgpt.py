@@ -96,6 +96,12 @@ class ImporterTest(unittest.TestCase):
         self.assertNotIn("abc123secret", text)
         self.assertEqual(record["redactions"], 2)
 
+    def test_password_is_redacted_but_prose_kept(self):
+        counter = [0]
+        self.assertEqual(import_chatgpt.redact("the box password is: hunter2", counter), "the box password is: [redacted]")
+        self.assertEqual(import_chatgpt.redact("the box password is far too easy", counter), "the box password is far too easy")
+        self.assertEqual(counter[0], 1)
+
     def test_times_in_sydney_with_daylight_saving(self):
         self.assertEqual(import_chatgpt.local("2026-08-10T11:58:53.000Z"), "2026-08-10T21:58:53+10:00")  # AEST
         self.assertEqual(import_chatgpt.local("2026-10-26T23:00:06.526Z"), "2026-10-27T10:00:06+11:00")  # AEDT

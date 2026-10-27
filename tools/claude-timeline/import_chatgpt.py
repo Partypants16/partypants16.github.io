@@ -23,7 +23,7 @@ What it writes, per chat (and nothing else):
   their times in Australia/Sydney, attachment names, and a one-line note of the tools used between
   messages (with the files they changed). Never: hidden reasoning, system/developer instructions,
   the environment blocks Codex adds to each turn, tool output, or attachment contents. Obvious
-  secrets (-pw values, password:/token= values, API-key shapes) are replaced with [redacted].
+  secrets (-pw values, password:/token= values incl. "password is: x", API-key shapes) are replaced with [redacted].
 - sources/manifest.json: one entry per chat id (title, where it came from, dates, completeness,
   gaps), so running this again updates the same entry instead of adding a second one. Its
   "known_missing" list (chats known about but not readable here) is edited by hand and kept;
@@ -61,7 +61,7 @@ ROLLOUT = re.compile(r"rollout-.*?([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{
 WRAPPER = re.compile(r"^\s*<([a-z_]+)\b[^>]*>.*?</\1>\s*", re.S)
 SECRETS = [
     (re.compile(r"(-pw\s+)(?![.…<$%{\[])\S+"), r"\1[redacted]"),
-    (re.compile(r"(?i)\b((?:pass(?:word|wd)?|token|secret|api[_-]?key|npsso)\s*[:=]\s*)(?![.…<$%{\[])[^\s,;]+"), r"\1[redacted]"),
+    (re.compile(r"(?i)\b((?:pass(?:word|wd)?|token|secret|api[_-]?key|npsso)(?:\s+is)?\s*[:=]\s*)(?![.…<$%{\[])[^\s,;]+"), r"\1[redacted]"),
     (re.compile(r"(?i)(\bsplunk\s+)[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"), r"\1[redacted]"),
     (re.compile(r"\b(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|sk-[A-Za-z0-9_-]{20,}|xox[abprs]-[A-Za-z0-9-]{10,}|AKIA[0-9A-Z]{16})\b"), "[redacted]"),
     (re.compile(r"\beyJ[\w-]{10,}\.[\w-]{10,}\.[\w-]{10,}\b"), "[redacted]"),  # JWTs
@@ -383,7 +383,9 @@ def write_chat(record, title, chatgpt_dir, manifest, existing, dry_run, report):
     imported = now()
     sources = chatgpt_dir / "sources"
     previous = manifest["chats"].get(chat_id, {})
+    # A changed redaction count (a stricter SECRETS rule) rewrites the record too.
     unchanged = (previous.get("sha256") == record["sha256"] and previous.get("format") == FORMAT
+                 and previous.get("redactions") == record["redactions"]
                  and (sources / f"{chat_id}.json").exists())
 
     entry = {
