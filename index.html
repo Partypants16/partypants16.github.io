@@ -32,10 +32,29 @@
   </header>
 
   <main>
-    <section id="hero">
-      <h2>Welcome to Parth's Palace</h2>
-      <p>where you will find everything...</p>
-      <a href="#cards" class="fancy-button">Are you ready?</a>
+    <section id="hero" class="widget-stack" aria-label="Home highlights" aria-roledescription="carousel">
+      <div class="widget-track" id="home-widgets" tabindex="0" aria-label="Swipe through cards">
+        <div class="widget-slide" role="group" aria-roledescription="slide" aria-label="1 / 3">
+          <h2>Welcome to Parth's Palace</h2>
+          <p>where you will find everything...</p>
+          <a href="#cards" class="fancy-button">Are you ready?</a>
+        </div>
+        <div class="widget-slide" role="group" aria-roledescription="slide" aria-label="2 / 3">
+          <h2>Coming Soon</h2>
+        </div>
+        <div class="widget-slide" role="group" aria-roledescription="slide" aria-label="3 / 3">
+          <h2>Coming Soon</h2>
+        </div>
+      </div>
+      <div class="widget-controls" hidden>
+        <button type="button" class="widget-prev" aria-label="Previous card" aria-controls="home-widgets">&#8592;</button>
+        <div class="widget-dots">
+          <button type="button" aria-label="Show card 1" aria-current="true" aria-controls="home-widgets"></button>
+          <button type="button" aria-label="Show card 2" aria-controls="home-widgets"></button>
+          <button type="button" aria-label="Show card 3" aria-controls="home-widgets"></button>
+        </div>
+        <button type="button" class="widget-next" aria-label="Next card" aria-controls="home-widgets">&#8594;</button>
+      </div>
     </section>
 
     <div class="card-group card-group--lan" id="cards">
@@ -169,6 +188,7 @@
   </footer>
 
   <script src="service-status.js"></script>
+  <script src="home-widgets.js"></script>
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>

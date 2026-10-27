@@ -15,6 +15,13 @@ const HINGLISH = {
   words: {
     // ---------- Top bar, titles, everywhere ----------
     "Home": "Ghar",
+    "Home highlights": "Ghar ki khaas baatein",
+    "Swipe through cards": "Cards dekhne ke liye swipe karo",
+    "Previous card": "Pichhla card",
+    "Next card": "Agla card",
+    "Show card 1": "Card 1 dikhao",
+    "Show card 2": "Card 2 dikhao",
+    "Show card 3": "Card 3 dikhao",
     "Movies": "Filmein",
     "Close settings": "Settings band karo",
     "Close": "Band karo",

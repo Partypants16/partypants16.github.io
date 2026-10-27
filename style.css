@@ -485,3 +485,61 @@ section p {
     font-size: 1rem;
   }
 }
+
+/* Home's swipeable welcome cards. Native scrolling also works without JS. */
+#hero.widget-stack {
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  position: relative;
+  isolation: isolate;
+  margin-bottom: 3rem;
+}
+.widget-stack::before, .widget-stack::after {
+  content: '';
+  position: absolute;
+  inset: 18px 20px 48px;
+  border-radius: 24px;
+  background: #8f7bff;
+  opacity: .3;
+  transform: translateY(12px);
+  z-index: -1;
+}
+.widget-stack::after { inset-inline: 36px; transform: translateY(22px); opacity: .15; }
+.widget-track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  border-radius: 24px;
+}
+.widget-track::-webkit-scrollbar { display: none; }
+.widget-slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  min-height: 620px;
+  padding: 6rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  background: linear-gradient(135deg, #6a5cff, #8f7bff 40%, #caa8ff);
+}
+.widget-slide:nth-child(2) { background: linear-gradient(135deg, #7b68ee, #bba4f5); }
+.widget-slide:nth-child(3) { background: linear-gradient(135deg, #6879eb, #b6b1ff); }
+.widget-slide h2 { max-width: 100%; overflow-wrap: break-word; }
+.widget-controls { display: flex; justify-content: center; align-items: center; gap: 1.25rem; padding-top: 1.7rem; }
+.widget-controls[hidden] { display: none; }
+.widget-controls button { cursor: pointer; color: var(--text); border: 0; background: transparent; min-width: 44px; min-height: 44px; border-radius: 50%; font-size: 1.4rem; }
+.widget-controls button:disabled { opacity: .3; cursor: default; }
+.widget-dots { display: flex; }
+.widget-dots button { position: relative; }
+.widget-dots button::after { content: ''; position: absolute; width: 8px; height: 8px; inset: 18px; border-radius: 50%; background: currentColor; opacity: .3; }
+.widget-dots button[aria-current]::after { opacity: 1; transform: scale(1.35); }
+.widget-track:focus-visible, .widget-controls button:focus-visible { outline: 3px solid var(--text); outline-offset: 3px; }
+@media (max-width: 900px) { .widget-slide { min-height: 410px; padding: 4rem 2rem; } }
+@media (max-width: 600px) { .widget-slide { min-height: 340px; padding: 3rem 1.5rem; } }
