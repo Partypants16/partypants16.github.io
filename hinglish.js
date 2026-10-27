@@ -217,6 +217,21 @@ const HINGLISH = {
     "changed": "badla",
     "Not imported:": "Import nahi hua:",
 
+    // ---------- Memory (memory.html: the Claude and ChatGPT timelines as two cards) ----------
+    "Memory": "Yaadein",
+    "Memory | Parth": "Yaadein | Parth",
+    "Everything I've worked on in parth_project with an AI assistant, one timeline each: what was asked, decided and changed.": "parth_project mein AI assistant ke saath jo bhi kaam kiya, sab yahan hai, har ek ki apni timeline: kya poocha, kya tay hua aur kya badla.",
+    "Every Claude Code session, each with its full write-up.": "Claude Code ka har session, apne poore write-up ke saath.",
+    "Sessions with ChatGPT and Codex: the write-up and, where it was saved, the conversation itself.": "ChatGPT aur Codex ke saath sessions: write-up, aur jahan save hui hai wahan poori baatcheet.",
+    "Open Claude": "Claude kholo",
+    "Open ChatGPT": "ChatGPT kholo",
+    "Session": "Session",
+    "Sessions": "Sessions",
+    "Day": "Din",
+    "Days": "Din",
+    "1 known chat isn't imported yet": "Ek chat ka pata hai jo abhi import nahi hui",
+    "Latest": "Sabse naya",
+
     // ---------- Projects (projects.html, project.html, and the tabs on the Claude pages) ----------
     "What I've built, and the thinking behind it: the decisions, the experiments and the dead ends along the way.": "Maine kya banaya, aur uske peeche ki soch: faisle, experiments, aur woh raaste jo kahin nahi pahunche.",
     "Projects sections": "Projects ke hisse",
@@ -582,6 +597,7 @@ const HINGLISH = {
     [/^(Built|Improved|Fixed|Ideas|Research|Setup|Sync|Docs|Done|Needs testing|Open|Parked) \((\d+)\)$/, (m, t) => t(m[1]) + " (" + m[2] + ")"],
     [/^(Needs testing|Open|Parked): (\d+)$/, (m, t) => t(m[1]) + ": " + m[2]],
     // ChatGPT page
+    [/^(\d+) known chats aren't imported yet$/, "$1 chats ka pata hai jo abhi import nahi hui"],
     [/^(\d+) messages?$/, "$1 messages"],
     [/^Used (\d+) tools$/, "$1 tools chalaye"],
     // Encyclopedia search

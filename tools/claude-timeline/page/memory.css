@@ -1,0 +1,61 @@
+/* The Memory page (memory.html): the Claude and ChatGPT timelines as two cards.
+   The card itself is the Showcase's .feature-card (projects.css), without its cover. */
+
+.memory-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.memory-card {
+  grid-template-columns: 1fr;
+}
+
+.memory-card h2 {
+  font-size: 2rem;
+  line-height: 1.1;
+  letter-spacing: -.01em;
+}
+
+.memory-card .feature-counts {
+  gap: 1.25rem 1.75rem;
+}
+
+.memory-latest {
+  font-size: .92rem;
+  color: var(--muted-text);
+}
+
+.memory-note {
+  font-size: .85rem;
+  font-style: italic;
+  color: var(--muted-text);
+}
+
+.memory-latest-label {
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.memory-latest-title {
+  color: var(--text);
+  font-weight: 600;
+}
+
+@media (max-width: 700px) {
+  .memory-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .memory-card .feature-body {
+    padding: 1.5rem;
+  }
+
+  .memory-card h2 {
+    font-size: 1.7rem;
+  }
+}

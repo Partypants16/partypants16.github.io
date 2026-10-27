@@ -11,9 +11,14 @@ address, so a filtered view can be bookmarked.
 box. The raw logs hold everything (Coles work, logins, family details), so
 they never go on the public website. It's a section of **Projects** (since
 2026-10-21): the top bar's Projects link opens the public showcase
-(`projects.html`), and its **Claude** tab goes to `claude.html` on the
-website, which forwards to the box. This page has the same Showcase / Claude
-/ To do tabs (styles from `projects.css`), so the way back is the Showcase tab. Off home Wi-Fi, the
+(`projects.html`), and its **Memory** tab (since 2026-10-27) goes to
+`memory.html` on the website, which forwards to the box's Memory page: one
+card for this timeline and one for its ChatGPT twin (below), with their
+counts and newest session, from a small `memory.json` the build writes. Both
+timelines have a Claude | ChatGPT switch under the tabs, and the Memory tab
+leads back to the cards. `claude.html` still forwards straight to this
+timeline, for old links. These pages have the same Showcase / Memory / To do
+/ Encyclopedia tabs (styles from `projects.css`), so the way back is the Showcase tab. Off home Wi-Fi, the
 box's address doesn't answer, so after 3 seconds it stops trying and says to
 connect to home Wi-Fi.
 
@@ -67,13 +72,13 @@ deploy ships it. A link to a page that doesn't exist is a build warning.
 | `tests/` | `test_chatgpt.py`: the importer and the build on made-up chats (nothing real). |
 | `todo.py` | The To do page's text: `_workspace/context/TODO.md`, with section 1 written from what git says about every repo. |
 | `encyclopedia.py` | The Encyclopedia: renders `_workspace/encyclopedia/**/*.md` into `dist/encyclopedia/` (pages, `search.json`, `pygments.css`, Mermaid). |
-| `page/` | The pages: `index.html`, `claude.js`, `claude.css` (Claude; `chatgpt.html` is the ChatGPT page, the same script and styles) and `todo.html`, `todo.js`, `todo.css` (To do). `handoff.js` copies in the settings the website passes along, on all of them. |
+| `page/` | The pages: `memory.html`, `memory.js`, `memory.css` (Memory: the two cards); `index.html`, `claude.js`, `claude.css` (Claude; `chatgpt.html` is the ChatGPT page, the same script and styles) and `todo.html`, `todo.js`, `todo.css` (To do). `handoff.js` copies in the settings the website passes along, on all of them. |
 | `page/encyclopedia/` | The Encyclopedia's template (`_template.html`, filled per page), `encyclopedia.css` and `encyclopedia.js` (search, sidebar on a phone, copy buttons, Mermaid). |
 | `vendor/` | `mermaid.min.js` (3.5 MB), fetched once by the build. Git-ignored. |
 | `deploy.py` | Runs `build.py`, then uploads `dist/` to `~/claude-timeline/` on the box and restarts the container. |
 | `update_site.py`, `Caddyfile`, `docker-compose.yml` | The box side: container `claude-timeline` (`caddy:2-alpine`, port 8120 → 80, `restart: unless-stopped`), same setup as Apex Dash. |
 | `dist/` | The build. **Git-ignored and must never be committed**: it's the full logs, the ChatGPT conversations and the to-do list, and this repo is public. |
-| `../../claude.html`, `../../chatgpt.html`, `../../todo.html`, `../../encyclopedia.html` | The public gateway pages the Claude, ChatGPT, To do and Encyclopedia tabs link to. All use `../../lan-gateway.js`. |
+| `../../memory.html`, `../../todo.html`, `../../encyclopedia.html` | The public gateway pages the Memory, To do and Encyclopedia tabs link to. `../../claude.html` and `../../chatgpt.html` go straight to one timeline (for old links and deep links). All use `../../lan-gateway.js`. |
 
 ## Updating it
 

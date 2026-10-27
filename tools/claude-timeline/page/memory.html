@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <script src="handoff.js"></script>
+  <script src="hinglish.js"></script>
+  <script src="i18n.js"></script>
+  <script src="settings.js"></script>
+  <script src="motion.js"></script>
+  <title>Memory | Parth</title>
+  <meta name="description" content="Everything Parth has done in parth_project with Claude and ChatGPT, as session logs. Only on the home server.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+  <link rel="stylesheet" href="movies.css">
+  <link rel="stylesheet" href="projects.css">
+  <link rel="stylesheet" href="settings.css">
+  <link rel="stylesheet" href="motion.css">
+  <link rel="stylesheet" href="memory.css">
+</head>
+
+<body>
+  <header>
+    <nav>
+      <p class="logo"><a href="https://partypants16.github.io/profile.html" title="Profile">PS</a></p>
+      <ul>
+        <li><a href="https://partypants16.github.io/index.html">Home</a></li>
+        <li><a href="https://partypants16.github.io/wallpaper.html">Wallpaper</a></li>
+        <li><a href="https://partypants16.github.io/gaming.html">Games</a></li>
+        <li><a href="https://partypants16.github.io/movies.html">Movies</a></li>
+        <li><a href="https://partypants16.github.io/projects.html" aria-current="page">Projects</a></li>
+      </ul>
+      <button class="settings-toggle" id="settingsToggle" type="button" aria-label="Settings" title="Settings" aria-haspopup="dialog" aria-expanded="false" aria-controls="settingsPanel"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="3.34 3.34"/><circle cx="12" cy="12" r="5.2" fill="none" stroke="currentColor" stroke-width="4.4"/></svg></button>
+    </nav>
+  </header>
+
+  <main class="projects memory">
+    <nav class="section-tabs" aria-label="Projects sections">
+      <a href="https://partypants16.github.io/projects.html">Showcase</a>
+      <a href="memory.html" aria-current="page">Memory</a>
+      <a href="todo.html">To do</a>
+      <a href="encyclopedia/">Encyclopedia</a>
+    </nav>
+
+    <section class="lists-intro">
+      <h1>Memory</h1>
+      <p>Everything I've worked on in parth_project with an AI assistant, one timeline each: what was asked, decided and changed.</p>
+    </section>
+
+    <div class="memory-cards">
+      <a class="feature-card memory-card" href="./" data-memory="claude">
+        <div class="feature-body">
+          <span class="pj-eyebrow" translate="no">Claude Code</span>
+          <h2 translate="no">Claude</h2>
+          <p class="feature-tagline">Every Claude Code session, each with its full write-up.</p>
+          <ul class="feature-counts" hidden></ul>
+          <p class="memory-latest" hidden></p>
+          <span class="feature-cta"><span>Open Claude</span><svg class="pj-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></span>
+        </div>
+      </a>
+      <a class="feature-card memory-card" href="chatgpt.html" data-memory="chatgpt">
+        <div class="feature-body">
+          <span class="pj-eyebrow" translate="no">ChatGPT and Codex</span>
+          <h2 translate="no">ChatGPT</h2>
+          <p class="feature-tagline">Sessions with ChatGPT and Codex: the write-up and, where it was saved, the conversation itself.</p>
+          <ul class="feature-counts" hidden></ul>
+          <p class="memory-latest" hidden></p>
+          <span class="feature-cta"><span>Open ChatGPT</span><svg class="pj-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></span>
+        </div>
+      </a>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; <span id="year"></span> Parth</p>
+  </footer>
+
+  <script src="memory.js"></script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+
+</html>

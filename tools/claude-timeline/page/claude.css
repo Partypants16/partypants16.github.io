@@ -448,6 +448,45 @@ mark {
   border-top: 1px solid var(--card-border);
 }
 
+/* ---------- Claude | ChatGPT: the switch between the two timelines inside Memory ---------- */
+
+.memory-switch {
+  display: flex;
+  justify-content: center;
+  gap: .2rem;
+  width: max-content;
+  max-width: 100%;
+  margin: -1.5rem auto 2rem;
+  padding: .2rem;
+  border-radius: 999px;
+  border: 1px solid var(--card-border);
+  background: var(--chip-bg);
+}
+
+.memory-switch a {
+  padding: .3rem .95rem;
+  border-radius: 999px;
+  color: var(--muted-text);
+  font-size: .9rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.memory-switch a:hover {
+  color: var(--text);
+}
+
+.memory-switch a[aria-current="page"] {
+  background: var(--card-bg);
+  color: var(--text);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .15);
+}
+
+.memory-switch a:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+}
+
 /* ---------- The ChatGPT page (chatgpt.html): where a session came from, and the chat itself ---------- */
 
 .entry-source {

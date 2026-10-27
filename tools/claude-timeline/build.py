@@ -333,6 +333,23 @@ def read_collection(folder, page):
     return entries
 
 
+def summary(entries, missing=()):
+    """One card on the Memory page (memory.html): how many sessions, over how long, what's waiting,
+    and the newest one. Small on purpose, so the page doesn't load either full dataset."""
+    dates = sorted(e["date"] for e in entries)
+    statuses = {s: sum(e["status"] == s for e in entries) for s in STATUSES}
+    newest = entries[0] if entries else None
+    return {
+        "sessions": len(entries),
+        "days": len(set(dates)),
+        "first": dates[0] if dates else "",
+        "last": dates[-1] if dates else "",
+        "statuses": {s: n for s, n in statuses.items() if n},
+        "latest": {"id": newest["id"], "title": newest["title"], "date": newest["date"]} if newest else None,
+        "missing": len(missing),
+    }
+
+
 def build():
     built = datetime.datetime.now().astimezone().isoformat(timespec="seconds")
     entries = read_collection(CONTEXT, "claude")
@@ -359,6 +376,9 @@ def build():
         shutil.copy2(path, target)
     (DIST / "data.json").write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     (DIST / "chatgpt-data.json").write_text(json.dumps(chatgpt_data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    # The Memory page's two cards (since 2026-10-27): Claude and ChatGPT, side by side.
+    memory = {"built": built, "claude": summary(entries), "chatgpt": summary(chatgpt_entries, chatgpt_data["missing"])}
+    (DIST / "memory.json").write_text(json.dumps(memory, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     logged = [dict(e, page="claude") for e in entries] + [dict(e, page="chatgpt") for e in chatgpt_entries]
     to_do = todo.make(TODO, WORKSPACE, logged, lambda text: render(text, page="todo", base=CONTEXT), warn)
     (DIST / "todo.json").write_text(json.dumps(to_do, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
