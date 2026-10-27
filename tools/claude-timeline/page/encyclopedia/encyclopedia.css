@@ -6,6 +6,12 @@ main.projects.encyclopedia {
   max-width: 1280px;
 }
 
+/* The site's settings drawer waits just off the right edge; on a long page it could widen the
+   page by a few pixels. Clip sideways overflow here (pages scroll their own wide tables). */
+html:has(main.encyclopedia) {
+  overflow-x: clip;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -691,4 +697,112 @@ main.projects.encyclopedia {
 :root[data-motion="off"] .encyclopedia * {
   transition: none !important;
   animation: none !important;
+}
+
+/* ---------- The Coles Confluence section (confluence.py) ---------- */
+
+.enc-nav .cf-home {
+  margin-top: -.35rem;
+  font-weight: 700;
+}
+
+.enc-nav .cf-spaces {
+  margin-bottom: .6rem;
+  padding-bottom: .5rem;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.cf-tree .cf-tree-loading {
+  padding: .3rem .5rem;
+  color: var(--muted-text);
+  font-size: .85rem;
+}
+
+.cf-tree ul {
+  display: block;
+  margin: 0;
+  padding-left: .75rem;
+  list-style: none;
+}
+
+.cf-tree > ul {
+  padding-left: 0;
+}
+
+.cf-tree details {
+  margin: 0;
+}
+
+.cf-tree summary {
+  padding: 0;
+  font-weight: inherit;
+}
+
+.cf-tree summary a {
+  flex: 1;
+}
+
+.cf-source {
+  margin: 0 0 1.25rem;
+  padding: .75rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--card-border);
+  background: var(--chip-bg);
+  font-size: .88rem;
+}
+
+.cf-source dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: .5rem 1.25rem;
+  margin: 0;
+}
+
+.cf-source dt {
+  color: var(--muted-text);
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.cf-source dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.cf-open {
+  margin: .6rem 0 0;
+  font-weight: 700;
+}
+
+.cf-open span {
+  color: var(--muted-text);
+  font-weight: 400;
+  font-size: .8rem;
+}
+
+.cf-notes {
+  margin: 0 0 1.5rem;
+  padding: .8rem 1.1rem;
+  border-radius: 12px;
+  border-left: 4px solid var(--ev-milestone, #9a6700);
+  background: color-mix(in srgb, var(--ev-milestone, #9a6700) 10%, transparent);
+}
+
+.cf-notes-title {
+  margin-bottom: .35rem;
+  font-weight: 800;
+}
+
+.cf-notes > :last-child {
+  margin-bottom: 0;
+}
+
+.cf-fulltree ul {
+  padding-left: 1.2rem;
+}
+
+.cf-fulltree > ul {
+  padding-left: 1rem;
 }

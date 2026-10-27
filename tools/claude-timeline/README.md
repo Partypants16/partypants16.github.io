@@ -62,6 +62,17 @@ Mermaid diagrams from a local copy of `mermaid.min.js` (fetched once into
 `vendor/`, git-ignored). The Markdown is the only thing to edit; the next
 deploy ships it. A link to a page that doesn't exist is a build warning.
 
+Its **Confluence** section (`encyclopedia/confluence/`, since 2026-10-27, `confluence.py`) is a
+read-only copy of Coles Confluence spaces, rendered straight from `parth_project/Coles/Confluence/`
+(one page per Confluence page, named by `content_id`; a source panel with "Open in Confluence";
+Parth's notes from `Coles/Confluence/_notes/`). It's built to reach tens of thousands of pages:
+each space's sidebar tree is one `tree.json` drawn by `encyclopedia.js`, search loads page titles
+for every space and each space's text from `search/<KEY>.json` (all of them while they're small),
+the rendered section is cached in `.cache/confluence/` (git-ignored) and only re-rendered when its
+sources or the renderer change, and `deploy.py` leaves it out of the upload when the box already
+has the same `build-hash.txt` (`update_site.py --keep`). Coles content: `dist/` and `.cache/` must
+never be committed.
+
 ## Files
 
 | File | What it is |
@@ -71,10 +82,12 @@ deploy ships it. A link to a page that doesn't exist is a build warning.
 | `import_chatgpt.py` | Imports chats into `_workspace/context/chatgpt/`: Codex's local records (read only) or a ChatGPT export, by chat id, without duplicates. |
 | `tests/` | `test_chatgpt.py`: the importer and the build on made-up chats (nothing real). |
 | `todo.py` | The To do page's text: `_workspace/context/TODO.md`, with section 1 written from what git says about every repo. |
+| `confluence.py` | The Encyclopedia's Confluence section: renders `Coles/Confluence/` into `dist/encyclopedia/confluence/` (pages by content_id, `tree.json` per space, `titles.json`, search shards, `build-hash.txt`), cached in `.cache/confluence/`. |
 | `encyclopedia.py` | The Encyclopedia: renders `_workspace/encyclopedia/**/*.md` into `dist/encyclopedia/` (pages, `search.json`, `pygments.css`, Mermaid). |
 | `page/` | The pages: `memory.html`, `memory.js`, `memory.css` (Memory: the two cards); `index.html`, `claude.js`, `claude.css` (Claude; `chatgpt.html` is the ChatGPT page, the same script and styles) and `todo.html`, `todo.js`, `todo.css` (To do). `handoff.js` copies in the settings the website passes along, on all of them. |
 | `page/encyclopedia/` | The Encyclopedia's template (`_template.html`, filled per page), `encyclopedia.css` and `encyclopedia.js` (search, sidebar on a phone, copy buttons, Mermaid). |
 | `vendor/` | `mermaid.min.js` (3.5 MB), fetched once by the build. Git-ignored. |
+| `.cache/` | The rendered Confluence section from the last build, reused while nothing changed. Git-ignored (Coles content). |
 | `deploy.py` | Runs `build.py`, then uploads `dist/` to `~/claude-timeline/` on the box and restarts the container. |
 | `update_site.py`, `Caddyfile`, `docker-compose.yml` | The box side: container `claude-timeline` (`caddy:2-alpine`, port 8120 → 80, `restart: unless-stopped`), same setup as Apex Dash. |
 | `dist/` | The build. **Git-ignored and must never be committed**: it's the full logs, the ChatGPT conversations and the to-do list, and this repo is public. |

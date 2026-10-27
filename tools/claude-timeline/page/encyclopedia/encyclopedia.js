@@ -38,13 +38,32 @@
   let index = null;
   let loading = null;
 
+  const getJSON = (url, fallback) => fetch(url, { cache: "no-store" })
+    .then(response => response.ok ? response.json() : fallback)
+    .catch(() => fallback);
+
+  // The Encyclopedia's pages, then the Confluence copy: every page's title and headings
+  // (titles.json), plus page text from the per-space shards: all of them while they're
+  // small, otherwise only the space you're reading.
   function load() {
     if (index) return Promise.resolve(index);
     if (!loading) {
-      loading = fetch(root + "search.json", { cache: "no-store" })
-        .then(response => response.ok ? response.json() : [])
-        .then(json => { index = json; return index; })
-        .catch(() => { index = []; return index; });
+      const tree = $("cf-tree");
+      const here = tree ? tree.dataset.space : "";
+      loading = Promise.all([
+        getJSON(root + "search.json", []),
+        getJSON(root + "confluence/titles.json", []),
+        getJSON(root + "confluence/search/shards.json", null)
+      ]).then(([own, titles, shards]) => {
+        const keys = !shards ? [] : Object.keys(shards.spaces).filter(key => shards.all || key === here);
+        return Promise.all(keys.map(key => getJSON(root + "confluence/search/" + key + ".json", [])))
+          .then(parts => {
+            const full = new Map();
+            parts.flat().forEach(page => full.set(page.u, page));
+            index = own.concat(titles.map(page => full.get(page.u) || page));
+            return index;
+          });
+      });
     }
     return loading;
   }
@@ -56,8 +75,8 @@
   function score(page, terms) {
     let total = 0;
     const title = page.t.toLowerCase();
-    const headings = page.h.join(" ").toLowerCase();
-    const body = page.b.toLowerCase();
+    const headings = (page.h || []).join(" ").toLowerCase();
+    const body = (page.b || "").toLowerCase();
     for (const term of terms) {
       let found = 0;
       if (title.includes(term)) found += 12;
@@ -71,7 +90,7 @@
   }
 
   function snippet(page, terms) {
-    const body = page.b;
+    const body = page.b || (page.h || []).join(" · ");
     const lower = body.toLowerCase();
     let at = -1;
     for (const term of terms) {
@@ -218,6 +237,57 @@
     new MutationObserver(list => {
       if (list.some(m => m.attributeName === "data-theme")) draw();
     }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  }
+
+  // ---------- A Confluence space's page tree (confluence/<KEY>/tree.json) ----------
+
+  // Drawn here rather than written into every page, so a space of thousands of pages
+  // doesn't repeat its whole tree in each one. The branch holding this page is opened.
+  const treeBox = $("cf-tree");
+  if (treeBox) {
+    const currentId = treeBox.dataset.current;
+    getJSON("tree.json", null).then(tree => {
+      treeBox.textContent = "";
+      if (!tree || !tree.length) return;
+      const path = new Set();
+      (function find(nodes, trail) {
+        for (const [id, , kids] of nodes) {
+          if (id === currentId) { trail.forEach(x => path.add(x)); return true; }
+          if (kids.length && find(kids, trail.concat(id))) return true;
+        }
+        return false;
+      })(tree, []);
+      let currentLink = null;
+      function list(nodes) {
+        const ul = document.createElement("ul");
+        nodes.forEach(([id, title, kids]) => {
+          const li = document.createElement("li");
+          const a = document.createElement("a");
+          a.href = id + ".html";
+          a.textContent = title;
+          if (id === currentId) { a.setAttribute("aria-current", "page"); currentLink = a; }
+          if (kids.length) {
+            const details = document.createElement("details");
+            details.open = path.has(id) || id === currentId;
+            const summary = document.createElement("summary");
+            summary.append(a);
+            details.append(summary, list(kids));
+            li.append(details);
+          } else {
+            li.append(a);
+          }
+          ul.append(li);
+        });
+        return ul;
+      }
+      treeBox.append(list(tree));
+      // Scroll the sidebar (not the page) so this page's entry is in view.
+      const box = $("enc-nav");
+      if (currentLink && box && box.scrollHeight > box.clientHeight) {
+        const top = currentLink.getBoundingClientRect().top - box.getBoundingClientRect().top + box.scrollTop;
+        box.scrollTop = Math.max(0, top - box.clientHeight / 2);
+      }
+    });
   }
 
   // ---------- The heading the page was opened at ----------

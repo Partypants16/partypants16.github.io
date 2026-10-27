@@ -11,6 +11,11 @@ docker compose up (recreated, so a changed Caddyfile is picked up too) -> checks
 and data.json answer, and that data.json is the one just built; the same for the ChatGPT
 page (chatgpt.html + chatgpt-data.json, compared byte for byte) and the Encyclopedia.
 dist/ holds the full session logs, so it only ever goes to this private box.
+
+The Encyclopedia's Coles Confluence section (encyclopedia/confluence/, from confluence.py) can
+grow to tens of thousands of pages, so it's only sent when it changed: if the box's
+encyclopedia/confluence/build-hash.txt matches this build's, the section is left out of the zip
+and update_site.py keeps the copy already on the box.
 """
 import getpass, json, os, subprocess, sys, tempfile, time, urllib.request, zipfile
 
@@ -36,20 +41,37 @@ def upload(paths):
     subprocess.run([os.path.join(PUTTY, "pscp.exe"), "-batch", "-q", "-pw", password, *paths, HOST + ":" + REMOTE_DIR + "/"], check=True)
 
 
+CONFLUENCE = "encyclopedia/confluence"
+
+
+def confluence_hash(read):
+    try:
+        return read().strip()
+    except OSError:
+        return ""
+
+
+local_hash = confluence_hash(lambda: open(os.path.join(DIST, *CONFLUENCE.split("/"), "build-hash.txt"), encoding="utf-8").read())
+box_hash = confluence_hash(lambda: urllib.request.urlopen(URL + CONFLUENCE + "/build-hash.txt", timeout=10).read().decode())
+keep_confluence = bool(local_hash) and local_hash == box_hash
+
 archive = os.path.join(tempfile.gettempdir(), "claude-site.zip")
 count = 0
 with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as z:
     for folder, _, names in os.walk(DIST):
         for name in names:
             path = os.path.join(folder, name)
-            z.write(path, os.path.relpath(path, DIST).replace(os.sep, "/"))
+            rel = os.path.relpath(path, DIST).replace(os.sep, "/")
+            if keep_confluence and rel.startswith(CONFLUENCE + "/"):
+                continue
+            z.write(path, rel)
             count += 1
-print("zipped", count, "files from dist/")
+print("zipped", count, "files from dist/" + (" (Confluence unchanged, kept on the box)" if keep_confluence else ""))
 
 ssh("mkdir -p " + REMOTE_DIR + "/site")
 upload([os.path.join(HERE, n) for n in ("Caddyfile", "docker-compose.yml", "update_site.py")] + [archive])
 os.remove(archive)
-ssh("python3 %s/update_site.py %s/claude-site.zip" % (REMOTE_DIR, REMOTE_DIR))
+ssh("python3 %s/update_site.py %s/claude-site.zip%s" % (REMOTE_DIR, REMOTE_DIR, " --keep " + CONFLUENCE if keep_confluence else ""))
 ssh("docker compose -f %s/docker-compose.yml up -d --force-recreate" % REMOTE_DIR)
 
 expected = os.path.getsize(os.path.join(DIST, "data.json"))
@@ -86,6 +108,24 @@ for attempt in range(10):  # Caddy takes a moment to start after the recreate
             if got != os.path.getsize(search):
                 sys.exit("encyclopedia/search.json on the box is %d bytes, expected %d" % (got, os.path.getsize(search)))
             print("live:", URL + "encyclopedia/", front, "· search.json", got, "bytes, matches the build")
+        # The Memory hub (memory.html + memory.json), once the build writes it.
+        built_memory = os.path.join(DIST, "memory.json")
+        if os.path.isfile(built_memory):
+            with urllib.request.urlopen(URL + "memory.html", timeout=15) as response:
+                memory_page = response.status
+            request = urllib.request.Request(URL + "memory.json", headers={"Accept-Encoding": "identity"})
+            with urllib.request.urlopen(request, timeout=15) as response:
+                live = response.read()
+            with open(built_memory, "rb") as built:
+                local = built.read()
+            if live != local:
+                sys.exit("memory.json on the box (%d bytes) isn't the one just built (%d bytes)" % (len(live), len(local)))
+            print("live:", URL + "memory.html", memory_page, "· memory.json", len(live), "bytes, matches the build")
+        if local_hash:
+            live_hash = confluence_hash(lambda: urllib.request.urlopen(URL + CONFLUENCE + "/build-hash.txt", timeout=15).read().decode())
+            if live_hash != local_hash:
+                sys.exit("encyclopedia/confluence on the box isn't this build's (hash differs)")
+            print("live:", URL + CONFLUENCE + "/", "· build hash matches" + (" (not re-sent)" if keep_confluence else " (sent)"))
         break
     except OSError:
         time.sleep(1)

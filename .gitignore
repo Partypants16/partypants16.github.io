@@ -5,6 +5,9 @@ Book.xlsx
 # The Claude page build: the full, unfiltered session logs. LAN only, never commit.
 tools/claude-timeline/dist/
 
+# The Encyclopedia's rendered Confluence section, cached between builds (Coles content: never commit)
+tools/claude-timeline/.cache/
+
 # Mermaid for the Encyclopedia tab (3.5 MB): build.py fetches it once (encyclopedia.py)
 tools/claude-timeline/vendor/
 

@@ -302,7 +302,15 @@ def nav_html(page, secs):
         current = page["folder"] == folder
         parts.append(f'<details{" open" if current else ""}><summary>{html.escape(label)}</summary><ul>'
                      + "".join(nav_item(page, p, folder_index=True) for p in group) + "</ul></details>")
+    if CONFLUENCE_SPACES:
+        # The Coles Confluence copy (confluence.py): its overview and one link per space.
+        items = [f'<li><a href="{root}confluence/index.html">Overview</a></li>']
+        items += [f'<li><a href="{root}confluence/{key}/index.html">{html.escape(name)}</a></li>' for key, name in CONFLUENCE_SPACES]
+        parts.append("<details><summary>Confluence</summary><ul>" + "".join(items) + "</ul></details>")
     return "\n".join(parts)
+
+
+CONFLUENCE_SPACES = []  # [(KEY, name)], set by build() when the Confluence copy has spaces
 
 
 def nav_item(page, target, folder_index=False):
@@ -373,6 +381,7 @@ def render_page(page, pages, secs, template, source, workspace, context, warn):
               .replace("{{content}}", body)
               .replace("{{neighbours}}", neighbours_html(page, secs))
               .replace("{{source}}", html.escape("_workspace/encyclopedia/" + page["rel"]))
+              .replace("{{source_note}}", "edit the Markdown, then redeploy the Claude page")
               .replace("{{mermaid}}", f'<script src="{root}mermaid.min.js"></script>' if env.get("mermaid") else ""))
     search = {
         "u": page["out"],
@@ -404,9 +413,11 @@ def fetch_mermaid(warn):
         return None
 
 
-def build(source, dest, workspace, context, warn):
+def build(source, dest, workspace, context, warn, confluence_spaces=()):
     """source: _workspace/encyclopedia/, dest: dist/encyclopedia/ (page/encyclopedia/ was copied there
-    already by build.py's copytree). Returns the number of pages written."""
+    already by build.py's copytree). confluence_spaces: [(KEY, name)] for the sidebar's Confluence
+    section (confluence.py writes those pages). Returns the number of pages written."""
+    CONFLUENCE_SPACES[:] = list(confluence_spaces)
     if not source.is_dir():
         warn("encyclopedia", f"no folder at {source}, so the tab has no pages")
         return 0

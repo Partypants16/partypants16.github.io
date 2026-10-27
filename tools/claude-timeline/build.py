@@ -48,6 +48,7 @@ from markdown_it import MarkdownIt
 
 import todo  # the To do page's text (todo.py, next to this file)
 import encyclopedia  # the Encyclopedia tab (encyclopedia.py, next to this file)
+import confluence  # its Coles Confluence section (confluence.py, next to this file)
 import chatgpt  # the ChatGPT page's extra fields (chatgpt.py, next to this file)
 
 HERE = Path(__file__).resolve().parent
@@ -57,6 +58,7 @@ CONTEXT = WORKSPACE / "_workspace" / "context"
 DISCONTINUED = WORKSPACE / "discontinued"     # dropped projects; their saved pages are served too
 TODO = CONTEXT / "TODO.md"                    # what's waiting on Parth: the To do page (todo.html)
 ENCYCLOPEDIA = WORKSPACE / "_workspace" / "encyclopedia"  # the Encyclopedia's Markdown (since 2026-10-22)
+CONFLUENCE = WORKSPACE / "Coles" / "Confluence"  # the Coles Confluence copy, the Encyclopedia's Confluence section (since 2026-10-27)
 CHATGPT = CONTEXT / "chatgpt"                 # the ChatGPT page's sessions, index and sources (since 2026-10-27)
 DIST = HERE / "dist"
 
@@ -383,7 +385,9 @@ def build():
     to_do = todo.make(TODO, WORKSPACE, logged, lambda text: render(text, page="todo", base=CONTEXT), warn)
     (DIST / "todo.json").write_text(json.dumps(to_do, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
-    pages = encyclopedia.build(ENCYCLOPEDIA, DIST / "encyclopedia", WORKSPACE, CONTEXT, warn)
+    spaces = [(key, name) for key, name, _ in confluence.spaces(CONFLUENCE)]
+    pages = encyclopedia.build(ENCYCLOPEDIA, DIST / "encyclopedia", WORKSPACE, CONTEXT, warn, spaces)
+    confluence_pages = confluence.build(CONFLUENCE, DIST / "encyclopedia" / "confluence", encyclopedia.TEMPLATE, warn)
 
     size = (DIST / "data.json").stat().st_size
     print(f"{len(entries)} sessions → {DIST.relative_to(SITE)} (data.json {size / 1024:.0f} KB)")
@@ -391,6 +395,8 @@ def build():
     print(f"ChatGPT: {len(chatgpt_entries)} sessions → chatgpt-data.json ({size / 1024:.0f} KB)")
     print(f"To do: TODO.md → todo.json ({len(to_do['html']) / 1024:.0f} KB, git section written now)")
     print(f"Encyclopedia: {pages} pages → {DIST.relative_to(SITE)}/encyclopedia/")
+    if confluence_pages:
+        print(f"Confluence: {confluence_pages} pages in {len(spaces)} spaces → {DIST.relative_to(SITE)}/encyclopedia/confluence/")
     return len(entries)
 
 

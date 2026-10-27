@@ -383,6 +383,7 @@ const HINGLISH = {
     "Copy": "Copy karo",
     "Copied": "Copy ho gaya",
     "edit the Markdown, then redeploy the Claude page": "Markdown edit karo, phir Claude page dobara deploy karo",
+    "Coles Confluence, read-only copy · notes go in": "Coles Confluence ki read-only copy · notes yahan jaate hain",
 
     // ---------- Under development (sports.html) ----------
     "This section": "Yeh section",
