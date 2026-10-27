@@ -31,14 +31,15 @@ def message(stamp, role, text):
     return row(stamp, "response_item", {"type": "message", "role": role, "content": [{"type": kind, "text": text}]})
 
 
-def fake_rollout(cwd, chat_id=CHAT_ID, start="2026-08-10T11:58:53.000Z"):
+def fake_rollout(cwd, chat_id=CHAT_ID, start="2026-08-10T11:58:53.000Z", originator="codex_work_desktop"):
     """A small Codex chat with everything the importer must keep or drop."""
     patch_call = 'text(await tools.apply_patch("*** Begin Patch\\n*** Update File: C:\\\\demo\\\\app\\\\Main.kt\\n@@\\n-a\\n+b\\n*** End Patch"));'
     return [
-        row(start, "session_meta", {"id": chat_id, "timestamp": start, "cwd": str(cwd),
+        row(start, "session_meta", {"id": chat_id, "timestamp": start, "cwd": str(cwd), "originator": originator,
                                     "base_instructions": {"text": "SYSTEM PROMPT, never shown"}}),
         message("2026-08-10T11:58:54.000Z", "developer", "DEVELOPER INSTRUCTIONS, never shown"),
         message("2026-08-10T11:58:55.000Z", "user", "<environment_context>\n  <cwd>C:\\x</cwd>\n</environment_context>"),
+        message("2026-08-10T11:58:55.500Z", "user", "# AGENTS.md instructions for C:\\x\n\n<INSTRUCTIONS>\nAGENTS TEXT, never shown\n</INSTRUCTIONS>"),
         message("2026-08-10T11:58:56.000Z", "user",
                 "\n# Files mentioned by the user:\n\n## handoff notes…: C:\\Users\\x\\.codex/attachments/1/pasted-text.txt\n\n"
                 "## My request:\nPlease carry on. The box is `plink -pw hunter2` and token=abc123secret\n"),
@@ -77,7 +78,7 @@ class ImporterTest(unittest.TestCase):
         roles = [m["role"] for m in record["messages"]]
         self.assertEqual(roles, ["user", "assistant", "tools", "assistant"])
         text = json.dumps(record)
-        for hidden in ("SYSTEM PROMPT", "DEVELOPER INSTRUCTIONS", "HIDDEN REASONING", "TOOL OUTPUT", "environment_context"):
+        for hidden in ("SYSTEM PROMPT", "DEVELOPER INSTRUCTIONS", "HIDDEN REASONING", "TOOL OUTPUT", "environment_context", "AGENTS TEXT"):
             self.assertNotIn(hidden, text)
         user = record["messages"][0]
         self.assertEqual(user["attachments"], ["handoff notes…"])
@@ -135,6 +136,33 @@ class ImporterTest(unittest.TestCase):
             encoding="utf-8")
         manifest, _ = self.run_import()
         self.assertEqual([m["chat_id"] for m in manifest["known_missing"]], ["other"])
+
+    def test_scripted_runs_skipped_unless_asked(self):
+        scripted = "01a00000-0000-7000-8000-000000000003"
+        inside = import_chatgpt.WORKSPACE / "apps" / "demo-app"
+        (self.rollout.parent / f"rollout-2026-08-10T23-00-00-{scripted}.jsonl").write_text(
+            "\n".join(json.dumps(r) for r in fake_rollout(inside, scripted, originator="codex_exec")) + "\n", encoding="utf-8")
+        manifest, _ = self.run_import()
+        self.assertNotIn(scripted, manifest["chats"])
+        self.assertIn("scripted", manifest["skipped"][scripted]["reason"])
+        manifest, _ = self.run_import(include_scripted=True)
+        self.assertIn(scripted, manifest["chats"])
+        self.assertTrue(manifest["chats"][scripted]["origin"].startswith("codex exec run"))
+
+    def test_title_falls_back_to_first_request(self):
+        (self.codex / "session_index.jsonl").write_text("", encoding="utf-8")  # Codex hasn't named it yet
+        manifest, _ = self.run_import()
+        self.assertTrue(manifest["chats"][CHAT_ID]["title"].startswith("Please carry on."), manifest["chats"][CHAT_ID]["title"])
+
+    def test_write_up_list(self):
+        _, report = self.run_import()
+        self.assertIn("(new chat)", "\n".join(report))
+        _, report = self.run_import()
+        self.assertNotIn("To write up", "\n".join(report))
+        with self.rollout.open("a", encoding="utf-8") as f:
+            f.write(json.dumps(message("2026-08-10T12:30:00.000Z", "user", "One more thing")) + "\n")
+        _, report = self.run_import()
+        self.assertIn("(the chat went on)", "\n".join(report))
 
     def test_dry_run_writes_nothing(self):
         self.run_import(dry_run=True)

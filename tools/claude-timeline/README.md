@@ -156,7 +156,10 @@ Its records live outside this repo, in `parth_project/_workspace/context/chatgpt
   go into the build. The rest of `sources/` never does.
 
 `import_chatgpt.py` fills `sources/` and makes a skeleton write-up for a chat
-that has none. It never touches an existing write-up, so hand corrections stay,
+that has none. It skips scripted `codex exec` runs (`--include-scripted` takes
+them), and ends with a "To write up" list: the new chats, and the chats that
+went on. Claude runs it at every session close and writes those up (step 6 of
+the root `CLAUDE.md` routine). It never touches an existing write-up, so hand corrections stay,
 and a second run updates by chat id instead of adding a duplicate. Codex chats
 are read from `~/.codex/sessions/` (only those that ran inside `parth_project`).
 ChatGPT chats need an account export: `--chatgpt-export conversations.json

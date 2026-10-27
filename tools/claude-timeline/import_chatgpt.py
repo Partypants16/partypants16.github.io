@@ -11,6 +11,9 @@ Where chats come from:
   databases are only ever read, never changed; a file Codex has locked is reported and skipped.
   Only chats whose folder (cwd) is inside parth_project are imported; the rest are listed as
   skipped. Older chats ran in pre-2026-10-21 paths such as parth_project/PrintPlace: still ours.
+  Scripted `codex exec` runs (started by a program, e.g. another assistant testing Codex, not
+  typed by Parth in the Codex app) are skipped too, unless --include-scripted or --chat names them.
+  The run ends with a "To write up" list: new chats, and chats that went on since last time.
 - ChatGPT (chatgpt.com) chats aren't on this laptop. Export the account's data from ChatGPT
   (Settings → Data controls → Export), unzip it, and pass its conversations.json with
   --chatgpt-export and the chat's --chat id. Only the chats named with --chat are taken.
@@ -67,7 +70,7 @@ SECRETS = [
 # (in an "exec" call), where a newline is \n and a backslash is \\.
 PATCH_FILE_RAW = re.compile(r"^\*\*\* (?:Add|Update|Delete) File: (.+?)\s*$", re.M)
 PATCH_FILE_JS = re.compile(r"\*\*\* (?:Add|Update|Delete) File: ((?:\\\\|[^\\\"\n])+)")
-FORMAT = 1  # bump when what's kept from a chat changes, so the next run redoes every record
+FORMAT = 2  # bump when what's kept from a chat changes, so the next run redoes every record
 
 
 def patched_files(args):
@@ -136,6 +139,8 @@ def clean_user(text):
         if stripped == text:
             break
         text = stripped
+    if text.lstrip().startswith("# AGENTS.md instructions for"):
+        return None  # Codex pastes the folder's AGENTS.md in as a user turn: not something Parth said
     attachments = []
     if text.lstrip().startswith("# Files mentioned by the user:"):
         head, _, request = text.partition("## My request:")
@@ -216,10 +221,16 @@ def from_codex(path):
     if attached:
         gaps.append("Attachments are named but not included: " + ", ".join(attached) + ".")
     chat_id = meta.get("id") or ROLLOUT.search(Path(path).name).group(1)
+    # `codex exec` runs are started by a program (a script, or another assistant testing Codex),
+    # not typed by Parth in the Codex app, so they're skipped unless asked for.
+    scripted = meta.get("originator") == "codex_exec" or meta.get("source") == "exec"
+    first = next((m["text"] for m in messages if m["role"] == "user" and m.get("text")), "")
     return {
         "chat_id": chat_id,
         "source": "Codex",
-        "origin": "Codex desktop app, local record (" + Path(path).name + ")",
+        "origin": ("codex exec run" if scripted else "Codex desktop app") + ", local record (" + Path(path).name + ")",
+        "_scripted": scripted,
+        "_first_request": " ".join(first.split())[:60],
         "cwd": relative(meta.get("cwd", "")),
         "in_workspace": in_workspace(meta.get("cwd", "")),
         "started": local(meta["timestamp"]) if meta.get("timestamp") else "",
@@ -398,10 +409,13 @@ def write_chat(record, title, chatgpt_dir, manifest, existing, dry_run, report):
         action = "session file kept as it is"
     entry["session"] = "sessions/" + session.name
 
-    report.append(f"  {chat_id}  {title!r}: {'unchanged' if unchanged else 'updated' if previous else 'imported'}, "
+    status = "unchanged" if unchanged else "updated" if previous else "imported"
+    report.append(f"  {chat_id}  {title!r}: {status}, "
                   f"{entry['messages']} messages, {entry['completeness']}; {action} ({session.name})"
                   + (f"; {record['redactions']} value(s) redacted" if record["redactions"] else ""))
     manifest["chats"][chat_id] = entry
+    if status != "unchanged" and (action == "new session file" or previous.get("messages") != entry["messages"]):
+        manifest.setdefault("_write_up", []).append(f"{entry['session']} ({'new chat' if action == 'new session file' else 'the chat went on'})")
     manifest["known_missing"] = [m for m in manifest.get("known_missing", []) if m.get("chat_id") != chat_id]
     if dry_run:
         return
@@ -435,7 +449,7 @@ def save_manifest(chatgpt_dir, manifest):
     path.write_text(json.dumps(manifest, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
 
 
-def run(chats=(), chatgpt_export=None, codex_home=CODEX_HOME, chatgpt_dir=CHATGPT, dry_run=False):
+def run(chats=(), chatgpt_export=None, codex_home=CODEX_HOME, chatgpt_dir=CHATGPT, dry_run=False, include_scripted=False):
     manifest = load_manifest(chatgpt_dir)
     existing = session_files(chatgpt_dir)
     report, wanted = [], set(chats)
@@ -461,15 +475,24 @@ def run(chats=(), chatgpt_export=None, codex_home=CODEX_HOME, chatgpt_dir=CHATGP
             except PermissionError:
                 report.append(f"  {chat_id}: locked by Codex right now, skipped (run again later)")
                 continue
-            title = titles.get(chat_id) or path.name
+            # Codex names a chat a little after it starts; until then, its first request stands in.
+            title = titles.get(chat_id) or record["_first_request"] or path.name
             if not record["in_workspace"] and chat_id not in chats:
                 manifest["skipped"][chat_id] = {"title": title, "cwd": record["cwd"], "reason": "outside parth_project"}
                 report.append(f"  {chat_id}  {title!r}: skipped, it ran outside parth_project ({record['cwd']})")
+                continue
+            if record["_scripted"] and not include_scripted and chat_id not in chats and chat_id not in manifest["chats"]:
+                manifest["skipped"][chat_id] = {"title": title, "cwd": record["cwd"], "reason": "scripted codex exec run, not a chat"}
+                report.append(f"  {chat_id}  {title!r}: skipped, a scripted `codex exec` run (--include-scripted or --chat to take it)")
                 continue
             manifest["skipped"].pop(chat_id, None)
             write_chat(record, title, chatgpt_dir, manifest, existing, dry_run, report)
     for chat_id in sorted(wanted):
         report.append(f"  {chat_id}: not found" + (" in the export" if chatgpt_export else f" under {codex_home / 'sessions'}"))
+    write_up = manifest.pop("_write_up", [])
+    if write_up:
+        report.append("To write up (frontmatter, write-up, a LOG.md line):")
+        report += ["  " + line for line in write_up]
     if not dry_run:
         save_manifest(chatgpt_dir, manifest)
     return manifest, report
@@ -482,7 +505,8 @@ if __name__ == "__main__":
     parser.add_argument("--chatgpt-export", help="conversations.json from a ChatGPT data export")
     parser.add_argument("--codex-home", type=Path, default=CODEX_HOME)
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--include-scripted", action="store_true", help="also take `codex exec` runs (skipped by default)")
     args = parser.parse_args()
-    _, lines = run(args.chat, args.chatgpt_export, args.codex_home, CHATGPT, args.dry_run)
+    _, lines = run(args.chat, args.chatgpt_export, args.codex_home, CHATGPT, args.dry_run, args.include_scripted)
     print(("Would do" if args.dry_run else "Done") + f" ({CHATGPT}):")
     print("\n".join(lines) or "  nothing to import")
