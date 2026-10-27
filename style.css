@@ -486,26 +486,18 @@ section p {
   }
 }
 
-/* Home's swipeable welcome cards. Native scrolling also works without JS. */
+/* Home's widget stack: cards on top of each other, the next ones peeking out
+   behind (home-widgets.js). Without JS it stays a sideways-scrolling row. */
 #hero.widget-stack {
   padding: 0;
   background: transparent;
   box-shadow: none;
-  position: relative;
-  isolation: isolate;
   margin-bottom: 3rem;
+  isolation: isolate;
 }
-.widget-stack::before, .widget-stack::after {
-  content: '';
-  position: absolute;
-  inset: 18px 20px 48px;
-  border-radius: 24px;
-  background: #8f7bff;
-  opacity: .3;
-  transform: translateY(12px);
-  z-index: -1;
-}
-.widget-stack::after { inset-inline: 36px; transform: translateY(22px); opacity: .15; }
+/* A card flying off never widens the page, and the top bar stays above it */
+body:has(.widget-stack) { overflow-x: clip; }
+body:has(.widget-stack) header { position: relative; z-index: 1; }
 .widget-track {
   display: flex;
   overflow-x: auto;
@@ -518,9 +510,8 @@ section p {
 .widget-slide {
   flex: 0 0 100%;
   min-width: 0;
-  box-sizing: border-box;
-  min-height: 620px;
-  padding: 6rem 2rem;
+  min-height: 560px;
+  padding: 5rem 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -529,17 +520,52 @@ section p {
   scroll-snap-stop: always;
   background: linear-gradient(135deg, #6a5cff, #8f7bff 40%, #caa8ff);
 }
-.widget-slide:nth-child(2) { background: linear-gradient(135deg, #7b68ee, #bba4f5); }
-.widget-slide:nth-child(3) { background: linear-gradient(135deg, #6879eb, #b6b1ff); }
+.widget-slide:nth-child(2) { background: linear-gradient(135deg, #ff7eb3, #ff9a8b 45%, #ffcf91); }
+.widget-slide:nth-child(3) { background: linear-gradient(135deg, #2bc0e4, #5ad1c6 45%, #a8e6cf); }
 .widget-slide h2 { max-width: 100%; overflow-wrap: break-word; }
-.widget-controls { display: flex; justify-content: center; align-items: center; gap: 1.25rem; padding-top: 1.7rem; }
+
+/* The stack itself, once home-widgets.js has started. Cards behind shrink and
+   drop so 22px / 44px of each shows below the front one (translateY's % is of
+   the card's own height, which undoes the shrink from the centre). */
+.widget-stack.is-stacked .widget-track {
+  display: grid;
+  overflow: visible;
+  border-radius: 0;
+  padding-bottom: 44px;  /* room for the cards peeking out below */
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.widget-stack.is-stacked .widget-slide {
+  grid-area: 1 / 1;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .18);
+  cursor: grab;
+  transition: transform .45s cubic-bezier(.2, .8, .2, 1), opacity .45s, filter .45s;
+}
+.widget-stack.is-stacked .widget-slide > * { transition: opacity .3s; }
+.widget-stack.is-stacked .widget-slide[data-pos="1"] { transform: translateY(calc(3% + 22px)) scale(.94); filter: brightness(.9); }
+.widget-stack.is-stacked .widget-slide[data-pos="2"] { transform: translateY(calc(6% + 44px)) scale(.88); filter: brightness(.8); }
+.widget-stack.is-stacked .widget-slide[data-pos="3"] { transform: translateY(calc(6% + 44px)) scale(.88); opacity: 0; }
+.widget-stack.is-stacked .widget-slide:not([data-pos="0"]) { cursor: default; }
+.widget-stack.is-stacked .widget-slide:not([data-pos="0"]) > * { opacity: 0; }
+.widget-stack.is-stacked .widget-slide.is-dragging { transition: none; cursor: grabbing; }
+.widget-stack.is-stacked .widget-slide.no-anim,
+.widget-stack.is-stacked .widget-slide.no-anim > * { transition: none; }
+
+.widget-controls { display: flex; justify-content: center; align-items: center; gap: 1.25rem; padding-top: 1.2rem; }
 .widget-controls[hidden] { display: none; }
 .widget-controls button { cursor: pointer; color: var(--text); border: 0; background: transparent; min-width: 44px; min-height: 44px; border-radius: 50%; font-size: 1.4rem; }
-.widget-controls button:disabled { opacity: .3; cursor: default; }
 .widget-dots { display: flex; }
 .widget-dots button { position: relative; }
-.widget-dots button::after { content: ''; position: absolute; width: 8px; height: 8px; inset: 18px; border-radius: 50%; background: currentColor; opacity: .3; }
+.widget-dots button::after { content: ''; position: absolute; width: 8px; height: 8px; inset: 18px; border-radius: 50%; background: currentColor; opacity: .3; transition: opacity .2s, transform .2s; }
 .widget-dots button[aria-current]::after { opacity: 1; transform: scale(1.35); }
 .widget-track:focus-visible, .widget-controls button:focus-visible { outline: 3px solid var(--text); outline-offset: 3px; }
-@media (max-width: 900px) { .widget-slide { min-height: 410px; padding: 4rem 2rem; } }
-@media (max-width: 600px) { .widget-slide { min-height: 340px; padding: 3rem 1.5rem; } }
+@media (max-width: 900px) { .widget-slide { min-height: 400px; padding: 4rem 2rem; } }
+@media (max-width: 600px) {
+  .widget-slide { min-height: 320px; padding: 3rem 1.5rem; }
+  .widget-stack.is-stacked .widget-track { padding-bottom: 32px; }
+  .widget-stack.is-stacked .widget-slide[data-pos="1"] { transform: translateY(calc(3% + 16px)) scale(.94); }
+  .widget-stack.is-stacked .widget-slide[data-pos="2"],
+  .widget-stack.is-stacked .widget-slide[data-pos="3"] { transform: translateY(calc(6% + 32px)) scale(.88); }
+}

@@ -285,7 +285,8 @@
   animation: mo-pop-in .9s cubic-bezier(.34, 1.56, .64, 1) .9s backwards;
 }
 
-:root[data-motion="extreme"] #hero {
+:root[data-motion="extreme"] #hero,
+:root[data-motion="extreme"] .widget-slide {
   background-size: 220% 220%;
   animation: mo-hero-drift 9s ease-in-out infinite;
 }
