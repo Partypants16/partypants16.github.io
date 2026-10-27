@@ -170,7 +170,8 @@ Its records live outside this repo, in `parth_project/_workspace/context/chatgpt
 
 `import_chatgpt.py` fills `sources/` and makes a skeleton write-up for a chat
 that has none. It skips scripted `codex exec` runs (`--include-scripted` takes
-them), and ends with a "To write up" list: the new chats, and the chats that
+them) and Codex's own sub-agents, such as the "guardian" approval reviewer
+(`--chat <id>` takes one), and ends with a "To write up" list: the new chats, and the chats that
 went on. Claude runs it at every session close and writes those up (step 6 of
 the root `CLAUDE.md` routine). It never touches an existing write-up, so hand corrections stay,
 and a second run updates by chat id instead of adding a duplicate. Codex chats

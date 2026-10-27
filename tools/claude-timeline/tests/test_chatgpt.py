@@ -149,6 +149,20 @@ class ImporterTest(unittest.TestCase):
         self.assertIn(scripted, manifest["chats"])
         self.assertTrue(manifest["chats"][scripted]["origin"].startswith("codex exec run"))
 
+    def test_subagent_records_skipped(self):
+        # Codex's "guardian" approval reviewer keeps its own record; it isn't a chat Parth had
+        guardian = "01a00000-0000-7000-8000-000000000004"
+        inside = import_chatgpt.WORKSPACE / "apps" / "demo-app"
+        rows = fake_rollout(inside, guardian)
+        rows[0]["payload"].update(source={"subagent": {"other": "guardian"}}, thread_source="guardian_review",
+                                  parent_thread_id=CHAT_ID)
+        (self.rollout.parent / f"rollout-2026-08-10T23-30-00-{guardian}.jsonl").write_text(
+            "\n".join(json.dumps(r) for r in rows) + "\n", encoding="utf-8")
+        manifest, _ = self.run_import()
+        self.assertNotIn(guardian, manifest["chats"])
+        self.assertIn("sub-agent", manifest["skipped"][guardian]["reason"])
+        self.assertIn(CHAT_ID, manifest["chats"])          # the chat it reviewed is still imported
+
     def test_title_falls_back_to_first_request(self):
         (self.codex / "session_index.jsonl").write_text("", encoding="utf-8")  # Codex hasn't named it yet
         manifest, _ = self.run_import()

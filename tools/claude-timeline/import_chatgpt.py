@@ -224,12 +224,18 @@ def from_codex(path):
     # `codex exec` runs are started by a program (a script, or another assistant testing Codex),
     # not typed by Parth in the Codex app, so they're skipped unless asked for.
     scripted = meta.get("originator") == "codex_exec" or meta.get("source") == "exec"
+    # Sub-agents Codex starts on its own (e.g. the "guardian" that approves another chat's actions) keep a
+    # record too, but they're not a chat Parth had: no thread_source "user", a parent thread, or a
+    # {"subagent": ...} source. Skipped the same way.
+    subagent = (isinstance(meta.get("source"), dict) and "subagent" in meta["source"]) or bool(meta.get("parent_thread_id")) \
+        or meta.get("thread_source") not in (None, "user")
     first = next((m["text"] for m in messages if m["role"] == "user" and m.get("text")), "")
     return {
         "chat_id": chat_id,
         "source": "Codex",
         "origin": ("codex exec run" if scripted else "Codex desktop app") + ", local record (" + Path(path).name + ")",
         "_scripted": scripted,
+        "_subagent": subagent,
         "_first_request": " ".join(first.split())[:60],
         "cwd": relative(meta.get("cwd", "")),
         "in_workspace": in_workspace(meta.get("cwd", "")),
@@ -484,6 +490,10 @@ def run(chats=(), chatgpt_export=None, codex_home=CODEX_HOME, chatgpt_dir=CHATGP
             if record["_scripted"] and not include_scripted and chat_id not in chats and chat_id not in manifest["chats"]:
                 manifest["skipped"][chat_id] = {"title": title, "cwd": record["cwd"], "reason": "scripted codex exec run, not a chat"}
                 report.append(f"  {chat_id}  {title!r}: skipped, a scripted `codex exec` run (--include-scripted or --chat to take it)")
+                continue
+            if record["_subagent"] and chat_id not in chats:
+                manifest["skipped"][chat_id] = {"title": title, "cwd": record["cwd"], "reason": "a Codex sub-agent (e.g. the guardian approval reviewer), not a chat"}
+                report.append(f"  {chat_id}  {title!r}: skipped, a Codex sub-agent, not a chat (--chat to take it)")
                 continue
             manifest["skipped"].pop(chat_id, None)
             write_chat(record, title, chatgpt_dir, manifest, existing, dry_run, report)
