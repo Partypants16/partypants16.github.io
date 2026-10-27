@@ -17,7 +17,7 @@ archive = sys.argv[1]
 shutil.rmtree(staging, ignore_errors=True)
 with zipfile.ZipFile(archive) as z:
     z.extractall(staging)
-for needed in ("index.html", "data.json"):
+for needed in ("index.html", "data.json", "chatgpt.html", "chatgpt-data.json"):
     if not os.path.isfile(os.path.join(staging, needed)):
         sys.exit("zip has no %s at its top level, site left unchanged" % needed)
 

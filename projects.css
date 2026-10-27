@@ -2186,6 +2186,17 @@ a.proof-tile:hover {
     padding: 2rem 1rem;
   }
 
+  /* Five tabs don't fit a phone's width: the row scrolls sideways instead of spilling out */
+  .section-tabs {
+    justify-content: flex-start;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .section-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
   .section-tabs a {
     padding: .45rem .75rem;
   }

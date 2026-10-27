@@ -9,13 +9,36 @@
 // Filters, search, order and "show all raw logs" are kept in the address
 // (?q=…&project=…&type=…&status=…&month=…&sort=old&raw=1), and #<log name>
 // opens that card.
+//
+// The same script draws the ChatGPT page (chatgpt.html, since 2026-10-27):
+// <main data-timeline="chatgpt"> picks its settings below. Its sessions come
+// from chatgpt-data.json, each card also says where it came from (Codex or
+// ChatGPT, historical import or kept during the session), and a card whose
+// chat was imported can show the conversation record too.
 
 (function () {
+  const PAGES = {
+    claude: {
+      data: "data.json", gateway: "claude.html",
+      show: "Show raw log", hide: "Hide raw log", showAll: "Show all raw logs", hideAll: "Hide all raw logs",
+      found: "Found in the raw log", loading: "Loading the session logs…", none: "There are no session logs yet.",
+      failed: "Couldn't load the session logs. Try reloading the page."
+    },
+    chatgpt: {
+      data: "chatgpt-data.json", gateway: "chatgpt.html",
+      show: "Show session details", hide: "Hide session details", showAll: "Expand all details", hideAll: "Collapse all details",
+      found: "Found in the session details", loading: "Loading the ChatGPT sessions…", none: "There are no ChatGPT sessions yet.",
+      failed: "Couldn't load the ChatGPT sessions. Try reloading the page."
+    }
+  };
+  const main = document.querySelector("main[data-timeline]");
+  const PAGE = PAGES[main && main.dataset.timeline] || PAGES.claude;
+
   const SITE_URL = "https://partypants16.github.io/";
   // The page's files are also in the public repo, without data. Send anyone
   // who finds them there to the gateway page instead.
   if (/(^|\.)github\.io$/.test(location.hostname)) {
-    location.replace(SITE_URL + "claude.html");
+    location.replace(SITE_URL + PAGE.gateway);
     return;
   }
 
@@ -139,7 +162,14 @@
     if (state.type && entry.type !== state.type) return false;
     if (state.status && entry.status !== state.status) return false;
     if (state.month && entry.date.slice(0, 7) !== state.month) return false;
-    return terms.every(t => entry.search.includes(t) || entry.searchRaw.includes(t));
+    return terms.every(t => entry.search.includes(t) || entry.searchRaw.includes(t) || (entry.searchConvo || "").includes(t));
+  }
+
+  // Where the search words were found, if not on the card itself: "" when they're all on it.
+  function hitLabel(entry, terms) {
+    if (!terms.length || terms.every(t => entry.search.includes(t))) return "";
+    if (terms.every(t => entry.search.includes(t) || entry.searchRaw.includes(t))) return PAGE.found;
+    return "Found in the conversation record";
   }
 
   // ---------- Cards ----------
@@ -175,29 +205,147 @@
     const summary = el("p", "entry-summary");
     summary.setAttribute("translate", "no");
     if (entry.summary) node.appendChild(summary);
-    const hit = el("p", "entry-hit", "Found in the raw log");
+    const hit = el("p", "entry-hit", PAGE.found);
     hit.hidden = true;
     node.appendChild(hit);
+    if (entry.source !== undefined) node.appendChild(sourceLine(entry));
 
     const toggle = el("button", "entry-toggle");
     toggle.type = "button";
     toggle.setAttribute("aria-expanded", "false");
     toggle.setAttribute("aria-controls", "raw-" + entry.id);
-    const label = el("span", "", "Show raw log");
+    const label = el("span", "", PAGE.show);
     toggle.append(label, el("span", "entry-words", plural(entry.words, "word")));
     node.appendChild(toggle);
+
+    // The ChatGPT page: the chat itself, when its record was imported.
+    let convoToggle = null, convoLabel = null, convo = null;
+    if (entry.conversation && entry.conversation.length) {
+      convoToggle = el("button", "entry-toggle");
+      convoToggle.type = "button";
+      convoToggle.setAttribute("aria-expanded", "false");
+      convoToggle.setAttribute("aria-controls", "convo-" + entry.id);
+      convoLabel = el("span", "", "Show conversation record");
+      const said = entry.conversation.filter(m => m.role !== "tools").length;
+      convoToggle.append(convoLabel, el("span", "entry-words", plural(said, "message")));
+      node.appendChild(convoToggle);
+    }
 
     const raw = el("div", "entry-raw");
     raw.id = "raw-" + entry.id;
     raw.hidden = true;
     node.appendChild(raw);
+    if (convoToggle) {
+      convo = el("div", "entry-raw entry-convo");
+      convo.id = "convo-" + entry.id;
+      convo.hidden = true;
+      node.appendChild(convo);
+    }
 
-    const card = { entry, node, parts: { title, summary, hit, toggle, label, raw, time }, open: false, rawShown: null };
+    const card = {
+      entry, node, parts: { title, summary, hit, toggle, label, raw, time, convoToggle, convoLabel, convo },
+      open: false, rawShown: null, convoOpen: false, convoShown: null
+    };
     toggle.addEventListener("click", () => {
       setOpen(card, !card.open);
       syncRawAll();
     });
+    if (convoToggle) convoToggle.addEventListener("click", () => setConvoOpen(card, !card.convoOpen));
     return card;
+  }
+
+  // "Codex · Historical import", and how much of the chat is kept if not all of it.
+  function sourceLine(entry) {
+    const line = el("p", "entry-source");
+    const parts = [];
+    if (entry.source) {
+      const source = el("span", "entry-source-name", entry.source);
+      source.setAttribute("translate", "no");
+      parts.push(source);
+    }
+    if (entry.record) parts.push(el("span", "", entry.record === "Maintained" ? "Logged during the session" : entry.record));
+    if (entry.completeness === "Partial") parts.push(el("span", "badge badge--todo", "Partial record"));
+    if (entry.completeness === "Not available") parts.push(el("span", "", "No conversation record"));
+    parts.forEach((part, i) => {
+      if (i) line.append(" · ");
+      line.appendChild(part);
+    });
+    return line;
+  }
+
+  // An ISO time with its offset ("2026-10-27T10:11:35+11:00") → "10:11", with the day if it isn't the card's.
+  function messageTime(iso, date) {
+    if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(iso || "")) return "";
+    const time = timeLabel(iso.slice(11, 16));
+    return iso.slice(0, 10) === date ? time : dayLabel(iso.slice(0, 10)) + ", " + time;
+  }
+
+  function fillConvo(card, terms) {
+    const key = terms.join(" ");
+    if (card.convoShown === key) return;
+    const { convo } = card.parts;
+    const { entry } = card;
+    convo.textContent = "";
+    convo.appendChild(el("p", "raw-label", entry.completeness === "Partial" ? "Partial conversation record" : "Conversation record"));
+    convo.appendChild(el("p", "convo-note", "The messages from the chat's saved record, in order: what was said, not a summary. Tool output and the assistant's hidden reasoning are left out."));
+    if (entry.gaps) {
+      const gaps = el("p", "convo-note");
+      const text = el("span", "", entry.gaps);
+      text.setAttribute("translate", "no");
+      gaps.append(el("strong", "", "Known gaps:"), " ", text);
+      convo.appendChild(gaps);
+    }
+    const list = el("ol", "convo-list");
+    entry.conversation.forEach(message => {
+      const item = el("li", "convo-msg convo-msg--" + message.role);
+      if (message.role === "tools") {
+        item.appendChild(el("span", "", message.count === 1 ? "Used a tool" : "Used " + message.count + " tools"));
+        if (message.files && message.files.length) {
+          const files = el("span", "convo-files", message.files.join(", "));
+          files.setAttribute("translate", "no");
+          item.append(" · ", el("span", "", "changed"), " ", files);
+        }
+        list.appendChild(item);
+        return;
+      }
+      const head = el("p", "convo-who");
+      const who = el("strong", "", message.who);
+      who.setAttribute("translate", "no");
+      head.appendChild(who);
+      const when = messageTime(message.time, entry.date);
+      if (when) {
+        const time = el("time", "convo-time", when);
+        time.dateTime = message.time;
+        time.setAttribute("translate", "no");
+        head.append(" ", time);
+      }
+      item.appendChild(head);
+      if (message.attachments && message.attachments.length) {
+        const names = el("span", "", message.attachments.join(", "));
+        names.setAttribute("translate", "no");
+        item.appendChild(el("p", "convo-attach")).append(el("span", "", "Attached (not included):"), " ", names);
+      }
+      const body = el("div", "markdown");
+      body.setAttribute("translate", "no");
+      body.innerHTML = message.html;  // made by build.py from Markdown with raw HTML turned off, so it's escaped
+      item.appendChild(body);
+      list.appendChild(item);
+    });
+    convo.appendChild(list);
+    const file = el("p", "raw-file", (entry.source ? entry.source + " chat " : "Chat ") + entry.chatId +
+      (entry.chatTitle ? " · “" + entry.chatTitle + "”" : "") + (entry.imported ? " · imported " + entry.imported.slice(0, 10) : ""));
+    file.setAttribute("translate", "no");
+    convo.appendChild(file);
+    markIn(convo, terms);
+    card.convoShown = key;
+  }
+
+  function setConvoOpen(card, open) {
+    card.convoOpen = open;
+    if (open) fillConvo(card, words(state.q));
+    card.parts.convo.hidden = !open;
+    card.parts.convoToggle.setAttribute("aria-expanded", String(open));
+    card.parts.convoLabel.textContent = open ? "Hide conversation record" : "Show conversation record";
   }
 
   function fillRaw(card, terms) {
@@ -233,7 +381,7 @@
     if (open) fillRaw(card, words(state.q));
     card.parts.raw.hidden = !open;
     card.parts.toggle.setAttribute("aria-expanded", String(open));
-    card.parts.label.textContent = open ? "Hide raw log" : "Show raw log";
+    card.parts.label.textContent = open ? PAGE.hide : PAGE.show;
     card.node.classList.toggle("is-open", open);
   }
 
@@ -244,7 +392,7 @@
   function syncRawAll() {
     const shown = visibleCards();
     state.raw = shown.length > 0 && shown.every(card => card.open);
-    ui.rawAll.textContent = state.raw ? "Hide all raw logs" : "Show all raw logs";
+    ui.rawAll.textContent = state.raw ? PAGE.hideAll : PAGE.showAll;
     ui.rawAll.setAttribute("aria-pressed", String(state.raw));
     writeAddress();
   }
@@ -276,9 +424,12 @@
       const card = cards.get(entry.id);
       fill(card.parts.title, entry.title, terms);
       if (entry.summary) fill(card.parts.summary, entry.summary, terms);
-      card.parts.hit.hidden = !terms.length || terms.every(t => entry.search.includes(t));
+      const hit = hitLabel(entry, terms);
+      card.parts.hit.hidden = !hit;
+      if (hit) card.parts.hit.textContent = hit;
       if (state.raw && !card.open) setOpen(card, true);
       if (card.open) fillRaw(card, terms);
+      if (card.convoOpen) fillConvo(card, terms);
       list.appendChild(card.node);
     });
 
@@ -388,6 +539,17 @@
     });
     if (quick.children.length) ui.stats.appendChild(quick);
 
+    // The ChatGPT page: chats known about that have no card, and why.
+    (data.missing || []).forEach(chat => {
+      const note = el("span", "stat-missing");
+      const name = el("span", "", chat.title + (chat.source ? " (" + chat.source + ")" : ""));
+      const reason = el("span", "", chat.reason);
+      name.setAttribute("translate", "no");
+      reason.setAttribute("translate", "no");
+      note.append(el("strong", "", "Not imported:"), " ", name, ". ", reason);
+      ui.stats.appendChild(note);
+    });
+
     showBuilt();
   }
 
@@ -441,7 +603,8 @@
   }
 
   readAddress();
-  fetch("data.json", { cache: "no-cache" })
+  fail(PAGE.loading);
+  fetch(PAGE.data, { cache: "no-cache" })
     .then(response => {
       if (!response.ok) throw new Error(response.status);
       return response.json();
@@ -449,9 +612,10 @@
     .then(json => {
       data = json;
       if (!data.entries || !data.entries.length) {
-        fail("There are no session logs yet.");
+        fail(PAGE.none);
         return;
       }
+      ui.message.hidden = true;
       data.entries.forEach(entry => cards.set(entry.id, buildCard(entry)));
       buildStats();
       buildControls();
@@ -460,5 +624,5 @@
       const id = decodeURIComponent(location.hash.slice(1));
       if (cards.has(id)) jumpTo(id, false);
     })
-    .catch(() => fail("Couldn't load the session logs. Try reloading the page."));
+    .catch(() => fail(PAGE.failed));
 })();

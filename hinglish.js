@@ -188,6 +188,34 @@ const HINGLISH = {
     "The session log": "Session log",
     "There are no session logs yet.": "Abhi koi session log nahi hai.",
     "Couldn't load the session logs. Try reloading the page.": "Session logs load nahi hue. Page reload karke dekho.",
+    "Loading the session logs…": "Session logs load ho rahe hain…",
+
+    // ---------- ChatGPT (chatgpt.html, and the page on the home server) ----------
+    "My parth_project sessions with ChatGPT and Codex: what was asked, decided and changed. Open a card for its write-up, or for the conversation itself where it was saved.": "parth_project mein ChatGPT aur Codex ke saath mere sessions: kya poocha, kya tay hua aur kya badla. Card kholo aur uska write-up dekho, ya jahan save hui hai wahan poori baatcheet.",
+    "Titles, summaries, write-ups and conversations": "Titles, summaries, write-ups aur baatcheet",
+    "Show session details": "Session ki details dikhao",
+    "Hide session details": "Session ki details chhupao",
+    "Expand all details": "Saari details kholo",
+    "Collapse all details": "Saari details band karo",
+    "Show conversation record": "Baatcheet ka record dikhao",
+    "Hide conversation record": "Baatcheet ka record chhupao",
+    "Found in the session details": "Session ki details mein mila",
+    "Found in the conversation record": "Baatcheet ke record mein mila",
+    "Loading the ChatGPT sessions…": "ChatGPT sessions load ho rahe hain…",
+    "There are no ChatGPT sessions yet.": "Abhi koi ChatGPT session nahi hai.",
+    "Couldn't load the ChatGPT sessions. Try reloading the page.": "ChatGPT sessions load nahi hue. Page reload karke dekho.",
+    "Historical import": "Purani chat se import",
+    "Logged during the session": "Session ke dauraan likha gaya",
+    "Partial record": "Adhoora record",
+    "No conversation record": "Baatcheet ka record nahi hai",
+    "Conversation record": "Baatcheet ka record",
+    "Partial conversation record": "Baatcheet ka adhoora record",
+    "The messages from the chat's saved record, in order: what was said, not a summary. Tool output and the assistant's hidden reasoning are left out.": "Chat ke saved record ke messages, usi kram mein: jo kaha gaya wahi, summary nahi. Tools ka output aur assistant ki andar ki soch shaamil nahi hai.",
+    "Known gaps:": "Jo missing hai:",
+    "Attached (not included):": "Attach kiya tha (yahan nahi hai):",
+    "Used a tool": "Ek tool chalaya",
+    "changed": "badla",
+    "Not imported:": "Import nahi hua:",
 
     // ---------- Projects (projects.html, project.html, and the tabs on the Claude pages) ----------
     "What I've built, and the thinking behind it: the decisions, the experiments and the dead ends along the way.": "Maine kya banaya, aur uske peeche ki soch: faisle, experiments, aur woh raaste jo kahin nahi pahunche.",
@@ -553,6 +581,9 @@ const HINGLISH = {
     [/^(\d+) words?$/, "$1 shabd"],
     [/^(Built|Improved|Fixed|Ideas|Research|Setup|Sync|Docs|Done|Needs testing|Open|Parked) \((\d+)\)$/, (m, t) => t(m[1]) + " (" + m[2] + ")"],
     [/^(Needs testing|Open|Parked): (\d+)$/, (m, t) => t(m[1]) + ": " + m[2]],
+    // ChatGPT page
+    [/^(\d+) messages?$/, "$1 messages"],
+    [/^Used (\d+) tools$/, "$1 tools chalaye"],
     // Encyclopedia search
     [/^Nothing found for (.+)$/, "$1 ke liye kuch nahi mila"]
   ]

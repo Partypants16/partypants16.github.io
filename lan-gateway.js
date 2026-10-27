@@ -1,6 +1,7 @@
 // The gateway for pages that only live on the home server: claude.html (the
-// Claude page) and todo.html (To do). Both are on the remote box (LAN only,
-// plain HTTP), so these pages only send visitors there. The address is in
+// Claude page), chatgpt.html (ChatGPT), todo.html (To do) and encyclopedia.html.
+// All are on the remote box (LAN only, plain HTTP), so these pages only send
+// visitors there. The address is in
 // <main data-lan-url="…">.
 //
 // A secure page can't check whether a home-network address answers, so it

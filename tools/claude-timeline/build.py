@@ -5,6 +5,10 @@ index in _workspace/context/LOG.md, and writes dist/: the page (from page/), dat
 of the site files it shares with my-website (top bar, settings, Hinglish,
 transitions, wallpapers). deploy.py then puts dist/ on the remote box.
 
+It also builds the ChatGPT page (since 2026-10-27) the same way, from
+_workspace/context/chatgpt/ (its own LOG.md and sessions/), into chatgpt-data.json:
+never mixed into data.json. Its extra fields are described in chatgpt.py.
+
     python tools/claude-timeline/build.py            # from my-website/
     python tools/claude-timeline/build.py --strict   # warnings stop the build
 
@@ -44,6 +48,7 @@ from markdown_it import MarkdownIt
 
 import todo  # the To do page's text (todo.py, next to this file)
 import encyclopedia  # the Encyclopedia tab (encyclopedia.py, next to this file)
+import chatgpt  # the ChatGPT page's extra fields (chatgpt.py, next to this file)
 
 HERE = Path(__file__).resolve().parent
 SITE = HERE.parent.parent                     # my-website/
@@ -52,7 +57,12 @@ CONTEXT = WORKSPACE / "_workspace" / "context"
 DISCONTINUED = WORKSPACE / "discontinued"     # dropped projects; their saved pages are served too
 TODO = CONTEXT / "TODO.md"                    # what's waiting on Parth: the To do page (todo.html)
 ENCYCLOPEDIA = WORKSPACE / "_workspace" / "encyclopedia"  # the Encyclopedia's Markdown (since 2026-10-22)
+CHATGPT = CONTEXT / "chatgpt"                 # the ChatGPT page's sessions, index and sources (since 2026-10-27)
 DIST = HERE / "dist"
+
+# The two collections of session logs, and the page each one's cards are on.
+SESSION_DIRS = {"claude": CONTEXT / "sessions", "chatgpt": CHATGPT / "sessions"}
+PAGE_URL = {"claude": "./", "chatgpt": "chatgpt.html"}
 
 # The filter lists show these in this order.
 PROJECTS = ["Website", "Apex Dash", "Claire", "Iris", "PAT-AI", "PrintPlace", "SkyWardrobe",
@@ -80,19 +90,38 @@ def warn(name, message):
 md = MarkdownIt("commonmark", {"html": False}).enable(["table", "strikethrough"])
 
 
-def link_kind(href):
-    """web (opens in a new tab), session (jumps to that card) or file (shown, not a link)."""
+def session_collection(path_part, stem, base):
+    """Which page a link to a session log goes to: "claude", "chatgpt" or None (not a log)."""
+    if base is not None:  # where the link really points, from the file it's in
+        target = (base / path_part).resolve()
+        for key, folder in SESSION_DIRS.items():
+            if target.parent == folder.resolve() and target.exists():
+                return key
+    # Otherwise by name, the way the Claude logs have always been linked (any path to a log's file).
+    if "chatgpt/" in path_part.replace("\\", "/") and (SESSION_DIRS["chatgpt"] / (stem + ".md")).exists():
+        return "chatgpt"
+    if (SESSION_DIRS["claude"] / (stem + ".md")).exists():
+        return "claude"
+    return None
+
+
+def link_kind(href, base=None):
+    """web (opens in a new tab), session (jumps to that card, on its own page) or file (shown, not a link)."""
     if re.match(r"^(https?:|mailto:)", href):
         return "web", href
-    stem = Path(href.split("#")[0]).stem
-    if href.split("#")[0].endswith(".md") and SESSION_NAME.match(stem) and (CONTEXT / "sessions" / (stem + ".md")).exists():
-        return "session", stem
+    path_part = href.split("#")[0]
+    stem = Path(path_part).stem
+    if path_part.endswith(".md") and SESSION_NAME.match(stem):
+        which = session_collection(path_part, stem, base)
+        if which:
+            return "session", (which, stem)
     return "file", href
 
 
 def render_link_open(self, tokens, idx, options, env):
-    kind, target = link_kind(tokens[idx].attrGet("href") or "")
-    if kind == "session" and target == env.get("self"):
+    kind, target = link_kind(tokens[idx].attrGet("href") or "", env.get("base"))
+    page = env.get("page", "claude")
+    if kind == "session" and target == (page, env.get("self")):
         kind = "self"  # LOG.md's entry links to its own log: just text on its own card
     env.setdefault("links", []).append(kind)
     if kind == "self":
@@ -100,7 +129,11 @@ def render_link_open(self, tokens, idx, options, env):
     if kind == "web":
         return f'<a href="{html.escape(target)}" target="_blank" rel="noopener noreferrer">'
     if kind == "session":
-        return f'<a href="#{target}" class="session-link" data-session="{target}">'
+        which, stem = target
+        if which == page:
+            return f'<a href="#{stem}" class="session-link" data-session="{stem}">'
+        # A log on the other page (Claude ↔ ChatGPT, or from To do): open it there.
+        return f'<a href="{PAGE_URL[which]}#{stem}" class="session-link session-link--other">'
     return f'<span class="file-ref" title="{html.escape(target)}">'
 
 
@@ -120,8 +153,10 @@ md.add_render_rule("link_close", render_link_close)
 md.add_render_rule("image", render_image)
 
 
-def render(text, name=None):
-    return md.render(text, {"self": name})
+def render(text, name=None, page="claude", base=None):
+    """Markdown → HTML for one page ("claude", "chatgpt" or "todo"); base is the folder the text's
+    file is in, so its relative links to session logs can be followed."""
+    return md.render(text, {"self": name, "page": page, "base": base})
 
 
 def plain(text):
@@ -133,10 +168,12 @@ def plain(text):
 
 # ---------- Reading the logs ----------
 
-def read_log_index():
+def read_log_index(folder=CONTEXT):
     """LOG.md → {session name: (position, markdown of its entry and any "Then …" lines)}."""
     entries, current = {}, None
-    lines = (CONTEXT / "LOG.md").read_text(encoding="utf-8").replace("\r\n", "\n").split("\n")
+    if not (folder / "LOG.md").exists():
+        return {}
+    lines = (folder / "LOG.md").read_text(encoding="utf-8").replace("\r\n", "\n").split("\n")
     for line in lines:
         if line.startswith("- **"):
             found = re.search(r"\]\(sessions/([^)]+)\.md\)", line)
@@ -222,36 +259,40 @@ def clock(name, value):
     return ""
 
 
-def read_session(path, log_index):
+def read_session(path, log_index, page="claude"):
+    """One session file → its card. page is "claude" (_workspace/context/sessions/) or "chatgpt"
+    (_workspace/context/chatgpt/sessions/, which also has the provenance fields in chatgpt.py)."""
     name = path.stem
+    label = name if page == "claude" else "chatgpt/" + name  # how warnings name it
     text = path.read_text(encoding="utf-8").replace("\r\n", "\n").lstrip("﻿")
     front, body = split_frontmatter(text)
     meta = {}
     if front is None:
-        warn(name, "no frontmatter block")
+        warn(label, "no frontmatter block")
     else:
         try:
             meta = yaml.safe_load(front) or {}
         except yaml.YAMLError as error:
-            warn(name, "frontmatter isn't valid YAML: " + str(error).replace("\n", " "))
+            warn(label, "frontmatter isn't valid YAML: " + str(error).replace("\n", " "))
     if not isinstance(meta, dict):
         meta = {}
 
-    card = check(name, meta) if meta else {}
+    card = check(label, meta) if meta else {}
     file_date = name[:10]
     date = str(meta.get("date") or file_date)
     if not re.match(r"^\d{4}-\d{2}-\d{2}$", date):
-        warn(name, f"date {date!r} isn't YYYY-MM-DD, using {file_date}")
+        warn(label, f"date {date!r} isn't YYYY-MM-DD, using {file_date}")
         date = file_date
-    time = clock(name, meta.get("time"))
+    time = clock(label, meta.get("time"))
 
     heading = heading_of(body)
     position, log_md = log_index.get(name, (None, ""))
     if position is None:
-        warn(name, "not listed in LOG.md")
+        warn(label, "not listed in LOG.md")
 
     projects = card.get("projects") or []
-    return {
+    folder = path.parent.parent  # the folder LOG.md is in
+    entry = {
         "id": name,
         "date": date,
         "time": time,
@@ -261,39 +302,45 @@ def read_session(path, log_index):
         "type": card.get("type", ""),
         "status": card.get("status", ""),
         "heading": heading,
-        "file": "_workspace/context/sessions/" + path.name,
+        "file": path.relative_to(WORKSPACE).as_posix(),
         "words": len(body.split()),
         "complete": all(key in card for key in ("title", "summary", "projects", "type", "status")),
-        "log": render(log_md, name) if log_md else "",
-        "raw": render(body, name),
+        "log": render(log_md, name, page, folder) if log_md else "",
+        "raw": render(body, name, page, path.parent),
         "search": " ".join([card.get("title", ""), card.get("summary", ""), heading, " ".join(projects),
                             card.get("type", ""), card.get("status", "")]).lower(),
         "searchRaw": (plain(log_md) + " " + plain(body)).lower(),
         "_order": position if position is not None else 10_000,
     }
+    if page == "chatgpt":
+        entry.update(chatgpt.provenance(label, meta, folder, lambda text: render(text, name, page), warn))
+    return entry
 
 
-def build():
-    log_index = read_log_index()
-    files = sorted((CONTEXT / "sessions").glob("*.md"))
-    entries = [read_session(path, log_index) for path in files]
+def read_collection(folder, page):
+    """Every session in folder/sessions/, newest first, checked against folder/LOG.md."""
+    log_index = read_log_index(folder)
+    entries = [read_session(path, log_index, page) for path in sorted((folder / "sessions").glob("*.md"))]
     for name in log_index:
-        if not (CONTEXT / "sessions" / (name + ".md")).exists():
-            warn(name, "listed in LOG.md but the file doesn't exist")
+        if not (folder / "sessions" / (name + ".md")).exists():
+            warn(name if page == "claude" else "chatgpt/" + name, "listed in LOG.md but the file doesn't exist")
 
     # Newest first: by date, then time, then by where LOG.md puts it (it lists newest first).
     # Logs with no time count as the earliest of their day.
     entries.sort(key=lambda e: (e["date"], e["time"], -e["_order"], e["id"]), reverse=True)
     for entry in entries:
         del entry["_order"]
+    return entries
 
-    data = {
-        "built": datetime.datetime.now().astimezone().isoformat(timespec="seconds"),
-        "projects": PROJECTS,
-        "types": TYPES,
-        "statuses": STATUSES,
-        "entries": entries,
-    }
+
+def build():
+    built = datetime.datetime.now().astimezone().isoformat(timespec="seconds")
+    entries = read_collection(CONTEXT, "claude")
+    data = {"built": built, "projects": PROJECTS, "types": TYPES, "statuses": STATUSES, "entries": entries}
+    # The ChatGPT page: its own sessions in its own file, never mixed into data.json.
+    chatgpt_entries = read_collection(CHATGPT, "chatgpt") if (CHATGPT / "sessions").is_dir() else []
+    chatgpt_data = {"built": built, "projects": PROJECTS, "types": TYPES, "statuses": STATUSES,
+                    "entries": chatgpt_entries, "missing": chatgpt.missing(CHATGPT)}
 
     if DIST.exists():
         shutil.rmtree(DIST)
@@ -311,13 +358,17 @@ def build():
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(path, target)
     (DIST / "data.json").write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
-    to_do = todo.make(TODO, WORKSPACE, entries, render, warn)
+    (DIST / "chatgpt-data.json").write_text(json.dumps(chatgpt_data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    logged = [dict(e, page="claude") for e in entries] + [dict(e, page="chatgpt") for e in chatgpt_entries]
+    to_do = todo.make(TODO, WORKSPACE, logged, lambda text: render(text, page="todo", base=CONTEXT), warn)
     (DIST / "todo.json").write_text(json.dumps(to_do, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
     pages = encyclopedia.build(ENCYCLOPEDIA, DIST / "encyclopedia", WORKSPACE, CONTEXT, warn)
 
     size = (DIST / "data.json").stat().st_size
     print(f"{len(entries)} sessions → {DIST.relative_to(SITE)} (data.json {size / 1024:.0f} KB)")
+    size = (DIST / "chatgpt-data.json").stat().st_size
+    print(f"ChatGPT: {len(chatgpt_entries)} sessions → chatgpt-data.json ({size / 1024:.0f} KB)")
     print(f"To do: TODO.md → todo.json ({len(to_do['html']) / 1024:.0f} KB, git section written now)")
     print(f"Encyclopedia: {pages} pages → {DIST.relative_to(SITE)}/encyclopedia/")
     return len(entries)

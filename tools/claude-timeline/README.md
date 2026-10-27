@@ -17,7 +17,17 @@ website, which forwards to the box. This page has the same Showcase / Claude
 box's address doesn't answer, so after 3 seconds it stops trying and says to
 connect to home Wi-Fi.
 
-The same build makes a second page, **To do** (`todo.html`, since 2026-10-21):
+The same build makes a twin of it, **ChatGPT** (`chatgpt.html`, since
+2026-10-27): the same timeline for work done with ChatGPT or Codex, from its own
+records in `parth_project/_workspace/context/chatgpt/`. It's drawn by the same
+`claude.js`, with its own data file (`chatgpt-data.json`; the two are never
+mixed). Each card also says where it came from (Codex or ChatGPT, a historical
+import or logged during the session), opens to **Show session details** (the
+write-up), and, where the chat itself was saved, **Show conversation record**:
+the messages in order, labelled Parth / Codex, never called a transcript if it
+isn't one. See [The ChatGPT page](#the-chatgpt-page) below.
+
+The same build makes another page, **To do** (`todo.html`, since 2026-10-21):
 what's waiting on Parth across `parth_project`. It's LAN-only for the same
 reason (it names Coles work), and the website's `todo.html` is its gateway.
 
@@ -52,15 +62,18 @@ deploy ships it. A link to a page that doesn't exist is a build warning.
 | File | What it is |
 |---|---|
 | `build.py` | Reads the logs + `_workspace/context/LOG.md` and writes `dist/`: the pages, `data.json`, `todo.json` (from `todo.py`), and copies of the site files it shares (top bar styles, the Projects tabs, settings, Hinglish, transitions, wallpapers). It also copies every `.html` page saved in `parth_project/discontinued/<project>/` to `/discontinued/<project>/`, so pages like Artifact reviews open on the LAN without a Claude sign-in. |
+| `chatgpt.py` | The ChatGPT page's extra card fields (where a session came from) and its conversation records, for `build.py`. |
+| `import_chatgpt.py` | Imports chats into `_workspace/context/chatgpt/`: Codex's local records (read only) or a ChatGPT export, by chat id, without duplicates. |
+| `tests/` | `test_chatgpt.py`: the importer and the build on made-up chats (nothing real). |
 | `todo.py` | The To do page's text: `_workspace/context/TODO.md`, with section 1 written from what git says about every repo. |
 | `encyclopedia.py` | The Encyclopedia: renders `_workspace/encyclopedia/**/*.md` into `dist/encyclopedia/` (pages, `search.json`, `pygments.css`, Mermaid). |
-| `page/` | The pages: `index.html`, `claude.js`, `claude.css` (Claude) and `todo.html`, `todo.js`, `todo.css` (To do). `handoff.js` copies in the settings the website passes along, on all of them. |
+| `page/` | The pages: `index.html`, `claude.js`, `claude.css` (Claude; `chatgpt.html` is the ChatGPT page, the same script and styles) and `todo.html`, `todo.js`, `todo.css` (To do). `handoff.js` copies in the settings the website passes along, on all of them. |
 | `page/encyclopedia/` | The Encyclopedia's template (`_template.html`, filled per page), `encyclopedia.css` and `encyclopedia.js` (search, sidebar on a phone, copy buttons, Mermaid). |
 | `vendor/` | `mermaid.min.js` (3.5 MB), fetched once by the build. Git-ignored. |
 | `deploy.py` | Runs `build.py`, then uploads `dist/` to `~/claude-timeline/` on the box and restarts the container. |
 | `update_site.py`, `Caddyfile`, `docker-compose.yml` | The box side: container `claude-timeline` (`caddy:2-alpine`, port 8120 → 80, `restart: unless-stopped`), same setup as Apex Dash. |
-| `dist/` | The build. **Git-ignored and must never be committed**: it's the full logs and the to-do list, and this repo is public. |
-| `../../claude.html`, `../../todo.html`, `../../encyclopedia.html` | The public gateway pages the Claude, To do and Encyclopedia tabs link to. All three use `../../lan-gateway.js`. |
+| `dist/` | The build. **Git-ignored and must never be committed**: it's the full logs, the ChatGPT conversations and the to-do list, and this repo is public. |
+| `../../claude.html`, `../../chatgpt.html`, `../../todo.html`, `../../encyclopedia.html` | The public gateway pages the Claude, ChatGPT, To do and Encyclopedia tabs link to. All use `../../lan-gateway.js`. |
 
 ## Updating it
 
@@ -71,9 +84,11 @@ python tools/claude-timeline/deploy.py          # build + deploy (asks for the b
                                                 # or set REMOTE_BOX_PW)
 python tools/claude-timeline/build.py           # build only, to look at dist/ locally
 python tools/claude-timeline/build.py --strict  # warnings stop the build
+python tools/claude-timeline/import_chatgpt.py  # bring in new Codex chats (see below)
+python -m unittest discover -s tools/claude-timeline/tests
 ```
 
-Needs `pip install pyyaml markdown-it-py pygments`, and PuTTY for deploying. The site
+Needs `pip install pyyaml markdown-it-py pygments` (and `zstandard` to import older Codex chats), and PuTTY for deploying. The site
 files are copied in at build time, so after changing `settings.js`,
 `hinglish.js`, `movies.css` etc., redeploy here too.
 
@@ -117,16 +132,48 @@ block. Those aren't shown on the card. A log without a block (or with a value
 that isn't on the lists) still shows up, using its heading, with a
 "No summary yet" badge, and `build.py` prints a warning for it.
 
+## The ChatGPT page
+
+Its records live outside this repo, in `parth_project/_workspace/context/chatgpt/`
+(that folder's `README.md` is the full description):
+
+- `LOG.md` and `sessions/*.md`: the same shape as Claude's. A session's
+  frontmatter has the card fields above plus where it came from: `source`
+  (Codex or ChatGPT), `chat_id`, `chat_title`, `record` (Historical import or
+  Maintained), `imported`, `completeness` (Complete, Partial or Not available),
+  `gaps`, and `conversation: true` to show its conversation record.
+  `build.py --strict` checks those too.
+- `sources/<chat-id>.json`: a chat's conversation record (messages, their times
+  in Australia/Sydney, attachment names, a note of the tools used between
+  messages). `sources/manifest.json` lists every chat by id, plus chats known
+  about but not imported (`known_missing`, shown on the page as "Not
+  imported"). Only the messages of a session that says `conversation: true`
+  go into the build. The rest of `sources/` never does.
+
+`import_chatgpt.py` fills `sources/` and makes a skeleton write-up for a chat
+that has none. It never touches an existing write-up, so hand corrections stay,
+and a second run updates by chat id instead of adding a duplicate. Codex chats
+are read from `~/.codex/sessions/` (only those that ran inside `parth_project`).
+ChatGPT chats need an account export: `--chatgpt-export conversations.json
+--chat <id>`. There's no watcher or scheduled import: chats appear when Codex
+follows the root `AGENTS.md` or someone runs the importer.
+
+Conversation text is rendered from Markdown with raw HTML turned off (so a
+`<script>` in a chat shows as text), with the same link rules as the logs.
+
 ## How the pieces talk
 
 - The website and the box are different sites, so settings saved in the
-  browser aren't shared. `claude.html` and `todo.html` pass theme, accent,
+  browser aren't shared. The gateway pages (`claude.html`, `chatgpt.html`, `todo.html`, `encyclopedia.html`) pass theme, accent,
   wallpaper, language, clock and transitions along in the link
   (`#settings=…`), and `handoff.js` copies them in before anything draws.
   Changes made on the box's copy stay there.
-- Links work both ways: `claude.html?project=Coles#2026-10-14-…` lands on the
-  same filter and card. Links inside a raw log to another session log jump to
-  that card. Links to other files in the workspace are shown, not clickable.
+- Links work both ways: `claude.html?project=Coles#2026-10-14-…` (or
+  `chatgpt.html?…#…`) lands on the same filter and card. Links inside a raw log
+  to another session log jump to that card, on whichever page it's on: a Claude
+  log linking to `../chatgpt/sessions/X.md` opens `chatgpt.html#X`, and a
+  ChatGPT write-up linking to `../../sessions/Y.md` opens the Claude page's card.
+  The To do page and the Encyclopedia follow the same rule. Links to other files in the workspace are shown, not clickable.
 - Off home Wi-Fi, some networks reject the address straight away instead of
   ignoring it. Then the browser shows its own "can't be reached" page instead
   of the message.

@@ -763,3 +763,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+// The Projects tabs (Showcase · Claude · ChatGPT · To do · Encyclopedia) scroll
+// sideways on a phone: start with the current one in view.
+document.addEventListener("DOMContentLoaded", () => {
+  const tabs = document.querySelector(".section-tabs");
+  const current = tabs && tabs.querySelector('[aria-current="page"]');
+  if (!current || tabs.scrollWidth <= tabs.clientWidth) return;
+  const offset = current.getBoundingClientRect().left - tabs.getBoundingClientRect().left;
+  tabs.scrollLeft += offset - (tabs.clientWidth - current.offsetWidth) / 2;
+});

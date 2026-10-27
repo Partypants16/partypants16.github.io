@@ -15,6 +15,7 @@ next links within its folder. Raw HTML in the Markdown is not passed through.
 Links in the Markdown:
   - another page, as a relative .md path            → that page (checked: a missing one is a warning)
   - a session log, e.g. ../../context/sessions/X.md → its card on the Claude page next door
+    (../../context/chatgpt/sessions/X.md            → its card on the ChatGPT page)
   - any other file in parth_project                 → shown as a path, not a link (it isn't served)
   - http(s)                                         → opens in a new tab
 
@@ -266,8 +267,12 @@ def make_resolver(page, pages, source, workspace, context, warn):
         if target in by_path:
             return "page", rel_url(page["out"], by_path[target]["out"]) + fragment
         stem = Path(path_part).stem
-        if path_part.endswith(".md") and SESSION_NAME.match(stem) and (context / "sessions" / (stem + ".md")).exists():
-            return "session", root_prefix(page["out"]) + "../#" + stem
+        if path_part.endswith(".md") and SESSION_NAME.match(stem):
+            chatgpt_log = context / "chatgpt" / "sessions" / (stem + ".md")
+            if target == chatgpt_log.resolve() and chatgpt_log.exists():
+                return "session", root_prefix(page["out"]) + "../chatgpt.html#" + stem
+            if (context / "sessions" / (stem + ".md")).exists():
+                return "session", root_prefix(page["out"]) + "../#" + stem
         try:
             inside = target.relative_to(source_resolved)
             if target.is_file():

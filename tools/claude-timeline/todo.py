@@ -134,13 +134,14 @@ def make(todo_file, workspace, entries, render, warn):
 
     written = datetime.datetime.fromtimestamp(todo_file.stat().st_mtime).astimezone()
     mark = written.strftime("%Y-%m-%d %H:%M")
-    newer = [{"id": e["id"], "title": e["title"]} for e in entries
+    # entries: the Claude and ChatGPT sessions, each with the page its card is on.
+    newer = [{"id": e["id"], "title": e["title"], "page": e.get("page", "claude")} for e in entries
              if e["time"] and f"{e['date']} {e['time']}" > mark]
 
     return {
         "built": built.isoformat(timespec="seconds"),
         "written": written.isoformat(timespec="seconds"),
-        # Links to session logs open their card on the Claude page next door.
+        # Links to session logs open their card on the Claude or ChatGPT page next door.
         "html": render(text).replace('href="#', 'href="./#'),
         "newer": newer,
     }

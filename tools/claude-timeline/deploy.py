@@ -8,10 +8,11 @@ variable, or is asked for. It is never stored here.
 What it does: build.py -> zip dist/ -> upload it with Caddyfile, docker-compose.yml and
 update_site.py to ~/claude-timeline/ -> update_site.py swaps the site in place ->
 docker compose up (recreated, so a changed Caddyfile is picked up too) -> checks the page
-and data.json answer, and that data.json is the one just built.
+and data.json answer, and that data.json is the one just built; the same for the ChatGPT
+page (chatgpt.html + chatgpt-data.json, compared byte for byte) and the Encyclopedia.
 dist/ holds the full session logs, so it only ever goes to this private box.
 """
-import getpass, os, subprocess, sys, tempfile, time, urllib.request, zipfile
+import getpass, json, os, subprocess, sys, tempfile, time, urllib.request, zipfile
 
 HOST = "parth@192.168.212.60"
 REMOTE_DIR = "/home/parth/claude-timeline"
@@ -62,6 +63,18 @@ for attempt in range(10):  # Caddy takes a moment to start after the recreate
         if size != expected:
             sys.exit("data.json on the box is %d bytes, expected %d" % (size, expected))
         print("live:", URL, page, "· data.json", size, "bytes, matches the build")
+        # The ChatGPT page: it answers, and its own data file is this build's (same bytes and sessions).
+        with urllib.request.urlopen(URL + "chatgpt.html", timeout=15) as response:
+            chat_page = response.status
+        request = urllib.request.Request(URL + "chatgpt-data.json", headers={"Accept-Encoding": "identity"})
+        with urllib.request.urlopen(request, timeout=15) as response:
+            live = response.read()
+        with open(os.path.join(DIST, "chatgpt-data.json"), "rb") as built:
+            local = built.read()
+        if live != local:
+            sys.exit("chatgpt-data.json on the box (%d bytes) isn't the one just built (%d bytes)" % (len(live), len(local)))
+        print("live:", URL + "chatgpt.html", chat_page, "· chatgpt-data.json", len(live), "bytes,",
+              len(json.loads(live)["entries"]), "sessions, matches the build")
         # The Encyclopedia tab: its front page and search index answer, and the index is this build's.
         search = os.path.join(DIST, "encyclopedia", "search.json")
         if os.path.isfile(search):

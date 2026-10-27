@@ -52,7 +52,7 @@
       data.newer.forEach((log, index) => {
         if (index) note.append(", ");
         const link = el("a", log.title);
-        link.href = "./#" + encodeURIComponent(log.id);
+        link.href = (log.page === "chatgpt" ? "chatgpt.html" : "./") + "#" + encodeURIComponent(log.id);
         link.setAttribute("translate", "no");
         note.append(link);
       });

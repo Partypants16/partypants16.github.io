@@ -448,6 +448,97 @@ mark {
   border-top: 1px solid var(--card-border);
 }
 
+/* ---------- The ChatGPT page (chatgpt.html): where a session came from, and the chat itself ---------- */
+
+.entry-source {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .3rem;
+  margin-top: .45rem;
+  font-size: .85rem;
+  color: var(--muted-text);
+}
+
+.entry-source-name {
+  font-weight: 700;
+}
+
+/* Two toggles: a gap after the first, so they wrap cleanly on a phone */
+.entry-toggle:has(+ .entry-toggle) {
+  margin-right: 1.25rem;
+}
+
+/* Both panels open: the write-up sits on top of the conversation, as one block */
+.entry-raw:has(+ .entry-convo:not([hidden])) {
+  margin-bottom: 0;
+  border-radius: 0;
+}
+
+.convo-note {
+  font-size: .85rem;
+  color: var(--muted-text);
+  margin-bottom: .5rem;
+}
+
+.convo-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+  margin-top: .75rem;
+}
+
+.convo-msg {
+  padding: .55rem .75rem;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  min-width: 0;
+}
+
+.convo-msg--user {
+  border-left: 3px solid var(--accent, #1464c0);
+}
+
+.convo-msg--tools {
+  padding: .1rem .75rem;
+  border: none;
+  background: none;
+  font-size: .82rem;
+  font-style: italic;
+  color: var(--muted-text);
+  overflow-wrap: anywhere;
+}
+
+.convo-files {
+  font-family: Consolas, "Courier New", monospace;
+  font-style: normal;
+}
+
+.convo-who {
+  font-size: .85rem;
+  margin-bottom: .3rem;
+}
+
+.convo-time {
+  margin-left: .35rem;
+  color: var(--muted-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.convo-attach {
+  font-size: .82rem;
+  color: var(--muted-text);
+  margin-bottom: .3rem;
+  overflow-wrap: anywhere;
+}
+
+.stat-missing {
+  flex-basis: 100%;
+  font-size: .85rem;
+}
+
 .file-ref {
   border-bottom: 1px dotted var(--muted-text);
 }
@@ -481,6 +572,10 @@ mark {
   .day-head::before {
     left: -1.2rem;
     margin-left: .25rem;
+  }
+
+  .convo-msg {
+    padding: .5rem .6rem;
   }
 }
 
