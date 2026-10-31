@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="hinglish.js"></script>
+  <script src="i18n.js"></script>
+  <script src="settings.js"></script>
+  <script src="motion.js"></script>
+  <title>Media | Parth</title>
+  <meta name="description" content="Parth's media pages: movie recommendation lists and franchise trackers, and soon a look back at his music listening history.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎞️</text></svg>">
+  <link rel="stylesheet" href="movies.css">
+  <link rel="stylesheet" href="projects.css">
+  <link rel="stylesheet" href="settings.css">
+  <link rel="stylesheet" href="motion.css">
+  <link rel="stylesheet" href="media.css">
+</head>
+
+<body>
+  <header>
+    <nav>
+      <p class="logo"><a href="profile.html" title="Profile">PS</a></p>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="wallpaper.html">Wallpaper</a></li>
+        <li><a href="gaming.html">Games</a></li>
+        <li><a href="media.html" aria-current="page">Media</a></li>
+        <li><a href="projects.html">Projects</a></li>
+      </ul>
+      <button class="settings-toggle" id="settingsToggle" type="button" aria-label="Settings" title="Settings" aria-haspopup="dialog" aria-expanded="false" aria-controls="settingsPanel"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="3.34 3.34"/><circle cx="12" cy="12" r="5.2" fill="none" stroke="currentColor" stroke-width="4.4"/></svg></button>
+    </nav>
+  </header>
+
+  <main class="projects media">
+    <section class="lists-intro">
+      <h1>Media</h1>
+      <p>What I watch and what I listen to, each with its own page.</p>
+    </section>
+
+    <div class="media-cards">
+      <a class="feature-card media-card" href="movies.html">
+        <div class="feature-body">
+          <span class="pj-eyebrow">Recommendations and trackers</span>
+          <h2>Movies</h2>
+          <p class="feature-tagline">Movie lists picked out for each person, and whole franchises tracked one title at a time.</p>
+          <ul class="feature-counts" id="movie-counts" hidden></ul>
+          <span class="feature-cta"><span>Open Movies</span><svg class="pj-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></span>
+        </div>
+      </a>
+      <div class="feature-card media-card is-soon" aria-disabled="true">
+        <div class="feature-body">
+          <span class="pj-eyebrow">Listening history</span>
+          <h2>Music</h2>
+          <p class="feature-tagline">Charts of what I've listened to over the years: top artists and songs, and when I listen most.</p>
+          <span class="feature-cta"><span>Coming soon</span></span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; <span id="year"></span> Parth</p>
+  </footer>
+
+  <script src="movie-lists.js"></script>
+  <script src="franchise-data.js"></script>
+  <script>
+    // The Movies card's numbers. The card is a plain link, so it still works if these don't load.
+    function count(list, number, label) {
+      const item = document.createElement("li");
+      const b = document.createElement("b");
+      b.textContent = String(number);
+      const span = document.createElement("span");
+      span.textContent = label;
+      item.append(b, span);
+      list.appendChild(item);
+    }
+
+    if (typeof MOVIE_LISTS !== "undefined" && typeof FRANCHISES !== "undefined") {
+      const counts = document.getElementById("movie-counts");
+      const lists = Object.keys(MOVIE_LISTS).length;
+      const franchises = Object.values(FRANCHISES);
+      const titles = franchises.reduce((n, f) => n + f.sections.reduce((m, s) => m + s.titles.length, 0), 0);
+      count(counts, lists, lists === 1 ? "List" : "Lists");
+      count(counts, franchises.length, franchises.length === 1 ? "Franchise" : "Franchises");
+      count(counts, titles, titles === 1 ? "Title tracked" : "Titles tracked");
+      counts.hidden = false;
+    }
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+
+</html>

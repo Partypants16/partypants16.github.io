@@ -18,7 +18,7 @@
     { group: "This site", items: [
       { name: "Home", icon: "🏰", href: "index.html" },
       { name: "Games", icon: "🎮", href: "gaming.html" },
-      { name: "Movies", icon: "🎬", href: "movies.html" },
+      { name: "Media", icon: "🎞️", href: "media.html" },
       { name: "Profile", icon: "🙂", href: "profile.html" },
       { name: "Vibe Testing Zone", icon: "🧪", href: "vibe-testing-zone/home.html" }
     ] },

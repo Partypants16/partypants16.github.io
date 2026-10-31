@@ -1,0 +1,54 @@
+/* The Media page (media.html): Movies and Music as two cards.
+   The card is the Showcase's .feature-card (projects.css) without its cover,
+   laid out like the Memory page on the home server. */
+
+.media-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.media-card {
+  grid-template-columns: 1fr;
+}
+
+.media-card h2 {
+  font-size: 2rem;
+  line-height: 1.1;
+  letter-spacing: -.01em;
+}
+
+.media-card .feature-counts {
+  gap: 1.25rem 1.75rem;
+}
+
+/* Music isn't built yet: the card is there, but it doesn't open or lift */
+.media-card.is-soon {
+  border-style: dashed;
+  box-shadow: none;
+}
+
+.media-card.is-soon:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.media-card.is-soon .feature-cta {
+  color: var(--muted-text);
+}
+
+@media (max-width: 700px) {
+  .media-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .media-card .feature-body {
+    padding: 1.5rem;
+  }
+
+  .media-card h2 {
+    font-size: 1.7rem;
+  }
+}

@@ -23,6 +23,7 @@ const HINGLISH = {
     "Show card 2": "Card 2 dikhao",
     "Show card 3": "Card 3 dikhao",
     "Movies": "Filmein",
+    "Media": "Media",
     "Close settings": "Settings band karo",
     "Close": "Band karo",
     "Parth | Home": "Parth | Ghar",
@@ -133,6 +134,23 @@ const HINGLISH = {
     // ---------- Games ----------
     "Gaming Platforms": "Mere Gaming Platforms",
     "My Games": "Mere Games",
+
+    // ---------- Media (media.html: Movies and Music as two cards) ----------
+    "Media | Parth": "Media | Parth",
+    "What I watch and what I listen to, each with its own page.": "Main kya dekhta hoon aur kya sunta hoon, dono ka apna page.",
+    "Recommendations and trackers": "Recommendations aur trackers",
+    "Movie lists picked out for each person, and whole franchises tracked one title at a time.": "Har insaan ke liye chuni hui movie lists, aur poori franchises ek-ek title karke track ki hui.",
+    "Open Movies": "Filmein kholo",
+    "Listening history": "Kya-kya suna",
+    "Music": "Gaane",
+    "Charts of what I've listened to over the years: top artists and songs, and when I listen most.": "Saalon mein jo suna uske charts: top artists aur gaane, aur main sabse zyada kab sunta hoon.",
+    "List": "List",
+    "Lists": "Lists",
+    "Franchise": "Franchise",
+    "Franchises": "Franchises",
+    "Title tracked": "Title track hua",
+    "Titles tracked": "Titles track hue",
+    "← Media": "← Media",
 
     // ---------- Movies ----------
     "Movie Recommendation Lists": "Filmon ki Recommendation Lists",
