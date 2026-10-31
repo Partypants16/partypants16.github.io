@@ -112,6 +112,7 @@ const HINGLISH = {
     "Takes you to the self-hosted Immich family photo library.": "Self-hosted Immich family photo library pe le jaata hai.",
     "Takes you to the self-hosted Navidrome music server.": "Self-hosted Navidrome music server pe le jaata hai.",
     "What's on the menu today? Takes you to the self-hosted family meal planner.": "Aaj menu mein kya hai? Self-hosted family meal planner pe le jaata hai.",
+    "The family's to-do lists and kanban boards, with reminders and recurring tasks. Takes you to the self-hosted Vikunja.": "Family ki to-do lists aur kanban boards, reminders aur recurring tasks ke saath. Self-hosted Vikunja pe le jaata hai.",
     "One shared clipboard for moving text, images and files between your own devices. Takes you to the self-hosted CrossPaste.": "Apne devices ke beech text, images aur files bhejne ke liye ek shared clipboard. Self-hosted CrossPaste pe le jaata hai.",
     "VS Code in the browser, running on the home server. Takes you to the self-hosted code-server.": "Browser mein VS Code, ghar ke server pe chalta hua. Self-hosted code-server pe le jaata hai.",
     "Live health of the home server: CPU, memory, disks, network and every container, updated every second. Takes you to the self-hosted Netdata dashboard.": "Ghar ke server ki live sehat: CPU, memory, disks, network aur har container, har second update hoti hai. Self-hosted Netdata dashboard pe le jaata hai.",
