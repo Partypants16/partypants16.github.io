@@ -183,7 +183,7 @@ close keeps it fresh. If Eunomia is down, it warns and deploys the old one.
   facts" is ticked. A source that's a session log links to its timeline card.
 - **No map:** Eunomia has no links between subjects yet (every vault's graph
   has 0 edges, checked 2026-11-01), so facts are grouped by project, then by
-  subject. See `EUNOMIA_MEMORY_VISUALISER.md` at the workspace root.
+  subject. See `EUNOMIA_MEMORY_VISUALISER.md` in this folder.
 - If the snapshot fails (Eunomia down, an API error, no memories), it exits
   with an error and the last good file stays. Without any snapshot the build
   still works and the card says "No snapshot yet".
