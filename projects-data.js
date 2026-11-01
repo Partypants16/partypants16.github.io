@@ -2203,6 +2203,65 @@ const PROJECTS_DATA = {
       technologies: ["TypeScript", "Three.js", "Vite", "Kotlin"],
       repo: null,
       claudeProject: "Apex Dash",
+      sequels: [
+        {
+          name: "Apex Dash 3D Masters",
+          tagline: "The sequel goes 3D: hills, jumps, banked turns and flyovers, with split screen, online races and a track editor.",
+          summary: "The sequel, with everything that wouldn't fit in the first game: real 3D circuits with hills, jumps, banked turns, a flyover and a corkscrew, split screen for up to four players, online races at home, medals and upgrades, and a track editor. The cars are free CC0 models and everything else, music included, is made in code, so anyone can play it.",
+          status: "building",
+          started: "2026-11-01",
+          updated: "2026-11-01",
+          technologies: ["TypeScript", "Three.js", "Vite", "Node.js", "WebSockets"],
+          claudeProject: "Apex Dash 3D Masters",
+          focus: "Playing it myself to judge how the hills, banking and jumps feel, and listening to the music the game makes.",
+          showcase: {
+            breadcrumb: ["Games", "Racing"],
+            developer: "Parth",
+            play: { href: "play/apex-dash-3d-masters/" },
+            header: "images/projects/apex-dash-3d-masters/header.jpg",
+            trailer: { src: "images/projects/apex-dash-3d-masters/trailer.mp4", poster: "images/projects/apex-dash-3d-masters/poster.jpg" },
+            screenshots: [
+          { src: "images/projects/apex-dash-3d-masters/shot-01.jpg", thumb: "images/projects/apex-dash-3d-masters/shot-01-thumb.jpg", alt: "Cars take off over a crest on the coast road at Sunrise Bay, with palm trees and the sea beside the track." },
+          { src: "images/projects/apex-dash-3d-masters/shot-02.jpg", thumb: "images/projects/apex-dash-3d-masters/shot-02-thumb.jpg", alt: "Cars fly off a ramp over a dry riverbed on the red desert road of Copperline Canyon." },
+          { src: "images/projects/apex-dash-3d-masters/shot-03.jpg", thumb: "images/projects/apex-dash-3d-masters/shot-03-thumb.jpg", alt: "At night on Neon Interchange the road climbs onto a flyover that crosses its own lower section between lit-up towers." },
+          { src: "images/projects/apex-dash-3d-masters/shot-04.jpg", thumb: "images/projects/apex-dash-3d-masters/shot-04-thumb.jpg", alt: "A pack of cars leans into a steeply banked turn at the Thunder Bowl superspeedway at sunset." },
+          { src: "images/projects/apex-dash-3d-masters/shot-05.jpg", thumb: "images/projects/apex-dash-3d-masters/shot-05-thumb.jpg", alt: "The corkscrew at Cloudbreak Summit: the road circles up and over itself on a mountain top at dawn." },
+          { src: "images/projects/apex-dash-3d-masters/shot-06.jpg", thumb: "images/projects/apex-dash-3d-masters/shot-06-thumb.jpg", alt: "Racing through the rain in Monsoon Valley, with spray, wet reflections and jungle trees along the barriers." },
+          { src: "images/projects/apex-dash-3d-masters/shot-07.jpg", thumb: "images/projects/apex-dash-3d-masters/shot-07-thumb.jpg", alt: "A car drifts through a corner inside the Ember Caldera volcano at night, with boost sparks under its wheels." },
+          { src: "images/projects/apex-dash-3d-masters/shot-08.jpg", thumb: "images/projects/apex-dash-3d-masters/shot-08-thumb.jpg", alt: "Four-player split screen: each player has their own view and race information." },
+          { src: "images/projects/apex-dash-3d-masters/shot-09.jpg", thumb: "images/projects/apex-dash-3d-masters/shot-09-thumb.jpg", alt: "The track editor: a circuit drawn from above with its control points, height colours and racing line, beside sliders for height, banking and width." },
+          { src: "images/projects/apex-dash-3d-masters/shot-10.jpg", thumb: "images/projects/apex-dash-3d-masters/shot-10-thumb.jpg", alt: "The Grand Prix menu showing gold, silver and bronze medals and the mirror and reverse cups." }
+            ],
+            tags: ["Racing", "Arcade", "3D", "Multiplayer", "Split screen", "Level editor", "Browser", "Controller support"],
+            features: [
+          "Eight real 3D circuits: rolling hills, jumps over canyons and lava, 32-degree banking, a night-time flyover and a mountain-top corkscrew.",
+          "Drift for blue, orange and purple boosts, time a rocket start, and land big jumps for a landing boost.",
+          "Split screen for two to four players on one computer, with gamepads or two keyboard halves.",
+          "Online races on your home network: make a room, share the code, ready up, with AI filling the grid.",
+          "Grand Prix cups with gold, silver and bronze medals, mirror and reverse cups, unlockable cars, upgrades and ten challenges.",
+          "An in-game track editor: drag points, set heights, banking and jumps, then test-drive it or race the AI on it.",
+          "Rain with wet, reflective roads and time of day that changes during the race.",
+          "Time Trial ghosts you can export and share, full race replays and a photo mode."
+            ],
+            requirements: [
+              { label: "PC", items: [
+                ["Browser", "A recent Chrome, Edge, Firefox or Safari with WebGL 2"],
+                ["Graphics", "Built-in graphics are enough: Medium at 1080p ran at 47 to 54 fps in testing on a laptop with no graphics card"],
+                ["Download", "About 3 MB: the game makes all its own music and sound"],
+                ["Input", "Keyboard or gamepad"]
+              ] },
+              { label: "Multiplayer", items: [
+                ["Split screen", "Two to four players on one computer, with gamepads or two halves of the keyboard"],
+                ["Online", "Races over my home network, on the home-server copy. This web version has everything else"]
+              ] },
+              { label: "Phone", items: [
+                ["Input", "Touch: steering stick, GAS, BRAKE and DRIFT pads"],
+                ["Speed", "Not measured on a real phone yet"]
+              ] }
+            ]
+          }
+        }
+      ],
       showcase: {
         breadcrumb: ["Games", "Racing"],
         developer: "Parth",

@@ -33,6 +33,7 @@
       { name: "Netdata", icon: "📈", href: "http://192.168.212.60:19999", service: "netdata" },
       { name: "n8n", icon: "⚙️", href: "http://192.168.212.60:5678", service: "n8n" },
       { name: "Sonic Apex Dash", icon: "🏎️", href: "http://192.168.212.60:8110", service: "apexdash" },
+      { name: "3D Masters online", icon: "🏁", href: "http://192.168.212.60:8111" },
       { name: "Sonic", icon: "🦔", href: "http://192.168.212.60:8000" }
     ] },
     { group: "Elsewhere", items: [
