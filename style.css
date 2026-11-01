@@ -250,6 +250,18 @@ section p {
   opacity: 0.85;
 }
 
+/* Sub-groups inside a group (LAN Only: Family, Everyday tools, Server & automation).
+   A small label in the group's colour, lined up with the cards below it. */
+.subgroup-head {
+  margin: 1.5rem 0 -0.5rem;
+  padding: 0 20px;
+  color: var(--group-colour);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
 @media (max-width: 600px) {
   .card-group {
     margin-top: 2.5rem;
