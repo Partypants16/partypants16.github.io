@@ -11,9 +11,10 @@
 // site: GitHub Pages builds with Jekyll, which skips folders starting with "_").
 //
 // Everything here is public: this repo is the public website. Never put Coles
-// work, LAN addresses or local paths in it. Apex Dash's trailer and screenshots
-// (which show Ring Racers art) are here because Parth chose to publish them on
-// 2026-10-22; the game itself and its raw assets still never go here.
+// work, LAN addresses or local paths in it. Since 2026-11-02 Apex Dash's trailer
+// and screenshots are of the public edition (original art). The Ring Racers ones
+// published on 2026-10-22 were replaced, and Sonic Apex Dash itself never goes here.
+// The public games are playable from play/ (static builds copied from games/).
 //
 // Project fields:
 //   slug, name, icon (emoji), hue (0-360, the project's colour), tagline,
@@ -27,7 +28,10 @@
 //   Optional `showcase` (games) swaps the story's hero for a Steam-style store
 //   page: { breadcrumb, developer, header, trailer: { src, poster },
 //   screenshots: [{ src, thumb, alt }], tags, features, requirements:
-//   [{ label, items: [[label, value]] }] }.
+//   [{ label, items: [[label, value]] }], play: { href, label? } }. `play` adds a
+//   green Play button. Optional `sequels` (only with `showcase`): [{ name,
+//   tagline, summary, status, started, updated, technologies, claudeProject,
+//   focus, showcase }], each drawn as a second store page before the journey.
 //
 // Event fields: id, date, type (milestone | decision | experiment | problem |
 //   deadend | refactor | direction | release | pause | resume), title, summary,
@@ -2193,8 +2197,8 @@ const PROJECTS_DATA = {
       name: "Apex Dash",
       icon: "🏎️",
       hue: 8,
-      tagline: "An arcade racer built from scratch in the browser: ten drivers, ten circuits, no power-ups, just grip and drift boosts.",
-      summary: "I wanted an arcade racer of my own. Apex Dash has ten circuits and ten drivers in proper cars, with no power-ups: drifting, drift boosts and a good start do the work. It runs in the browser, as an Android app, and on my home server. Some of the art isn't mine, so the game stays private.",
+      tagline: "An arcade racer built from scratch in the browser: ten drivers, ten circuits, no power-ups, just grip and drift boosts. Now with art and music of its own, so anyone can play it.",
+      summary: "I wanted an arcade racer of my own. Apex Dash has ten circuits and ten drivers in proper cars, with no power-ups: drifting, drift boosts and a good start do the work. The first version borrowed its art and music from a Sonic fan game, so it had to stay private. This version replaces all of that with drivers, scenery, sound and ten circuit songs made in code, so it plays right here in the browser.",
       status: "building",
       featured: true,
       kind: "Personal",
@@ -2265,53 +2269,56 @@ const PROJECTS_DATA = {
       showcase: {
         breadcrumb: ["Games", "Racing"],
         developer: "Parth",
+        play: { href: "play/apex-dash/" },
         header: "images/projects/apex-dash/header.jpg",
         trailer: { src: "images/projects/apex-dash/trailer.mp4", poster: "images/projects/apex-dash/poster.jpg" },
         screenshots: [
-          { src: "images/projects/apex-dash/shot-01.jpg", thumb: "images/projects/apex-dash/shot-01-thumb.jpg", alt: "Rocket start on Palm Coast: the countdown hits 1, with the player's blue car on the grid and the Apex Dash start gantry ahead." },
-          { src: "images/projects/apex-dash/shot-02.jpg", thumb: "images/projects/apex-dash/shot-02-thumb.jpg", alt: "Driver select: ten driver portraits, Sonic picked, with his stats and his car on a glowing turntable." },
-          { src: "images/projects/apex-dash/shot-03.jpg", thumb: "images/projects/apex-dash/shot-03-thumb.jpg", alt: "Night racing through the neon city of Neon Boulevard, with pixel-art billboards on the buildings." },
-          { src: "images/projects/apex-dash/shot-04.jpg", thumb: "images/projects/apex-dash/shot-04-thumb.jpg", alt: "Frostbite Pass: a pink car on a snowy mountain road, the low-grip circuit." },
-          { src: "images/projects/apex-dash/shot-05.jpg", thumb: "images/projects/apex-dash/shot-05-thumb.jpg", alt: "Magma Ridge: racing at night beside a lava sea under a red sky." },
-          { src: "images/projects/apex-dash/shot-06.jpg", thumb: "images/projects/apex-dash/shot-06-thumb.jpg", alt: "Mushroom Grove: a forest track lined with giant pixel-art mushrooms." },
-          { src: "images/projects/apex-dash/shot-07.jpg", thumb: "images/projects/apex-dash/shot-07-thumb.jpg", alt: "Starlight Orbit: a space-station ring at night, with glowing rings beside the track." },
-          { src: "images/projects/apex-dash/shot-08.jpg", thumb: "images/projects/apex-dash/shot-08-thumb.jpg", alt: "Sunset Speedway: the grand-prix circuit at golden hour, between grandstands." },
-          { src: "images/projects/apex-dash/shot-09.jpg", thumb: "images/projects/apex-dash/shot-09-thumb.jpg", alt: "Grand Prix results: the champion podium and the final points table." },
-          { src: "images/projects/apex-dash/shot-10.jpg", thumb: "images/projects/apex-dash/shot-10-thumb.jpg", alt: "The Android version: the same race on a phone, with a steering stick and GAS, BRAKE and DRIFT pads." }
+          { src: "images/projects/apex-dash/shot-01.jpg", thumb: "images/projects/apex-dash/shot-01-thumb.jpg", alt: "An orange hatchback boosting out of a drift at Sunset Speedway at sunset, seen in a replay." },
+          { src: "images/projects/apex-dash/shot-02.jpg", thumb: "images/projects/apex-dash/shot-02-thumb.jpg", alt: "Racing at night down Neon Boulevard between lit skyscrapers and glowing billboards." },
+          { src: "images/projects/apex-dash/shot-03.jpg", thumb: "images/projects/apex-dash/shot-03-thumb.jpg", alt: "A pink coupe drifting through a corner at Magma Ridge, sparks flying, with a lava sea behind." },
+          { src: "images/projects/apex-dash/shot-04.jpg", thumb: "images/projects/apex-dash/shot-04-thumb.jpg", alt: "Cars racing up Frostbite Pass between snowy pine trees and ice walls." },
+          { src: "images/projects/apex-dash/shot-05.jpg", thumb: "images/projects/apex-dash/shot-05-thumb.jpg", alt: "A desert race through Dust Devil Canyon past giant cacti and red rock spires." },
+          { src: "images/projects/apex-dash/shot-06.jpg", thumb: "images/projects/apex-dash/shot-06-thumb.jpg", alt: "Racing past giant red and blue spotted mushrooms in Mushroom Grove." },
+          { src: "images/projects/apex-dash/shot-07.jpg", thumb: "images/projects/apex-dash/shot-07-thumb.jpg", alt: "The Starlight Orbit space-station circuit at night, with antennas and glowing beacons." },
+          { src: "images/projects/apex-dash/shot-08.jpg", thumb: "images/projects/apex-dash/shot-08-thumb.jpg", alt: "The driver select screen with ten cartoon racing drivers and their stats." },
+          { src: "images/projects/apex-dash/shot-09.jpg", thumb: "images/projects/apex-dash/shot-09-thumb.jpg", alt: "A replay seen from a trackside camera as a car speeds past." },
+          { src: "images/projects/apex-dash/shot-10.jpg", thumb: "images/projects/apex-dash/shot-10-thumb.jpg", alt: "Time Trial on Clover Meadows with a see-through ghost car showing the best lap." }
         ],
-        tags: ["Racing", "Arcade", "Drifting", "3D", "Singleplayer", "Browser", "Android", "Controller support"],
+        tags: ["Racing", "Arcade", "Drifting", "3D", "Singleplayer", "Browser", "Photo mode", "Controller support"],
         features: [
-          "Ten drivers, each with their own car and stats. Average lap times are within 1.6% of each other.",
-          "Ten circuits, each with its own look and music: seaside, countryside, a neon city, casino night, desert, snow, a volcano, a mushroom forest, a space station and a grand-prix speedway.",
+          "Ten original drivers, from Nova to Baron Voss, each with their own car and stats. Average lap times are within 1.6% of each other.",
+          "Ten circuits, each with its own look and its own music: seaside, countryside, a neon city, casino night, desert, snow, a volcano, a mushroom forest, a space station and a grand-prix speedway.",
           "Drift to charge a boost that goes blue, orange, then purple. Let go to fire it.",
-          "Rocket start: hit the accelerator in the last half-second before GO. Too early and you stall.",
-          "Grand Prix (two five-race cups), Quick Race on any circuit at easy, normal or hard, and Time Trial with your best laps saved.",
-          "Seven AI rivals that follow a racing line, brake for corners and pick a side to pass.",
-          "Play with a keyboard, a gamepad, or touch on Android."
+          "Rocket start: hit the accelerator in the last half-second before GO. Too early and you stall. The AI takes the same gamble.",
+          "Seven AI rivals that follow a racing line, drift through tight corners and pick a side to pass.",
+          "Speed you can feel: the camera kicks and shakes on boosts, speed lines and motion blur at top speed, sparks and a jolt on hard hits, and rumble on a gamepad or phone. All of it can be turned down.",
+          "Time Trial ghosts you can export and swap, replays with three cameras, and a photo mode.",
+          "Grand Prix (two five-race cups), Quick Race at easy, normal or hard, and Time Trial."
         ],
         requirements: [
           { label: "PC", items: [
             ["OS", "Windows, macOS or Linux"],
             ["Browser", "A recent Edge, Chrome or Firefox"],
-            ["Graphics", "Built-in graphics are enough (41 to 61 fps in testing on a laptop with no graphics card)"],
+            ["Graphics", "Built-in graphics are enough (33 to 54 fps on High in testing on a laptop with no graphics card)"],
+            ["Download", "About 35 MB"],
             ["Input", "Keyboard or gamepad"]
           ] },
-          { label: "Android", items: [
-            ["App", "The Apex Dash app (APK)"],
-            ["Input", "Touch: steering stick, buttons or tilt, plus GAS, BRAKE and DRIFT pads"],
-            ["Network", "None needed: it runs fully offline"]
+          { label: "Phone", items: [
+            ["How", "In the phone's browser"],
+            ["Input", "Touch: steering stick, buttons or tilt, plus GAS, BRAKE and DRIFT pads"]
           ] }
         ]
       },
-      commits: 8,
-      sessions: 5,
+      commits: 19,
+      sessions: 6,
 
       evolution: [
         { label: "The idea", text: "A simple arcade racer of my own: proper cars, ten circuits, ten drivers, no power-ups." },
         { label: "First build", text: "Flat tracks drawn in real 3D in the browser. Playable on the first day, with 41 automated tests." },
-        { label: "What got in the way", text: "Some of the art isn't mine, so it can't go public. And nobody has judged the feel by hand yet." },
+        { label: "What got in the way", text: "The art and music came from a Sonic fan game, so it couldn't go public. It lived on my home server instead." },
         { label: "Beyond the PC", text: "The same code became an Android app, and a copy runs on my home server for the home Wi-Fi." },
-        { label: "Now", text: "Playable on PC, phone and the home network. Waiting on a real feel test and a fix for the AI start." }
+        { label: "Going public", text: "The original stays home as Sonic Apex Dash. This one got new drivers, scenery, sounds and music, all made in code, plus AI that drifts and starts properly." },
+        { label: "Now", text: "Anyone can play it in the browser, and a sequel, Apex Dash 3D Masters, was built alongside. Waiting on my own feel test and a listen to the new music." }
       ],
 
       events: [
@@ -2474,6 +2481,104 @@ const PROJECTS_DATA = {
             { type: "git", ref: "43c8cc6", label: "Host the game on the home server" },
             { type: "claude", ref: "2026-10-21-apex-dash-on-home-server", label: "On the home server" }
           ]
+        },
+        {
+          id: "three-games",
+          date: "2026-11-01",
+          type: "direction",
+          key: true,
+          title: "Going public: one game becomes three",
+          summary: "I decided I want Apex Dash public. The Sonic version stays at home, a public version replaces every borrowed asset, and the big new ideas become a sequel.",
+          context: "I asked what would take the game to the next level. The answer came in three parts: fix what makes races unfair, make speed feel like speed, and some big moves like multiplayer and real hills. Plus one question: does it ever go public? If so, everything from the fan game has to go.",
+          options: [
+            { text: "Keep it private on the home server", chosen: false, note: "No work, but nobody outside my home can ever play it." },
+            { text: "Swap the art and lose the Sonic version", chosen: false, note: "Public, but the version I already liked would be gone." },
+            { text: "Two editions from one codebase, and a separate sequel", chosen: true, note: "Sonic Apex Dash stays at home, Apex Dash goes public, and both get every fix." }
+          ],
+          why: "The game finds every picture and sound through one list, so a second set of art could be dropped in without touching the game code. One codebase means every fix lands in both editions. The big moves would have changed what the game is, so they became a new game instead.",
+          outcome: "Sonic Apex Dash keeps the fan game's art on my home network. Apex Dash is the same game with all of it replaced, playable on this website. Apex Dash 3D Masters is the sequel, with its own store section on this page.",
+          sources: [
+            { type: "claude", ref: "2026-11-01-apex-dash-three-games", label: "Three games" }
+          ]
+        },
+        {
+          id: "ai-fixed",
+          date: "2026-11-01",
+          type: "problem",
+          title: "The AI learns to start, drift and stay out of the way",
+          summary: "The start stall is fixed, the AI drifts, and a car right behind mine no longer hides it.",
+          context: "Every AI car stalled at every start, the AI never drifted so boosts were mine alone, and a tailgater could cover my car on screen.",
+          outcome: "Each AI car now presses the accelerator at its own moment, so some get a rocket start and a few stall, with odds set by difficulty. On hard the AI drifts nine tight corners in ten and fires the boosts. Cars between the camera and mine turn see-through, and the camera rises over a tailgater. Fixing the start exposed a new bug: with nobody stalling, the pack stayed bunched and two cars side by side could hold each other to a crawl. The AI now keeps a gap from cars alongside.",
+          lesson: "Fixing one bug can uncover another that it was hiding.",
+          sources: [
+            { type: "git", ref: "6bc0971", label: "AI starts and drifting" },
+            { type: "git", ref: "34d2c87", label: "Chase camera tailgater fix" },
+            { type: "claude", ref: "2026-11-01-apex-dash-three-games", label: "Three games" }
+          ]
+        },
+        {
+          id: "feel",
+          date: "2026-11-01",
+          type: "milestone",
+          title: "Speed you can feel, ghosts and replays",
+          summary: "Camera kicks, speed lines, motion blur, hit sparks and rumble, plus Time Trial ghosts, replays and a photo mode.",
+          context: "The driving model was there, but going fast didn't look or feel much different from going slowly.",
+          outcome: "Boosts kick the camera wider with a little shake, top speed brings speed lines and motion blur, hard wall hits freeze the frame for a moment with sparks, and gamepads and phones rumble. Every strength is a number I can tune, and the options can turn it all down. Time Trial saves a ghost of the best lap that can be exported and swapped. After any race there's a replay with three cameras, and a photo mode that saves a picture.",
+          sources: [
+            { type: "git", ref: "b56086c", label: "Speed effects" },
+            { type: "git", ref: "dda4b48", label: "Ghosts, replays, photo mode" }
+          ]
+        },
+        {
+          id: "own-art",
+          date: "2026-11-01",
+          type: "decision",
+          key: true,
+          title: "New art and music, made in code",
+          summary: "Every driver, texture, prop, sound and song from the fan game was replaced, and a check proves none of it slipped back in.",
+          context: "To go public, the drivers, scenery, textures, engine sounds, effects, voices and the music for all ten circuits had to be replaced. The plan was free art packs that allow any use, plus things made in code. The free-pack site blocked downloads by scripts.",
+          options: [
+            { text: "Free art packs that allow any use", chosen: false, note: "The plan, but the site blocked downloads by scripts." },
+            { text: "AI-generated art and music", chosen: false, note: "Ruled out from the start." },
+            { text: "Make it in code", chosen: true, note: "Drawn portraits, built 3D props, generated textures and composed songs, all original." }
+          ],
+          why: "Art made in code has no licence question at all. Only the cars (free Kenney models) and the font come from outside, and both allow any use.",
+          outcome: "Ten new drivers, from Nova to Baron Voss, with drawn portraits. 45 kinds of 3D props, 35 textures and billboards for made-up brands. Thirteen original songs, such as Neon Afterburn and Golden Hour Grand Prix, plus engines, effects and wordless voices. A leak guard fails the build if any file or name from the fan game turns up. The sound was only checked by measurement, so I still have to listen to it.",
+          lesson: "Finding every asset through one list from day one made swapping all of them possible.",
+          sources: [
+            { type: "git", ref: "e3d585d", label: "The edition switch" },
+            { type: "git", ref: "644b84c", label: "Public edition and leak guard" }
+          ]
+        },
+        {
+          id: "sequel",
+          date: "2026-11-01",
+          type: "decision",
+          key: true,
+          title: "The big moves become a sequel",
+          summary: "Multiplayer, real hills and jumps, progression, a track editor and better graphics went into a new game, Apex Dash 3D Masters.",
+          context: "Real hills and bridges change the whole driving model, and multiplayer and an editor change what the game is.",
+          options: [
+            { text: "Add it all to Apex Dash", chosen: false, note: "One game, but it would stop being the simple flat-track racer." },
+            { text: "A sequel", chosen: true, note: "Apex Dash stays as it is, and the sequel starts from its code." }
+          ],
+          why: "Apex Dash works as a simple arcade racer. A sequel could rebuild the physics for real 3D without risking that.",
+          outcome: "Apex Dash 3D Masters: eight 3D circuits with hills, jumps, banking, a flyover and a corkscrew, split screen for up to four, online races on my home network, medals and upgrades, and a track editor. Its cars are free public-domain models and everything else is made in code.",
+          sources: [
+            { type: "claude", ref: "2026-11-01-apex-dash-three-games", label: "Three games" }
+          ]
+        },
+        {
+          id: "public",
+          date: "2026-11-02",
+          type: "release",
+          title: "Playable on this website",
+          summary: "Apex Dash and Apex Dash 3D Masters now run straight from my website. Sonic Apex Dash stays on the home network.",
+          context: "In October the answer to putting the game on the website was no, because of the borrowed art. With that art gone, it's just a folder of files.",
+          outcome: "Both public games play from the Games page and the Play buttons on this page. The trailer and screenshots here are of the public version now. The website is HTTPS, so tilt steering on a phone works here, which it never did through the home server.",
+          sources: [
+            { type: "claude", ref: "2026-11-01-apex-dash-three-games", label: "Three games" }
+          ]
         }
       ],
 
@@ -2481,14 +2586,16 @@ const PROJECTS_DATA = {
         { title: "One game, many places", text: "Wrapping the browser game for Android, instead of rewriting it, means every fix lands everywhere." },
         { title: "Look at it", text: "Screenshots found the washed-out bloom, white night roads and hidden dialogs that no unit test could." },
         { title: "Build it right by design", text: "Tracks made as closed shapes always close. Patching the error afterwards only bent them." },
-        { title: "Equal bugs hide", text: "Every AI car stalling at the start never failed a test, because it hit all of them the same." }
+        { title: "Equal bugs hide", text: "Every AI car stalling at the start never failed a test, because it hit all of them the same." },
+        { title: "Make it swappable early", text: "Finding every picture and sound through one list meant all the borrowed art could be replaced without touching the game code." },
+        { title: "Fixes uncover bugs", text: "Fixing the start stall showed that the pack could jam side by side, which the stall had been hiding." }
       ],
 
-      focus: "Playing it myself, on the PC and on my phone, to judge the feel before changing any numbers.",
+      focus: "Playing it myself to judge the feel of the new effects and the drifting AI, and listening to the new music.",
       next: [
-        "Fix the AI cars stalling at every race start",
-        "Try it on my real phone: frame rate, and how the stick and tilt feel",
-        "Teach the AI to drift, so hard difficulty is a real challenge"
+        "Play it and tune the feel: drifting, the AI and the new speed effects",
+        "Listen to the new music, engines and voices, and redo any that don't work",
+        "Try it on my real phone, now that tilt works through the website"
       ]
     },
     {
