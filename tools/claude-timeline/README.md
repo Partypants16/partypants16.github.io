@@ -63,6 +63,14 @@ Mermaid diagrams from a local copy of `mermaid.min.js` (fetched once into
 `vendor/`, git-ignored). The Markdown is the only thing to edit; the next
 deploy ships it. A link to a page that doesn't exist is a build warning.
 
+Its **visual overview** (`encyclopedia/explorer.html`, since 2026-11-01) is a clickable
+map of the same pages: six areas, each topic's links both ways, and walkthroughs.
+`encyclopedia.py` writes `explorer.json` from the pages (title, summary, status,
+Last checked, headings, links) plus `_workspace/encyclopedia/_explorer/explorer.yaml`
+(the areas, walkthroughs and typed connections, nothing a page already says);
+`page/encyclopedia/explorer.js` draws it. The Encyclopedia's own page about it:
+`07-encyclopedia-tab/visual-overview.md`.
+
 Its **Confluence** section (`encyclopedia/confluence/`, since 2026-10-27, `confluence.py`) is a
 read-only copy of Coles Confluence spaces, rendered straight from `parth_project/Coles/Confluence/`
 (one page per Confluence page, named by `content_id`; a source panel with "Open in Confluence";
@@ -81,10 +89,10 @@ never be committed.
 | `build.py` | Reads the logs + `_workspace/context/LOG.md` and writes `dist/`: the pages, `data.json`, `todo.json` (from `todo.py`), and copies of the site files it shares (top bar styles, the Projects tabs, settings, Hinglish, transitions, wallpapers). It also copies every `.html` page saved in `parth_project/discontinued/<project>/` to `/discontinued/<project>/`, so pages like Artifact reviews open on the LAN without a Claude sign-in. |
 | `chatgpt.py` | The ChatGPT page's extra card fields (where a session came from) and its conversation records, for `build.py`. |
 | `import_chatgpt.py` | Imports chats into `_workspace/context/chatgpt/`: Codex's local records (read only) or a ChatGPT export, by chat id, without duplicates. |
-| `tests/` | `test_chatgpt.py`: the importer and the build on made-up chats (nothing real). |
+| `tests/` | `test_chatgpt.py`: the importer and the build on made-up chats (nothing real). `test_encyclopedia_explorer.py`: the visual overview's data and page, on a made-up encyclopedia. |
 | `todo.py` | The To do page's text: `_workspace/context/TODO.md`, with section 1 written from what git says about every repo. |
 | `confluence.py` | The Encyclopedia's Confluence section: renders `Coles/Confluence/` into `dist/encyclopedia/confluence/` (pages by content_id, `tree.json` per space, `titles.json`, search shards, `build-hash.txt`), cached in `.cache/confluence/`. |
-| `encyclopedia.py` | The Encyclopedia: renders `_workspace/encyclopedia/**/*.md` into `dist/encyclopedia/` (pages, `search.json`, `pygments.css`, Mermaid). |
+| `encyclopedia.py` | The Encyclopedia: renders `_workspace/encyclopedia/**/*.md` into `dist/encyclopedia/` (pages, `search.json`, `pygments.css`, Mermaid), plus the visual overview (`explorer.html`, `explorer.json`). |
 | `page/` | The pages: `memory.html`, `memory.js`, `memory.css` (Memory: the three cards); `eunomia.html`, `eunomia.js`, `eunomia.css` (Eunomia, on top of `claude.css`); `index.html`, `claude.js`, `claude.css` (Claude; `chatgpt.html` is the ChatGPT page, the same script and styles) and `todo.html`, `todo.js`, `todo.css` (To do). `handoff.js` copies in the settings the website passes along, on all of them. |
 | `page/encyclopedia/` | The Encyclopedia's template (`_template.html`, filled per page), `encyclopedia.css` and `encyclopedia.js` (search, sidebar on a phone, copy buttons, Mermaid). |
 | `vendor/` | `mermaid.min.js` (3.5 MB), fetched once by the build. Git-ignored. |

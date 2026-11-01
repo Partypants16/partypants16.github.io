@@ -1,0 +1,14 @@
+<!-- The visual overview's content: encyclopedia.py puts this into _template.html as explorer.html,
+     and explorer.js draws the map into #ex from explorer.json. -->
+<h1>Visual overview</h1>
+<p class="ex-intro">The whole setup as a map. Pick an area to see what's in it, pick a topic to see what it connects to, or follow a walkthrough. Every topic opens its full page.</p>
+<div class="ex-modes" role="navigation" aria-label="Ways to explore">
+  <a href="#" data-mode="map">Map</a>
+  <a href="#tours" data-mode="tours">Walkthroughs</a>
+  <a href="#all" data-mode="all">Every page</a>
+</div>
+<p class="ex-crumbs" id="ex-crumbs"></p>
+<div class="ex" id="ex">
+  <p class="ex-loading">Loading the map…</p>
+  <noscript><p>The map needs JavaScript. The pages themselves work without it: use the contents on the left.</p></noscript>
+</div>

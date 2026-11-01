@@ -23,6 +23,10 @@ A folder's README.md is its landing page (index.html); the root README.md is the
 front page. A page's title is its first "# " heading. Folder labels come from the folder name
 ("01-system" → "System"). Files that aren't Markdown (images) are copied as they are.
 
+The visual overview (explorer.html, since 2026-11-01) is a clickable map of the same pages, drawn by
+page/encyclopedia/explorer.js from explorer.json, which this writes: each page's facts read from the
+page, plus the areas, walkthroughs and connections in _explorer/explorer.yaml (see explorer_data()).
+
 Mermaid is a 3.5 MB file, so it isn't in the repo: vendor/mermaid.min.js is fetched once from
 jsdelivr (pinned version below) and git-ignored. Without it the build still works, with a warning,
 and diagrams show as their source text.
@@ -63,7 +67,7 @@ def slugify(text):
 
 def heading_text(inline_token):
     """The plain words of a heading, without its Markdown marks."""
-    return re.sub(r"[`*_~]|\[([^\]]*)\]\([^)]*\)", r"\1", inline_token.content).strip()
+    return re.sub(r"[`*~]|\[([^\]]*)\]\([^)]*\)", r"\1", inline_token.content).strip()
 
 
 def render_heading_open(self, tokens, idx, options, env):
@@ -190,7 +194,7 @@ def page_title(text, path):
 
 
 def heading_text_raw(text):
-    return re.sub(r"[`*_~]|\[([^\]]*)\]\([^)]*\)", r"\1", text).strip()
+    return re.sub(r"[`*~]|\[([^\]]*)\]\([^)]*\)", r"\1", text).strip()
 
 
 def out_name(path, source):
@@ -292,7 +296,9 @@ def make_resolver(page, pages, source, workspace, context, warn):
 
 def nav_html(page, secs):
     root = root_prefix(page["out"])
-    parts = [f'<a class="enc-home" href="{root}index.html">Encyclopedia</a>']
+    current = ' aria-current="page"' if page["out"] == EXPLORER_OUT else ""
+    parts = [f'<a class="enc-home" href="{root}index.html">Encyclopedia</a>',
+             f'<a class="enc-visual" href="{root}{EXPLORER_OUT}"{current}>Visual overview</a>']
     for folder, label, group in secs:
         if not folder:
             items = [p for p in group if not p["is_index"]]
@@ -362,8 +368,12 @@ def render_page(page, pages, secs, template, source, workspace, context, warn):
     env = {"resolve": make_resolver(page, pages, source, workspace, context, warn)}
     body = md.render(page["text"], env)
     headings = env.get("headings", [])
+    page["headings"] = headings  # for explorer.json
     # "On this page" goes under the page's title (or at the top if it has no "# " heading).
     toc = toc_html(headings)
+    if page["out"] == "index.html":
+        toc = (f'<p class="enc-visual-cta"><a href="{EXPLORER_OUT}">Visual overview</a>'
+               '<span>The same pages as a map you can click through, with walkthroughs.</span></p>\n' + toc)
     body = body.replace("</h1>", "</h1>\n" + toc, 1) if "</h1>" in body else toc + body
     root = root_prefix(page["out"])
     site = root + "../"
@@ -391,6 +401,206 @@ def render_page(page, pages, secs, template, source, workspace, context, warn):
         "b": plain(page["text"])[:SEARCH_BODY_MAX],
     }
     return filled, search
+
+
+# ---------- The visual overview (explorer.html + explorer.json) ----------
+
+# A clickable map of the same pages: six areas, walkthroughs, and each page's connections.
+# Everything about a page (title, summary, status, Last checked, headings, links) is read from
+# the page, so the map can't drift from the text. Only the grouping, the walkthroughs and the
+# typed connections are hand-written, in _explorer/explorer.yaml (an _ folder, so not a page).
+
+EXPLORER_OUT = "explorer.html"
+EXPLORER_YAML = Path("_explorer") / "explorer.yaml"
+SUMMARY_MAX = 600
+
+# Words a page's first paragraph uses for its status → the badge shown on the map. The
+# "Status: …" sentence is read first (the earliest of these words in it wins), then bold words.
+STATUS_WORDS = [
+    ("on demand", "On demand"), ("running", "Running"), ("paused", "Paused"),
+    ("parked", "Parked"), ("design only", "Parked"), ("waiting on parth", "Parked"),
+    ("research only", "Idea"), ("researching", "Idea"), ("brainstorming", "Idea"),
+    ("building", "In progress"), ("in progress", "In progress"), ("discontinued", "Dropped"),
+    ("dropped", "Dropped"), ("finished", "Finished"), ("in daily use", "Active"), ("in use", "Active"),
+    ("switched on", "Active"), ("live", "Running"),
+    ("active", "Active"), ("usable", "Active"), ("never starts", "Not running"),
+    ("nothing deploys or runs it", "Not running"), ("off", "Not running"),
+]
+FOLDER_STATUS = {"09-plans-and-parked": "Parked"}
+LAST_CHECKED = re.compile(r"^\*Last checked: (\d{4}-\d{2}-\d{2})(.*?)\*\s*$", re.M)
+MD_LINK = re.compile(r"(?<!!)\[[^\]]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
+FENCE = re.compile(r"^```.*?^```", re.M | re.S)
+
+
+def first_paragraph(text):
+    lines = text.split("\n")
+    i = next((k + 1 for k, line in enumerate(lines) if line.startswith("# ")), 0)
+    while i < len(lines) and not lines[i].strip():
+        i += 1
+    para = []
+    while i < len(lines) and lines[i].strip() and not lines[i].startswith("#"):
+        para.append(lines[i].strip())
+        i += 1
+    return " ".join(para)
+
+
+def summary_text(paragraph):
+    text = re.sub(r"!?\[([^\]]*)\]\([^)]*\)", r"\1", paragraph)
+    text = re.sub(r"\*+|`", "", text)
+    text = re.sub(r"\s+", " ", text).strip()
+    if len(text) > SUMMARY_MAX:
+        cut = text[:SUMMARY_MAX]
+        end = max(cut.rfind(". "), cut.rfind(": "))
+        text = (cut[:end + 1] if end > SUMMARY_MAX // 2 else cut.rsplit(" ", 1)[0]) + " …"
+    return text
+
+
+def page_status(page, paragraph, overrides):
+    if page["rel"] in overrides:
+        return overrides[page["rel"]]
+
+    def earliest(text):
+        found = [(m.start(), status) for word, status in STATUS_WORDS
+                 for m in [re.search(rf"\b{re.escape(word)}\b", text)] if m]
+        return min(found)[1] if found else ""
+
+    clause = re.search(r"\bStatus:\s*(.+?)(?:\.\s|\.?$)", re.sub(r"\*+", "", paragraph))
+    status = earliest(clause.group(1).lower()) if clause else ""
+    if not status:
+        status = earliest(" | ".join(re.findall(r"\*\*([^*]+)\*\*", paragraph)).lower())
+    return status or ("" if page["is_index"] else FOLDER_STATUS.get(page["folder"], ""))
+
+
+def page_links(page, text, by_path):
+    """The pages a page links to, in order, without repeats (code blocks don't count)."""
+    out = []
+    for href in MD_LINK.findall(FENCE.sub("", text)):
+        path_part = href.split("#", 1)[0]
+        if not path_part.endswith(".md") or re.match(r"^[a-z]+:", path_part):
+            continue
+        target = by_path.get((page["path"].parent / path_part).resolve())
+        if target and target is not page and target["out"] not in out:
+            out.append(target["out"])
+    return out
+
+
+def explorer_data(pages, secs, source, warn):
+    by_path = {p["path"].resolve(): p for p in pages}
+    by_rel = {p["rel"]: p for p in pages}
+    config = {}
+    config_path = source / EXPLORER_YAML
+    if config_path.exists():
+        import yaml  # build.py's dependency already
+        try:
+            config = yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}
+        except yaml.YAMLError as error:
+            warn("encyclopedia", f"{EXPLORER_YAML.as_posix()} isn't valid YAML ({error}); the map has no areas")
+    else:
+        warn("encyclopedia", f"no {EXPLORER_YAML.as_posix()}, so the visual overview has no areas or walkthroughs")
+
+    def out_of(rel, where):
+        page = by_rel.get(rel)
+        if not page:
+            warn(EXPLORER_YAML.as_posix(), f"{where} names a page that doesn't exist: {rel}")
+            return None
+        return page["out"]
+
+    summary_only = set(config.get("summary_only") or [])
+    overrides = config.get("status") or {}
+    data = {}
+    for page in pages:
+        paragraph = first_paragraph(page["text"])
+        checked = LAST_CHECKED.search(page["text"])
+        entry = {
+            "t": page["title"],
+            "s": next((label for folder, label, _ in secs if folder == page["folder"]), ""),
+            "f": page["folder"],
+            "sum": summary_text(paragraph),
+            "st": page_status(page, paragraph, overrides),
+            "lc": checked.group(1) if checked else "",
+            "ln": checked.group(2).strip(" .()") if checked else "",
+        }
+        if page["rel"] not in summary_only:
+            text = page["text"]
+            see_also = re.split(r"^## See also\s*$", text, maxsplit=1, flags=re.M)
+            entry["h"] = [[text_, slug] for level, text_, slug in page.get("headings", [])
+                          if level == 2 and text_ != "See also"]
+            entry["to"] = page_links(page, text, by_path)
+            entry["see"] = page_links(page, see_also[1], by_path) if len(see_also) > 1 else []
+            entry["c"] = {k: len(re.findall(rf"\b{word}\b", text))
+                          for k, word in (("v", "VERIFIED"), ("i", "INFERRED"), ("r", "REPORTED"), ("u", "UNKNOWN"))}
+        data[page["out"]] = entry
+    for out, entry in data.items():
+        for target in entry.get("to", []):
+            data[target].setdefault("from", []).append(out)
+
+    areas = []
+    for area in config.get("areas") or []:
+        groups = []
+        for group in area.get("groups") or []:
+            outs = [o for o in (out_of(rel, f"area {area.get('id')}") for rel in group.get("pages") or []) if o]
+            groups.append({"title": group.get("title", ""), "blurb": group.get("blurb", ""), "pages": outs})
+        areas.append({"id": area["id"], "title": area.get("title", ""), "blurb": area.get("blurb", ""),
+                      "page": out_of(area.get("page", ""), f"area {area['id']}"), "groups": groups})
+
+    tours = []
+    for tour in config.get("tours") or []:
+        steps = []
+        for n, step in enumerate(tour.get("steps") or [], 1):
+            out = out_of(step.get("page", ""), f"walkthrough {tour.get('id')}")
+            if not out:
+                continue
+            steps.append({k: v for k, v in {
+                "id": str(step.get("id", n)), "page": out, "anchor": step.get("anchor", ""),
+                "note": step.get("note", ""), "next": step.get("next", ""), "go": step.get("go", ""),
+                "choices": step.get("choices") or [], "end": bool(step.get("end")),
+            }.items() if v})
+        ids = {s["id"] for s in steps}
+        for s in steps:
+            for target in [s.get("go")] + [c.get("go") for c in s.get("choices", [])]:
+                if target and target not in ids:
+                    warn(EXPLORER_YAML.as_posix(), f"walkthrough {tour.get('id')} goes to a step that doesn't exist: {target}")
+        tours.append({"id": tour["id"], "title": tour.get("title", ""), "blurb": tour.get("blurb", ""), "steps": steps})
+
+    relations = []
+    for row in config.get("relations") or []:
+        if len(row) != 3:
+            warn(EXPLORER_YAML.as_posix(), f"a relation needs [from, verb, to]: {row}")
+            continue
+        a, b = out_of(row[0], "relations"), out_of(row[2], "relations")
+        if a and b:
+            relations.append([a, row[1], b])
+
+    return {
+        "pages": data,
+        "sections": [[folder, label or "Encyclopedia", [p["out"] for p in group]] for folder, label, group in secs],
+        "areas": areas,
+        "tours": tours,
+        "rel": relations,
+    }
+
+
+def explorer_page(pages, secs, template):
+    """The visual overview's page: the usual template, with explorer.js drawing into it."""
+    shell = Path(__file__).resolve().parent / "page" / "encyclopedia" / "_explorer.html"
+    content = shell.read_text(encoding="utf-8") if shell.exists() else '<div id="ex"></div>'
+    page = {"out": EXPLORER_OUT, "folder": "", "is_index": False, "title": "Visual overview"}
+    return (template
+            .replace("</head>", '  <link rel="stylesheet" href="explorer.css">\n</head>', 1)
+            .replace('<div class="enc-body" translate="no">', '<div class="enc-body ex-body">', 1)
+            .replace("{{root}}", "")
+            .replace("{{site}}", "../")
+            .replace("{{tab_title}}", "Visual overview · Encyclopedia | Parth")
+            .replace("{{title}}", "Visual overview")
+            .replace("{{description}}", "A clickable map of the parth_project Encyclopedia. Only on the home server.")
+            .replace("{{crumbs}}", '<a href="index.html">Encyclopedia</a> <span class="crumb-sep">›</span> '
+                                   '<span aria-current="page">Visual overview</span>')
+            .replace("{{nav}}", nav_html(page, secs))
+            .replace("{{content}}", content)
+            .replace("{{neighbours}}", "")
+            .replace("{{source}}", html.escape("_workspace/encyclopedia/" + EXPLORER_YAML.as_posix()))
+            .replace("{{source_note}}", "the map is read from the pages; only its groups, walkthroughs and connections are in this file")
+            .replace("{{mermaid}}", '<script src="explorer.js"></script>'))
 
 
 # ---------- Build ----------
@@ -435,10 +645,11 @@ def build(source, dest, workspace, context, warn, confluence_spaces=()):
 
     dest.mkdir(parents=True, exist_ok=True)
     (dest / "_template.html").unlink(missing_ok=True)
+    (dest / "_explorer.html").unlink(missing_ok=True)
 
     # Images and other files next to the Markdown, as they are.
     for path in source.rglob("*"):
-        if path.is_file() and path.suffix.lower() != ".md" and not any(part.startswith(".") for part in path.relative_to(source).parts):
+        if path.is_file() and path.suffix.lower() != ".md" and not any(part[:1] in "._" for part in path.relative_to(source).parts):
             target = dest / path.relative_to(source)
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(path, target)
@@ -451,6 +662,10 @@ def build(source, dest, workspace, context, warn, confluence_spaces=()):
         target.write_text(page_html, encoding="utf-8")
         index.append(search)
     (dest / "search.json").write_text(json.dumps(index, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+
+    explorer = explorer_data(pages, secs, source, warn)
+    (dest / "explorer.json").write_text(json.dumps(explorer, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    (dest / EXPLORER_OUT).write_text(explorer_page(pages, secs, template), encoding="utf-8")
 
     css = HtmlFormatter(style="default").get_style_defs(".hl") + "\n" + \
         HtmlFormatter(style="github-dark").get_style_defs(':root[data-theme="dark"] .hl')

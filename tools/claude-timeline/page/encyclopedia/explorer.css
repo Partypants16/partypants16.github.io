@@ -1,0 +1,603 @@
+/* The Encyclopedia's visual overview (explorer.html, drawn by explorer.js). Loads after
+   encyclopedia.css and uses the site's colours (--text, --card-bg, --card-border, --chip-bg,
+   --muted-text, --accent, --link), so light and dark come with them. */
+
+:root {
+  --ex-line: color-mix(in srgb, var(--muted-text, #555) 45%, transparent);
+  --ex-st-run: #1d7a3e;   --ex-st-run-bg: #e3f4e8;
+  --ex-st-wait: #8a5a00;  --ex-st-wait-bg: #fbf0d9;
+  --ex-st-idea: #6a3fb0;  --ex-st-idea-bg: #efe7fb;
+  --ex-st-off: #a8322b;   --ex-st-off-bg: #fbe6e4;
+  --ex-st-done: #4b5563;  --ex-st-done-bg: #eceef1;
+  --ex-st-work: #1659a8;  --ex-st-work-bg: #e2edfa;
+}
+
+:root[data-theme="dark"] {
+  --ex-st-run: #7fd99a;   --ex-st-run-bg: #183824;
+  --ex-st-wait: #f0c56b;  --ex-st-wait-bg: #3a2d10;
+  --ex-st-idea: #c6a8f5;  --ex-st-idea-bg: #2e2244;
+  --ex-st-off: #f2a19a;   --ex-st-off-bg: #42201d;
+  --ex-st-done: #b9c0ca;  --ex-st-done-bg: #2a2e34;
+  --ex-st-work: #8fbaf0;  --ex-st-work-bg: #1a2d46;
+}
+
+/* ---------- Top of the page ---------- */
+
+.ex-body .ex-intro {
+  color: var(--muted-text);
+  max-width: 60ch;
+}
+
+.ex-body .ex-modes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: .5rem;
+  margin: 1rem 0 .5rem;
+}
+
+.ex-body .ex-modes a,
+.ex-body .ex-btn,
+.ex-chip,
+.ex-more {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+  padding: .45rem .9rem;
+  border-radius: 999px;
+  border: 1px solid var(--card-border);
+  background: var(--chip-bg);
+  color: var(--text);
+  font: inherit;
+  font-size: .92rem;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.ex-modes a:hover,
+.ex-btn:hover,
+.ex-chip:hover,
+.ex-more:hover {
+  border-color: var(--accent, #1464c0);
+}
+
+.ex-body .ex-modes a[aria-current="page"],
+.ex-chip[aria-pressed="true"],
+.ex-btn.ex-primary {
+  background: var(--accent, #1464c0);
+  border-color: var(--accent, #1464c0);
+  color: #fff;
+}
+
+.ex-crumbs {
+  font-size: .9rem;
+  color: var(--muted-text);
+  margin: .5rem 0 1rem;
+}
+
+.ex-crumbs a {
+  color: var(--link);
+}
+
+.ex-title:focus {
+  outline: none;
+}
+
+.ex-title:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.ex-loading,
+.ex-none,
+.ex-hint {
+  color: var(--muted-text);
+}
+
+.ex-hint {
+  font-size: .88rem;
+}
+
+/* ---------- Boxes ---------- */
+
+.ex-canvas {
+  position: relative;
+  --ex-lines: on; /* explorer.js skips the lines where this is "off" */
+}
+
+.ex-lines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 0;
+}
+
+.ex-lines path {
+  fill: none;
+  stroke: var(--ex-line);
+  stroke-width: 1.5;
+}
+
+.ex-canvas > :not(svg) {
+  position: relative;
+  z-index: 1;
+}
+
+.ex-hub,
+.ex-head,
+.ex-centre,
+.ex-group,
+.ex-area,
+.ex-tour-card,
+.ex-step,
+.ex-guide section {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 1rem 1.1rem;
+}
+
+.ex-head.ex-plain {
+  background: none;
+  border: 0;
+  padding: 0;
+  max-width: none;
+  justify-self: stretch;
+  text-align: left;
+}
+
+.ex-body h2.ex-title,
+.ex-body .ex-hub h2 {
+  margin: 0 0 .25rem;
+  border: 0;
+  padding: 0;
+}
+
+.ex-body .ex-group h3,
+.ex-body .ex-col h3,
+.ex-body .ex-guide h3,
+.ex-body .ex-strip h3,
+.ex-body .ex-step h3 {
+  margin: 0 0 .5rem;
+  font-size: 1rem;
+}
+
+.ex-group p,
+.ex-head p,
+.ex-area-b,
+.ex-guide p {
+  color: var(--muted-text);
+  font-size: .92rem;
+  margin: 0 0 .6rem;
+}
+
+/* A topic */
+.ex-node {
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+  padding: .5rem .7rem;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  background: var(--chip-bg);
+  color: var(--text);
+  text-decoration: none;
+  line-height: 1.3;
+}
+
+.ex-node:hover,
+.ex-node:focus-visible,
+.ex-area:hover,
+.ex-area:focus-visible,
+.ex-tour-card:hover,
+.ex-tour-card:focus-visible {
+  border-color: var(--accent, #1464c0);
+  box-shadow: var(--pj-shadow-lift, 0 4px 14px rgba(0, 0, 0, .12));
+}
+
+.ex-node-t {
+  font-weight: 600;
+}
+
+.ex-verb {
+  font-size: .78rem;
+  color: var(--muted-text);
+  text-transform: lowercase;
+}
+
+.ex-node-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .4rem;
+  font-size: .8rem;
+  color: var(--muted-text);
+  margin: 0;
+}
+
+.ex-nodes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: .5rem;
+}
+
+/* Status badges */
+.ex-st {
+  display: inline-block;
+  padding: .05rem .5rem;
+  border-radius: 999px;
+  font-size: .75rem;
+  font-weight: 600;
+  color: var(--ex-st-done);
+  background: var(--ex-st-done-bg);
+}
+
+.ex-st-running, .ex-st-on-demand, .ex-st-active { color: var(--ex-st-run); background: var(--ex-st-run-bg); }
+.ex-st-needs-testing { color: var(--ex-st-work); background: var(--ex-st-work-bg); }
+.ex-st-parked, .ex-st-paused { color: var(--ex-st-wait); background: var(--ex-st-wait-bg); }
+.ex-st-idea { color: var(--ex-st-idea); background: var(--ex-st-idea-bg); }
+.ex-st-not-running { color: var(--ex-st-off); background: var(--ex-st-off-bg); }
+.ex-st-in-progress { color: var(--ex-st-work); background: var(--ex-st-work-bg); }
+
+.ex-checked.is-stale {
+  color: var(--ex-st-wait);
+}
+
+/* ---------- Overview: the hub between two columns of areas ---------- */
+
+.ex-overview {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(170px, .7fr) minmax(0, 1fr);
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.ex-hub {
+  text-align: center;
+  border-width: 2px;
+  border-color: var(--accent, #1464c0);
+}
+
+.ex-hub p {
+  margin: 0;
+  color: var(--muted-text);
+}
+
+.ex-areas {
+  display: grid;
+  gap: 1rem;
+}
+
+.ex-tour-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.ex-area,
+.ex-tour-card {
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.ex-area-t {
+  font-weight: 700;
+  font-size: 1.08rem;
+}
+
+.ex-area-g {
+  font-size: .82rem;
+  color: var(--muted-text);
+}
+
+.ex-count {
+  margin-top: auto;
+  font-size: .82rem;
+  color: var(--link);
+}
+
+.ex-strip {
+  margin-top: 2rem;
+}
+
+/* ---------- An area, a topic: map + guide ---------- */
+
+.ex-split {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.ex-guide {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: .75rem;
+  align-items: start;
+  font-size: .92rem;
+}
+
+.ex-guide ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.ex-guide li + li {
+  margin-top: .3rem;
+}
+
+.ex-area-map {
+  display: grid;
+  gap: 2.5rem;
+}
+
+.ex-head {
+  justify-self: center;
+  max-width: 560px;
+  text-align: center;
+  border-width: 2px;
+  border-color: var(--accent, #1464c0);
+}
+
+.ex-start {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .35rem;
+}
+
+.ex-start .ex-node {
+  text-align: left;
+}
+
+.ex-groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.ex-topic {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.ex-col .ex-nodes {
+  grid-template-columns: 1fr;
+}
+
+.ex-centre {
+  border-width: 2px;
+  border-color: var(--accent, #1464c0);
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+
+.ex-section {
+  font-size: .8rem;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--muted-text);
+  margin: 0;
+}
+
+.ex-sum {
+  font-size: .95rem;
+  margin: 0;
+}
+
+.ex-open {
+  align-self: flex-start;
+  font-weight: 600;
+  color: var(--link);
+}
+
+.ex-open::after {
+  content: " →";
+}
+
+.ex-more {
+  margin-top: .5rem;
+  font-size: .85rem;
+}
+
+/* ---------- Walkthroughs ---------- */
+
+.ex-tour-list {
+  margin-top: 1rem;
+}
+
+.ex-flow {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .4rem;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+.ex-flow-step {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+
+.ex-flow-step a {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .35rem .7rem;
+  border-radius: 999px;
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  color: var(--text);
+  text-decoration: none;
+  font-size: .88rem;
+}
+
+.ex-flow-n {
+  display: inline-grid;
+  place-items: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  background: var(--chip-bg);
+  font-size: .78rem;
+  font-weight: 700;
+}
+
+.ex-flow-step.is-done a {
+  border-color: color-mix(in srgb, var(--accent, #1464c0) 50%, var(--card-border));
+}
+
+.ex-flow-step.is-current a {
+  background: var(--accent, #1464c0);
+  border-color: var(--accent, #1464c0);
+  color: #fff;
+}
+
+.ex-flow-step.is-current .ex-flow-n {
+  background: rgba(255, 255, 255, .25);
+}
+
+.ex-flow-arrow {
+  font-size: .78rem;
+  color: var(--muted-text);
+}
+
+.ex-flow-arrow::before {
+  content: "→ ";
+}
+
+.ex-step {
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+  max-width: 720px;
+}
+
+.ex-note {
+  font-size: 1.02rem;
+  margin: 0;
+  padding-left: .8rem;
+  border-left: 4px solid var(--accent, #1464c0);
+}
+
+.ex-step-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+  align-items: flex-start;
+  margin-top: .4rem;
+}
+
+.ex-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  align-items: center;
+}
+
+.ex-choices .ex-hint {
+  flex-basis: 100%;
+  margin: 0;
+}
+
+.ex-btn-sub {
+  opacity: .85;
+}
+
+/* ---------- Every page ---------- */
+
+.ex-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.ex-filter {
+  padding: .5rem .8rem;
+  border-radius: 10px;
+  border: 1px solid var(--control-border, var(--card-border));
+  background: var(--control-bg, var(--card-bg));
+  color: var(--text);
+  font: inherit;
+  min-width: 220px;
+}
+
+.ex-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+}
+
+.ex-chip-n {
+  opacity: .7;
+}
+
+.ex-all {
+  display: grid;
+  gap: 1rem;
+}
+
+/* ---------- Narrower screens ---------- */
+
+@media (max-width: 1100px) {
+  /* The hub on top, then the six areas in one grid. */
+  .ex-overview {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    --ex-lines: off;
+  }
+  .ex-overview .ex-hub {
+    order: -1;
+    grid-column: 1 / -1;
+  }
+  .ex-overview .ex-areas {
+    display: contents;
+  }
+  .ex-tour-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .ex-overview,
+  .ex-tour-cards,
+  .ex-groups,
+  .ex-topic {
+    grid-template-columns: 1fr;
+  }
+  .ex-area-map,
+  .ex-topic {
+    gap: 1rem;
+    --ex-lines: off;
+  }
+  /* The topic first, then what it connects to, then what links to it. */
+  .ex-topic .ex-centre { order: 1; }
+  .ex-topic .ex-to { order: 2; }
+  .ex-topic .ex-from { order: 3; }
+  .ex-nodes {
+    grid-template-columns: 1fr;
+  }
+  .ex-filter {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ex-node,
+  .ex-area,
+  .ex-tour-card {
+    transition: border-color .15s, box-shadow .15s;
+  }
+}

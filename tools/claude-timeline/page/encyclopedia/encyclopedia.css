@@ -152,6 +152,42 @@ html:has(main.encyclopedia) {
   text-decoration: none;
 }
 
+/* The visual overview (explorer.html): a link under "Encyclopedia", and a box on the front page. */
+.enc-nav .enc-visual {
+  display: block;
+  margin: 0 .5rem .6rem 0;
+  padding: .35rem .6rem;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--accent, #1464c0) 45%, transparent);
+  color: var(--link);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.enc-nav .enc-visual[aria-current="page"] {
+  background: color-mix(in srgb, var(--accent, #1464c0) 14%, transparent);
+}
+
+.enc-body .enc-visual-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .3rem .9rem;
+  align-items: center;
+  padding: .8rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--accent, #1464c0);
+  background: color-mix(in srgb, var(--accent, #1464c0) 8%, transparent);
+}
+
+.enc-body .enc-visual-cta a {
+  font-weight: 700;
+}
+
+.enc-body .enc-visual-cta span {
+  color: var(--muted-text);
+  font-size: .92rem;
+}
+
 .enc-nav details {
   margin: .1rem .5rem .1rem 0;
 }
