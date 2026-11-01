@@ -1,0 +1,55 @@
+/* Whose memory (since 2026-11-01): the Parth | Mridul switch under the Projects tabs, on the
+   Memory page and every page it opens. Parth has Claude, ChatGPT and Eunomia; Mridul has Claude. */
+
+.person-switch {
+  display: flex;
+  flex-direction: row; /* movies.css stacks every nav on phones; this one stays a row */
+  justify-content: center;
+  align-items: center;
+  gap: .2rem;
+  width: max-content;
+  max-width: 100%;
+  margin: -1.5rem auto 1.5rem;
+  padding: .2rem;
+  border-radius: 999px;
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+}
+
+.person-switch-label {
+  padding: 0 .55rem 0 .7rem;
+  color: var(--muted-text);
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.person-switch a {
+  padding: .3rem .95rem;
+  border-radius: 999px;
+  color: var(--muted-text);
+  font-size: .9rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.person-switch a:hover {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.person-switch a[aria-current="page"] {
+  background: var(--accent, #1464c0);
+  color: #fff;
+}
+
+.person-switch a:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+}
+
+/* The Claude | ChatGPT | Eunomia switch sits under it, closer than under the tabs alone */
+.person-switch + .memory-switch {
+  margin-top: 0;
+}

@@ -4,6 +4,8 @@
 // sessions, days, what's waiting, and the newest one; for Eunomia, facts,
 // projects and when its snapshot was taken.
 // The cards are plain links, so they work even if that file doesn't load.
+// Since 2026-11-01 a Parth | Mridul switch picks whose cards show: Mridul's
+// one card is his Claude page (mridul.html).
 
 (function () {
   // The page's files are also in the public repo, without data. Send anyone
@@ -75,6 +77,25 @@
       latest.hidden = false;
     }
   }
+
+  // Whose memory (since 2026-11-01): Parth's three cards or Mridul's one, by ?person=mridul.
+  // The switch's links work without this; it just saves the reload.
+  function showPerson(person) {
+    document.querySelectorAll("[data-for]").forEach(node => { node.hidden = node.dataset.for !== person; });
+    document.querySelectorAll(".person-switch a").forEach(link => {
+      if (link.dataset.person === person) link.setAttribute("aria-current", "page");
+      else link.removeAttribute("aria-current");
+    });
+  }
+  const person = () => (new URLSearchParams(location.search).get("person") === "mridul" ? "mridul" : "parth");
+  showPerson(person());
+  document.querySelectorAll(".person-switch a").forEach(link => link.addEventListener("click", event => {
+    if (event.button || event.metaKey || event.ctrlKey || event.shiftKey) return;
+    event.preventDefault();
+    history.pushState(null, "", link.getAttribute("href"));
+    showPerson(link.dataset.person);
+  }));
+  window.addEventListener("popstate", () => showPerson(person()));
 
   fetch("memory.json", { cache: "no-cache" })
     .then(response => {

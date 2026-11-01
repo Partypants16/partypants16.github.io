@@ -9,6 +9,10 @@ It also builds the ChatGPT page (since 2026-10-27) the same way, from
 _workspace/context/chatgpt/ (its own LOG.md and sessions/), into chatgpt-data.json:
 never mixed into data.json. Its extra fields are described in chatgpt.py.
 
+And Mridul's Claude page (mridul.html, since 2026-11-01), from _workspace/context/mridul/ into
+mridul-data.json: his Claude Code chats outside parth_project, written up afterwards from the
+records import_mridul.py keeps. Same cards, his own project names (MRIDUL_PROJECTS).
+
     python tools/claude-timeline/build.py            # from my-website/
     python tools/claude-timeline/build.py --strict   # warnings stop the build
 
@@ -60,19 +64,23 @@ TODO = CONTEXT / "TODO.md"                    # what's waiting on Parth: the To 
 ENCYCLOPEDIA = WORKSPACE / "_workspace" / "encyclopedia"  # the Encyclopedia's Markdown (since 2026-10-22)
 CONFLUENCE = WORKSPACE / "Coles" / "Confluence"  # the Coles Confluence copy, the Encyclopedia's Confluence section (since 2026-10-27)
 CHATGPT = CONTEXT / "chatgpt"                 # the ChatGPT page's sessions, index and sources (since 2026-10-27)
+MRIDUL = CONTEXT / "mridul"                   # Mridul's Claude page: sessions, index and sources (since 2026-11-01)
 DIST = HERE / "dist"
 # The Eunomia page's data: a snapshot made on the laptop by `_workspace/eunomia/scripts/eunomia.py
 # snapshot` (since 2026-11-01). Built pages use whatever snapshot is there; Eunomia needn't be up.
 EUNOMIA_SNAPSHOT = HERE / ".cache" / "eunomia.json"
 
 # The two collections of session logs, and the page each one's cards are on.
-SESSION_DIRS = {"claude": CONTEXT / "sessions", "chatgpt": CHATGPT / "sessions"}
-PAGE_URL = {"claude": "./", "chatgpt": "chatgpt.html"}
+SESSION_DIRS = {"claude": CONTEXT / "sessions", "chatgpt": CHATGPT / "sessions", "mridul": MRIDUL / "sessions"}
+PAGE_URL = {"claude": "./", "chatgpt": "chatgpt.html", "mridul": "mridul.html"}
 
 # The filter lists show these in this order.
 PROJECTS = ["Website", "Apex Dash", "Apex Dash 3D Masters", "Claire", "Iris", "PAT-AI", "PrintPlace", "SkyWardrobe",
             "StaySafe", "CrossPaste", "Sonic", "Gaming Archive", "NovaDiagnostics", "PocketDIY", "n8n", "Coles", "Remote box",
             "Music", "Physical projects", "Photos", "OpenRecall", "Workspace"]
+# Mridul's page has its own (his projects aren't in parth_project).
+MRIDUL_PROJECTS = ["Family Tree", "Katha Event", "Photo Library", "Food Tech", "Kanban", "Work", "Home admin",
+                   "Workspace"]
 TYPES = ["Built", "Improved", "Fixed", "Ideas", "Research", "Setup", "Sync", "Docs"]
 STATUSES = ["Done", "Needs testing", "Open", "Parked"]
 TITLE_MAX, SUMMARY_MAX = 60, 240
@@ -213,7 +221,7 @@ def heading_of(body):
     return re.sub(r"^\d{4}-\d{2}-\d{2}\s*[—–-]+\s*", "", title)
 
 
-def check(name, meta):
+def check(name, meta, known=PROJECTS):
     """The card fields, cleaned. Anything that doesn't fit is warned about and left empty."""
     card = {}
     title = meta.get("title")
@@ -234,10 +242,10 @@ def check(name, meta):
 
     projects = meta.get("projects")
     if isinstance(projects, list) and projects:
-        unknown = [p for p in projects if p not in PROJECTS]
+        unknown = [p for p in projects if p not in known]
         if unknown:
             warn(name, "unknown project(s) " + ", ".join(map(str, unknown)))
-        card["projects"] = [p for p in projects if p in PROJECTS]
+        card["projects"] = [p for p in projects if p in known]
     else:
         warn(name, "no projects list")
 
@@ -265,10 +273,11 @@ def clock(name, value):
 
 
 def read_session(path, log_index, page="claude"):
-    """One session file → its card. page is "claude" (_workspace/context/sessions/) or "chatgpt"
-    (_workspace/context/chatgpt/sessions/, which also has the provenance fields in chatgpt.py)."""
+    """One session file → its card. page is "claude" (_workspace/context/sessions/), "chatgpt"
+    (_workspace/context/chatgpt/sessions/, which also has the provenance fields in chatgpt.py) or
+    "mridul" (_workspace/context/mridul/sessions/, with chat_id and covered_to)."""
     name = path.stem
-    label = name if page == "claude" else "chatgpt/" + name  # how warnings name it
+    label = name if page == "claude" else page + "/" + name  # how warnings name it
     text = path.read_text(encoding="utf-8").replace("\r\n", "\n").lstrip("﻿")
     front, body = split_frontmatter(text)
     meta = {}
@@ -282,7 +291,7 @@ def read_session(path, log_index, page="claude"):
     if not isinstance(meta, dict):
         meta = {}
 
-    card = check(label, meta) if meta else {}
+    card = check(label, meta, MRIDUL_PROJECTS if page == "mridul" else PROJECTS) if meta else {}
     file_date = name[:10]
     date = str(meta.get("date") or file_date)
     if not re.match(r"^\d{4}-\d{2}-\d{2}$", date):
@@ -319,6 +328,12 @@ def read_session(path, log_index, page="claude"):
     }
     if page == "chatgpt":
         entry.update(chatgpt.provenance(label, meta, folder, lambda text: render(text, name, page), warn))
+    elif page == "mridul":
+        # Where it came from, for the card's source line. The chat itself isn't shown.
+        entry.update(source="Claude Code", record="Historical import", chatId=str(meta.get("chat_id") or ""),
+                     chatTitle=str(meta.get("chat_title") or ""), conversation=[])
+        if not entry["chatId"] or not meta.get("covered_to"):
+            warn(label, "needs chat_id and covered_to (see _workspace/context/mridul/README.md)")
     return entry
 
 
@@ -328,7 +343,7 @@ def read_collection(folder, page):
     entries = [read_session(path, log_index, page) for path in sorted((folder / "sessions").glob("*.md"))]
     for name in log_index:
         if not (folder / "sessions" / (name + ".md")).exists():
-            warn(name if page == "claude" else "chatgpt/" + name, "listed in LOG.md but the file doesn't exist")
+            warn(name if page == "claude" else page + "/" + name, "listed in LOG.md but the file doesn't exist")
 
     # Newest first: by date, then time, then by where LOG.md puts it (it lists newest first).
     # Logs with no time count as the earliest of their day.
@@ -374,6 +389,10 @@ def build():
     chatgpt_entries = read_collection(CHATGPT, "chatgpt") if (CHATGPT / "sessions").is_dir() else []
     chatgpt_data = {"built": built, "projects": PROJECTS, "types": TYPES, "statuses": STATUSES,
                     "entries": chatgpt_entries, "missing": chatgpt.missing(CHATGPT)}
+    # Mridul's Claude page: his own file too.
+    mridul_entries = read_collection(MRIDUL, "mridul") if (MRIDUL / "sessions").is_dir() else []
+    mridul_data = {"built": built, "projects": MRIDUL_PROJECTS, "types": TYPES, "statuses": STATUSES,
+                   "entries": mridul_entries}
 
     if DIST.exists():
         shutil.rmtree(DIST)
@@ -392,13 +411,14 @@ def build():
         shutil.copy2(path, target)
     (DIST / "data.json").write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     (DIST / "chatgpt-data.json").write_text(json.dumps(chatgpt_data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    (DIST / "mridul-data.json").write_text(json.dumps(mridul_data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     # The Eunomia page (since 2026-11-01): the last snapshot as it is, or no data file if there's none yet.
     snapshot = json.loads(EUNOMIA_SNAPSHOT.read_text(encoding="utf-8")) if EUNOMIA_SNAPSHOT.exists() else None
     if snapshot:
         (DIST / "eunomia-data.json").write_text(json.dumps(snapshot, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
-    # The Memory page's cards: Claude and ChatGPT (since 2026-10-27), Eunomia (since 2026-11-01).
+    # The Memory page's cards: Claude and ChatGPT (since 2026-10-27), Eunomia and Mridul's Claude (since 2026-11-01).
     memory = {"built": built, "claude": summary(entries), "chatgpt": summary(chatgpt_entries, chatgpt_data["missing"]),
-              "eunomia": eunomia_summary(snapshot)}
+              "eunomia": eunomia_summary(snapshot), "mridul-claude": summary(mridul_entries)}
     (DIST / "memory.json").write_text(json.dumps(memory, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     logged = [dict(e, page="claude") for e in entries] + [dict(e, page="chatgpt") for e in chatgpt_entries]
     to_do = todo.make(TODO, WORKSPACE, logged, lambda text: render(text, page="todo", base=CONTEXT), warn)
@@ -412,6 +432,8 @@ def build():
     print(f"{len(entries)} sessions → {DIST.relative_to(SITE)} (data.json {size / 1024:.0f} KB)")
     size = (DIST / "chatgpt-data.json").stat().st_size
     print(f"ChatGPT: {len(chatgpt_entries)} sessions → chatgpt-data.json ({size / 1024:.0f} KB)")
+    size = (DIST / "mridul-data.json").stat().st_size
+    print(f"Mridul: {len(mridul_entries)} sessions → mridul-data.json ({size / 1024:.0f} KB)")
     if snapshot:
         print(f"Eunomia: snapshot of {snapshot['generated_at']} → eunomia-data.json ({len(snapshot['memories'])} memories)")
     else:

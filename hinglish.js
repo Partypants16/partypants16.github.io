@@ -268,6 +268,21 @@ const HINGLISH = {
     "Last refreshed": "Aakhri baar update hua",
     "No snapshot yet": "Abhi koi snapshot nahi hai",
 
+    // ---------- Whose memory: Parth | Mridul (memory.html and mridul.html on the home server) ----------
+    "Person": "Kiski",
+    "What Mridul has worked on with Claude in his own projects, written up afterwards from his saved chats.": "Mridul ne apne projects mein Claude ke saath jo kaam kiya, baad mein uski save ki hui chats se likha gaya.",
+    "Mridul's Claude Code sessions on his own projects, each written up from the chat.": "Mridul ke apne projects ke Claude Code sessions, har ek chat se likha hua.",
+    "Mridul's Claude Code sessions on his own projects, written up afterwards from the saved chats. Open a card for its write-up.": "Mridul ke apne projects ke Claude Code sessions, baad mein save ki hui chats se likhe gaye. Card kholo aur uska write-up dekho.",
+    "Titles, summaries and write-ups": "Titles, summaries aur write-ups",
+    "Show write-up": "Write-up dikhao",
+    "Hide write-up": "Write-up chhupao",
+    "Show all write-ups": "Saare write-ups dikhao",
+    "Hide all write-ups": "Saare write-ups chhupao",
+    "Found in the write-up": "Write-up mein mila",
+    "Loading Mridul's sessions…": "Mridul ke sessions load ho rahe hain…",
+    "There are no sessions of Mridul's yet.": "Mridul ka abhi koi session nahi hai.",
+    "Couldn't load Mridul's sessions. Try reloading the page.": "Mridul ke sessions load nahi hue. Page reload karke dekho.",
+
     // ---------- Eunomia (eunomia.html, and the page on the home server) ----------
     "Eunomia | Parth": "Eunomia | Parth",
     "What Claude and Codex remember about my projects, from Eunomia, the memory they share. It's a snapshot taken on my laptop, so it can be a little behind.": "Mere projects ke baare mein Claude aur Codex ko kya yaad hai, Eunomia se, jo yaad dono share karte hain. Yeh laptop pe liya gaya snapshot hai, isliye thoda purana ho sakta hai.",

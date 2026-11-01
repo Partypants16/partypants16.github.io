@@ -29,6 +29,13 @@
       show: "Show session details", hide: "Hide session details", showAll: "Expand all details", hideAll: "Collapse all details",
       found: "Found in the session details", loading: "Loading the ChatGPT sessions…", none: "There are no ChatGPT sessions yet.",
       failed: "Couldn't load the ChatGPT sessions. Try reloading the page."
+    },
+    // Mridul's Claude page (mridul.html, since 2026-11-01): his own projects, written up from his chats.
+    mridul: {
+      data: "mridul-data.json", gateway: "memory.html",
+      show: "Show write-up", hide: "Hide write-up", showAll: "Show all write-ups", hideAll: "Hide all write-ups",
+      found: "Found in the write-up", loading: "Loading Mridul's sessions…", none: "There are no sessions of Mridul's yet.",
+      failed: "Couldn't load Mridul's sessions. Try reloading the page."
     }
   };
   const main = document.querySelector("main[data-timeline]");

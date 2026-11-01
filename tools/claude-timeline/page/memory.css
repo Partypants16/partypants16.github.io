@@ -1,4 +1,5 @@
-/* The Memory page (memory.html): the Claude and ChatGPT timelines and Eunomia as three cards.
+/* The Memory page (memory.html): the Claude and ChatGPT timelines and Eunomia as three cards
+   (Parth's), or Mridul's Claude timeline as one (the person switch, person.css).
    The card itself is the Showcase's .feature-card (projects.css), without its cover. */
 
 .memory-cards {

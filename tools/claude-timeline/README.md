@@ -89,12 +89,13 @@ never be committed.
 |---|---|
 | `build.py` | Reads the logs + `_workspace/context/LOG.md` and writes `dist/`: the pages, `data.json`, `todo.json` (from `todo.py`), and copies of the site files it shares (top bar styles, the Projects tabs, settings, Hinglish, transitions, wallpapers). It also copies every `.html` page saved in `parth_project/discontinued/<project>/` to `/discontinued/<project>/`, so pages like Artifact reviews open on the LAN without a Claude sign-in. |
 | `chatgpt.py` | The ChatGPT page's extra card fields (where a session came from) and its conversation records, for `build.py`. |
+| `import_mridul.py` | Keeps readable records of Mridul's Claude Code chats in `_workspace/context/mridul/sources/` and lists what's left to write up (Mridul's page, below). |
 | `import_chatgpt.py` | Imports chats into `_workspace/context/chatgpt/`: Codex's local records (read only) or a ChatGPT export, by chat id, without duplicates. |
 | `tests/` | `test_chatgpt.py`: the importer and the build on made-up chats (nothing real). `test_encyclopedia_explorer.py`: the visual overview's data and page, on a made-up encyclopedia. |
 | `todo.py` | The To do page's text: `_workspace/context/TODO.md`, with section 1 written from what git says about every repo. |
 | `confluence.py` | The Encyclopedia's Confluence section: renders `Coles/Confluence/` into `dist/encyclopedia/confluence/` (pages by content_id, `tree.json` per space, `titles.json`, search shards, `build-hash.txt`), cached in `.cache/confluence/`. |
 | `encyclopedia.py` | The Encyclopedia: renders `_workspace/encyclopedia/**/*.md` into `dist/encyclopedia/` (pages, `search.json`, `pygments.css`, Mermaid), plus the visual overview (`explorer.html`, `explorer.json`). |
-| `page/` | The pages: `memory.html`, `memory.js`, `memory.css` (Memory: the three cards); `eunomia.html`, `eunomia.js`, `eunomia.css` (Eunomia, on top of `claude.css`); `index.html`, `claude.js`, `claude.css` (Claude; `chatgpt.html` is the ChatGPT page, the same script and styles) and `todo.html`, `todo.js`, `todo.css` (To do). `handoff.js` copies in the settings the website passes along, on all of them. |
+| `page/` | The pages: `memory.html`, `memory.js`, `memory.css` (Memory: the three cards); `eunomia.html`, `eunomia.js`, `eunomia.css` (Eunomia, on top of `claude.css`); `index.html`, `claude.js`, `claude.css` (Claude; `chatgpt.html` is the ChatGPT page and `mridul.html` Mridul's Claude page, the same script and styles); `person.css` (the Parth | Mridul switch) and `todo.html`, `todo.js`, `todo.css` (To do). `handoff.js` copies in the settings the website passes along, on all of them. |
 | `page/encyclopedia/` | The Encyclopedia's template (`_template.html`, filled per page), `encyclopedia.css` and `encyclopedia.js` (search, sidebar on a phone, copy buttons, Mermaid). |
 | `vendor/` | `mermaid.min.js` (3.5 MB), fetched once by the build. Git-ignored. |
 | `.cache/` | The rendered Confluence section from the last build, reused while nothing changed, and `eunomia.json`, the Eunomia page's snapshot. Git-ignored (Coles content, memories). |
@@ -218,6 +219,28 @@ are read from `~/.codex/sessions/` (only those that ran inside `parth_project`).
 ChatGPT chats need an account export: `--chatgpt-export conversations.json
 --chat <id>`. There's no watcher or scheduled import: chats appear when Codex
 follows the root `AGENTS.md` or someone runs the importer.
+
+## Mridul's page
+
+Since 2026-11-01 the Memory page has a **Parth | Mridul** switch under the
+tabs (`person.css`; `memory.html?person=mridul` shows Mridul's side). Parth's
+side is the three cards above. Mridul's side is one card, his **Claude** page
+(`mridul.html`, drawn by `claude.js` from `mridul-data.json`): his Claude Code
+sessions on his own projects (outside `parth_project`), with his own project
+names (`MRIDUL_PROJECTS` in `build.py`). Every Parth page has the same switch
+above its Claude | ChatGPT | Eunomia one. LAN only, like everything here.
+
+Its records live outside this repo, in `parth_project/_workspace/context/mridul/`
+(its `README.md` is the full description). His workspaces keep no session
+logs, so every card is a historical write-up from the chat:
+`import_mridul.py` reads `~/.claude/projects/*/*.jsonl` (read only), keeps
+the chats that ran outside `parth_project` and temp folders as readable
+records in `sources/` (kept after Claude Code deletes a chat at 30 days), and
+ends with a "To write up" list. A write-up has the card fields plus
+`source: Claude Code`, `chat_id`, `chat_title`, `record: Historical import`
+and `covered_to` (the last message it covers; one long chat can be several
+cards). The page shows write-ups only, never the chat records. Claude runs the
+importer at every session close (step 6 of the root `CLAUDE.md` routine).
 
 Conversation text is rendered from Markdown with raw HTML turned off (so a
 `<script>` in a chat shows as text), with the same link rules as the logs.
