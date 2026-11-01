@@ -1,7 +1,7 @@
 // The projects shown on projects.html and project.html (projects.js draws them).
 //
-// The eight stories (PAT-AI, Claire, Apex Dash, LOVELESS book, Sonic laptop,
-// Parth's Palace, PrintPlace, NovaDiagnostics) are simplified versions of their
+// The ten stories (PAT-AI, Claire, Apex Dash, LOVELESS book, Sonic laptop,
+// Parth's Palace, PrintPlace, NovaDiagnostics, SkyWardrobe, Sonic) are simplified versions of their
 // real history (git, session logs and project docs). Parth approved the layout on 2026-10-22, so `sample`
 // is off; setting it to true brings back the "Sample data" note and badges.
 // Later this file will be generated from the project history files (see the
@@ -580,14 +580,219 @@ const PROJECTS_DATA = {
       name: "SkyWardrobe",
       icon: "🌦️",
       hue: 195,
-      tagline: "Tells you what to wear from the weather forecast. Web, Docker and Android.",
+      tagline: "Turns the weather into what to wear, with a rain radar. Web, Docker and Android.",
+      summary: "SkyWardrobe started as a challenge: turn live weather into an outfit. It reads the current weather, picks a top, bottom, jacket, shoes and an accessory to match from a small wardrobe database, and adds a rain radar and a 24-hour rain outlook. There's a web version, a Docker version that runs on my home server, and an Android app that needs no server at all.",
       status: "usable",
+      featured: true,
       kind: "Personal",
       categories: ["Web", "Android"],
-      started: "2026-08-07",
-      technologies: ["Node.js", "SQLite", "Docker", "Android"],
+      started: "2026-07-07",
+      technologies: ["Node.js", "Express", "SQLite", "Docker", "Capacitor", "Leaflet", "OpenWeatherMap"],
       repo: { name: "Partypants16/SkyWardrobe", private: false },
-      claudeProject: "SkyWardrobe"
+      claudeProject: "SkyWardrobe",
+      commits: 28,
+      sessions: 4,
+
+      evolution: [
+        { label: "The idea", text: "A challenge brief: take the live weather and turn it into a sensible outfit of the day." },
+        { label: "First build", text: "A small server that fetched the weather, then a dashboard. It went online on Railway after GitHub Pages couldn't load the weather." },
+        { label: "What got in the way", text: "The database library kept breaking inside Docker, and a fix got lost in a merge. The Android app wouldn't build on my laptop until October." },
+        { label: "Change of direction", text: "It moved off the cloud and onto my home server in Docker, so now it only works on my home Wi-Fi." },
+        { label: "Now", text: "Running on the home server, with an online dot on my website. The Android app has its first APK." }
+      ],
+
+      events: [
+        {
+          id: "brief",
+          date: "2026-07-07",
+          type: "milestone",
+          title: "It started as a challenge brief",
+          summary: "The first commit was a planning doc and a 36-line server that fetched the current weather for one city.",
+          context: "The brief asked for live weather, a recommendation engine that maps it to a local list of clothes, a fallback for when the weather service is down or rate-limited, clear lines between \"cold\" and \"chilly\", and a plan for 10,000 people asking at once. My notes say I built it with Codex, an AI coding agent.",
+          outcome: "Within two hours it had a dashboard, and the server passed on every field the weather service sends: gusts, cloud, rain, sunrise and sunset.",
+          sources: [
+            { type: "git", ref: "8804014", label: "Initial commit" },
+            { type: "git", ref: "b73ce70", label: "Dashboard and new fields" }
+          ]
+        },
+        {
+          id: "pages-vs-railway",
+          date: "2026-07-11",
+          type: "problem",
+          key: true,
+          title: "GitHub Pages couldn't load the weather",
+          summary: "As a static page, the weather never showed up. The same app on Railway worked, so that's the link that went on my website.",
+          context: "On Railway, a server makes the weather calls. GitHub Pages has no server, so the browser has to call the weather service itself.",
+          options: [
+            { text: "GitHub Pages", chosen: false, note: "Free, and it already hosts my site, but the browser's calls were blocked." },
+            { text: "Railway, with a server in front", chosen: true, note: "The server talks to the weather service, so it works." }
+          ],
+          why: "My notes put it down to browser security rules and the weather service's free plan, which doesn't allow calls straight from a web page. The fix is for the page to ask my server, and the server to ask the weather service.",
+          outcome: "The web version has kept its key on the server ever since. This version stayed on its own branch, the one the hosted site ran from, because what came next was mostly Android.",
+          lesson: "Where the code runs decides what it's allowed to do.",
+          sources: [
+            { type: "git", ref: "595dcc9", label: "Web page branch" },
+            { type: "git", ref: "49f2655", label: "Why Railway works and Pages doesn't" },
+            { type: "git", ref: "4782ba2", label: "Website: SkyWardrobe card added" }
+          ]
+        },
+        {
+          id: "wardrobe-db",
+          date: "2026-08-07",
+          type: "milestone",
+          title: "Two apps, and a real wardrobe",
+          summary: "The project was split into a web version and an Android version, and outfits started coming from a SQLite database of 25 clothes.",
+          context: "Each item has a category (top, bottom, outerwear, footwear or accessory), the temperature range it suits, and whether it works in rain, wind and humidity. Above 8 m/s counts as windy, and above 70% as humid.",
+          outcome: "Items made for rain or wind come first when it's raining or windy, then one is picked at random so the outfit changes. If the weather service is down or there's no key, it shows sample weather marked as such, instead of an error. That was the brief's fallback.",
+          sources: [
+            { type: "git", ref: "ee21727", label: "Web and Android split, wardrobe database" },
+            { type: "note", ref: "SkyWardrobe-Web/README.md", label: "Web README" }
+          ]
+        },
+        {
+          id: "phone-standalone",
+          date: "2026-08-07",
+          type: "decision",
+          key: true,
+          title: "The phone app needs no server",
+          summary: "The Android version is the same web page wrapped in Capacitor, and it does everything on the phone.",
+          context: "The web version asks its own server for the weather and the outfit. The phone app could have worked the same way.",
+          options: [
+            { text: "Go through a SkyWardrobe server", chosen: false, note: "The app would need a server running somewhere." },
+            { text: "Do it all on the phone", chosen: true, note: "The wardrobe ships as a file inside the app, and the phone calls the weather and radar services itself." }
+          ],
+          why: "So the app doesn't depend on a server of any kind. A setting to point it at one is still there, but it's left blank.",
+          outcome: "The catch is written up in its README: an app with no server can't keep its weather key secret, so it's meant to use a key of its own, separate from the server's.",
+          sources: [
+            { type: "git", ref: "1edf346", label: "Android version" },
+            { type: "git", ref: "edb7226", label: "Android gets rain, and its README" },
+            { type: "note", ref: "SkyWardrobe-Android/README.md", label: "Android README" }
+          ]
+        },
+        {
+          id: "rain-radar",
+          date: "2026-08-08",
+          type: "milestone",
+          title: "Rain and radar",
+          summary: "A live rain radar map, a rain graph, when the next rain is due, an hourly timeline and a window for being outside. The outfit advice learned about rain too: umbrella, jacket, waterproof shoes.",
+          context: "The radar comes from RainViewer, which needs no key, drawn on a Leaflet map. Everything else comes from a forecast with only one reading every three hours.",
+          why: "So it never claims more than the data has. It never says \"rain in 45 minutes\", only the time rain becomes likely, and every rain section looks at the same 24 hours. When RainViewer has no forecast frames, the radar just shows the past ones. There are no weather alerts and no UV index, because neither is available, and neither is made up.",
+          outcome: "The radar's frame logic was split out so it could be tested without a network. The same day, the Android app got all of it.",
+          lesson: "False precision is still false. Three-hourly data can't tell you the minute.",
+          sources: [
+            { type: "git", ref: "e0e8d4d", label: "Rain features with forecasting" },
+            { type: "git", ref: "05871a7", label: "Live precipitation radar" },
+            { type: "git", ref: "edb7226", label: "Android gets rain" }
+          ]
+        },
+        {
+          id: "docker",
+          date: "2026-08-26",
+          type: "direction",
+          title: "A Docker version for Linux",
+          summary: "A third copy of the app, packaged to run on a Linux machine with one command.",
+          context: "It sets itself up. On first start it creates and fills the wardrobe database, keeps it in a volume so it survives restarts, and checks its own health every 30 seconds. Without a weather key it falls back to sample weather.",
+          sources: [
+            { type: "git", ref: "25ed110", label: "Docker version for Linux" },
+            { type: "note", ref: "SkyWardrobe-Docker/README.md", label: "Docker README" }
+          ]
+        },
+        {
+          id: "sqlite-night",
+          date: "2026-08-26",
+          type: "problem",
+          title: "Three sqlite3 fixes in one night",
+          summary: "The database library kept failing with a GLIBC error: it had been compiled for a different Linux than the one in the container. Three commits in under half an hour: \"sqlite3 GLIBC compilation fix\", \"second fix for sqlite3\", \"final fix hopefully\".",
+          options: [
+            { text: "Compile sqlite3 from source inside the container", chosen: false, note: "Tried twice, two different ways." },
+            { text: "Switch to better-sqlite3 and let npm build it fresh", chosen: true, note: "Only the Docker version changed. The web version still uses sqlite3." }
+          ],
+          why: "The build copies in only the package list, not the lock file, so npm works out a fresh Linux one instead of reaching for the Windows builds from my laptop.",
+          outcome: "The third fix had the right idea.",
+          sources: [
+            { type: "git", ref: "26897b8", label: "sqlite3 GLIBC compilation fix" },
+            { type: "git", ref: "349b4b3", label: "Second fix for sqlite3" },
+            { type: "git", ref: "7af6992", label: "Final fix hopefully" }
+          ]
+        },
+        {
+          id: "merge-undid-fix",
+          date: "2026-08-27",
+          type: "problem",
+          title: "The merge that put the old line back",
+          summary: "I'd also tidied the same file on GitHub that night. When the two were merged, the old install line won, so main kept the build step from before the fix.",
+          context: "The code now used better-sqlite3, but the build still ran the steps meant for the old sqlite3.",
+          outcome: "It turned up on the home server in September.",
+          lesson: "Check the merged file, not just the fix.",
+          sources: [
+            { type: "git", ref: "080fefb", label: "Dockerfile tidy-up on GitHub" },
+            { type: "git", ref: "d3c8fec", label: "Merge" },
+            { type: "git", ref: "70cf5ca", label: "Merged into main" }
+          ]
+        },
+        {
+          id: "crash-loop",
+          date: "2026-09-20",
+          type: "problem",
+          key: true,
+          title: "A crash loop on the home server",
+          summary: "SkyWardrobe wasn't loading, so I asked why. On the home server, its container was crashing and restarting over and over with the same GLIBC error.",
+          context: "The build still rebuilt the old sqlite3, and it also skipped better-sqlite3's own install step. So swapping one name for the other wouldn't have been enough.",
+          options: [
+            { text: "Commit a lock file and use npm ci", chosen: false, note: "The lock file is left out of git on purpose for this project." },
+            { text: "Plain npm install, with install steps on", chosen: true, note: "better-sqlite3 fetches the right build for the container by itself." }
+          ],
+          why: "With no lock file in the repo, npm install is the right tool. It was tested with a clean build on the home server itself, the same place it runs.",
+          outcome: "The first try, a plain restart, crashed again: a restart keeps the old image. Rebuilt from scratch, it came up healthy. The same fix went to GitHub and to the server's copy, so all three match. Nine days later the server rebooted for updates, and SkyWardrobe came back by itself.",
+          lesson: "Restarting isn't redeploying. A restart runs the same broken image again.",
+          sources: [
+            { type: "git", ref: "303927b", label: "Crash loop fix" },
+            { type: "claude", ref: "2026-09-20-skywardrobe-remote-crash-fix", label: "Crash loop fix" },
+            { type: "claude", ref: "2026-09-29-remote-box-updates-reboot", label: "Server updates and reboot" }
+          ]
+        },
+        {
+          id: "home-server",
+          date: "2026-09-21",
+          type: "direction",
+          title: "From Railway to my home server",
+          summary: "The Railway site was gone, so the SkyWardrobe card on my website now points to the home server instead.",
+          context: "That means it only works on my home Wi-Fi, so the card says so, like my other self-hosted apps.",
+          outcome: "Since October the card also shows whether it's online, checked every five minutes.",
+          sources: [
+            { type: "git", ref: "b6adb6d", label: "Website: card points to the home server" },
+            { type: "claude", ref: "2026-10-20-website-service-status", label: "Online status on the website" }
+          ]
+        },
+        {
+          id: "first-apk",
+          date: "2026-10-06",
+          type: "milestone",
+          title: "The first APK",
+          summary: "When I gathered all my Android apps into one folder, SkyWardrobe's had never been built.",
+          context: "Back in August, a commit called \"Unable to fix Android Build\" made the build skip a missing Capacitor plugins folder. In October the build failed because it needed Java 21, and my laptop only had 17.",
+          outcome: "It was built with a portable copy of Java 21. Capacitor's sync step rewrote two of its generated build files and dropped a guard added by hand, so they were put back as they were.",
+          sources: [
+            { type: "git", ref: "990c477", label: "Unable to fix Android Build" },
+            { type: "claude", ref: "2026-10-06-latest-android-apks", label: "Android APKs" }
+          ]
+        }
+      ],
+
+      lessons: [
+        { title: "Where it runs matters", text: "The same page worked behind a server and failed on GitHub Pages." },
+        { title: "Check the merged result", text: "The right fix was lost in a merge, and turned up weeks later as a crash loop." },
+        { title: "Restart isn't redeploy", text: "Restarting the container just ran the broken image again. It needed a rebuild." },
+        { title: "Don't claim what the data can't say", text: "A three-hourly forecast can't say \"rain in 45 minutes\", so the app doesn't." }
+      ],
+
+      focus: "Keeping it running on the home server, and checking whether it shows live weather or its sample fallback.",
+      next: [
+        "Check the home server shows live weather, not the sample fallback",
+        "Add a graph for location and sun times",
+        "Add a text section for air quality, pollen and flu activity",
+        "Install Java 21 properly, so the Android app is easy to rebuild"
+      ]
     },
     {
       slug: "crosspaste",
@@ -1763,13 +1968,212 @@ const PROJECTS_DATA = {
       icon: "🦔",
       hue: 240,
       tagline: "My own assistant on the home server. It wakes up when I open it and goes back to sleep after ten idle minutes.",
+      summary: "Sonic is my own chat assistant. It runs a small local model on my home server, can search the web when it needs to, and keeps my chats in the browser. The server is an old laptop with no GPU, so Sonic can't stay loaded all day. Now it starts when I open the page and shuts itself down, model and all, after ten quiet minutes.",
       status: "usable",
+      featured: true,
       kind: "Personal",
       categories: ["AI"],
       started: "2026-09-20",
-      technologies: ["Python", "FastAPI", "Ollama", "systemd"],
+      technologies: ["Python", "FastAPI", "Ollama", "Qwen3", "JavaScript", "systemd"],
       repo: null,
-      claudeProject: "Sonic"
+      claudeProject: "Sonic",
+      sessions: 8,
+
+      evolution: [
+        { label: "The idea", text: "A private assistant of my own, on my own server, that's short, practical and doesn't make things up." },
+        { label: "First build", text: "A chat in the terminal, then a web page with saved chats and a web search tool, on a small 1.7B model." },
+        { label: "What got in the way", text: "The server is short on memory, so I had to start Sonic by hand in a terminal every time I wanted it." },
+        { label: "Change of direction", text: "It's always reachable now. Opening the page wakes it and loads the model, and ten idle minutes put it back to sleep." },
+        { label: "Now", text: "Usable on the home Wi-Fi. A change for another project broke it for nine days in October, and it's fixed and tested again." }
+      ],
+
+      events: [
+        {
+          id: "terminal-chat",
+          date: "2026-09-20",
+          type: "milestone",
+          title: "A chat in the terminal",
+          summary: "The first Sonic was a small script: type a message, get an answer from a local model, /clear to start again.",
+          context: "It talks to Ollama on the same machine, using Qwen3 at 1.7B, a model small enough for a computer with no GPU. The instructions were the same from day one: be concise and practical, keep facts apart from guesses, never claim something was done unless a tool confirms it, and never invent personal information.",
+          sources: [
+            { type: "note", ref: "assistant.py", label: "The first terminal version" }
+          ]
+        },
+        {
+          id: "web-page",
+          date: "2026-09-21",
+          type: "milestone",
+          title: "Then a proper chat page",
+          summary: "Within a night it had a web page: a list of chats down the side, answers formatted properly, light and dark themes, and a web search tool.",
+          context: "The first page was a single chat that forgot everything on reload. By the end of the night, chats were saved in the browser, so the server keeps nothing. Answers are rendered as formatted text and cleaned before they're shown.",
+          outcome: "Sonic got one tool: a web search it can use up to three times per answer, for anything recent or anything it isn't sure about. Its instructions tell it to say when it has searched. That's the only thing that leaves the server. The model itself never does.",
+          sources: [
+            { type: "note", ref: "static/index.html", label: "The chat page" },
+            { type: "note", ref: "app.py", label: "The app and its search tool" }
+          ]
+        },
+        {
+          id: "by-hand",
+          date: "2026-09-29",
+          type: "problem",
+          title: "Started by hand, every time",
+          summary: "After the home server rebooted for updates, nothing was answering for Sonic. It only ran while I had it open in a terminal.",
+          context: "Keeping the model loaded all day is too much for that laptop: 4 cores, under 8 GB of RAM, and already about ten other services running. So each time I wanted Sonic, I logged in, started it in a terminal, and used it.",
+          outcome: "It stayed that way for three more weeks. What I really wanted was for Sonic to always be there when I opened it, without costing memory when I didn't.",
+          sources: [
+            { type: "claude", ref: "2026-09-29-remote-box-updates-reboot", label: "Server updates and reboot" },
+            { type: "claude", ref: "2026-10-20-sonic-local-on-demand", label: "Sonic on demand" }
+          ]
+        },
+        {
+          id: "on-demand",
+          date: "2026-10-20",
+          type: "decision",
+          key: true,
+          title: "Wake up when opened, sleep when idle",
+          summary: "The server now listens for Sonic all the time. The first visit starts it, and after ten minutes with no requests it stops again.",
+          context: "I wanted Sonic always reachable at its link, with the model and everything else loaded only when someone actually opens it. Ollama, the model server, was already running as a service and loading models on demand, so the missing piece was the app itself.",
+          options: [
+            { text: "Keep starting it by hand", chosen: false, note: "No memory used when I'm not using it, but I have to log in first every time." },
+            { text: "Leave the app running and only load the model on demand", chosen: false, note: "Would have worked, since the app on its own is small. But it's not everything on demand." },
+            { text: "Let the system start the app on the first visit and stop it when idle", chosen: true, note: "A standard Linux feature does the waiting, so it costs nothing while asleep." }
+          ],
+          why: "I asked for everything to load on demand, and this does that. It also starts by itself after a reboot, and if the app ever crashes, the next visit just starts it again. The app didn't need any special code for it, so the old way of running it still works.",
+          outcome: "Live on the server the same night. A cold visit answered in about a second, the model loaded in about 6 seconds, and a one-sentence reply took about 10 seconds on the CPU. With the real ten-minute timer, it went to sleep after 9 minutes 56 seconds, then woke in a second on the next visit.",
+          sources: [
+            { type: "claude", ref: "2026-10-20-sonic-local-on-demand", label: "Sonic on demand" },
+            { type: "note", ref: "startingSonic.txt", label: "How Sonic starts" }
+          ]
+        },
+        {
+          id: "model-follows-page",
+          date: "2026-10-20",
+          type: "decision",
+          title: "Opening the page is what loads the model",
+          summary: "The page asks for the model as soon as it opens, and the model is unloaded when Sonic goes to sleep.",
+          context: "Waking the app is cheap. The model is the expensive part, so it should only be in memory while I'm actually chatting.",
+          outcome: "The status badge shows \"Loading…\" and then \"Online\", or \"Model unavailable\" if the model server is down. The model is kept for ten minutes after the last message, the same as the app's idle timer, and unloaded straight away when the app shuts down. A reply that's still coming keeps Sonic awake, so it can't fall asleep mid-answer. Chats live in the browser, so nothing is lost when it sleeps.",
+          sources: [
+            { type: "claude", ref: "2026-10-20-sonic-local-on-demand", label: "Sonic on demand" },
+            { type: "note", ref: "app.py", label: "Warm-up and unload" }
+          ]
+        },
+        {
+          id: "test-copy",
+          date: "2026-10-20",
+          type: "experiment",
+          title: "Tested on a throwaway copy of the server first",
+          summary: "Before touching the real server, the whole wake-and-sleep chain ran in a disposable copy of the same Ubuntu version, with a 20-second timer.",
+          context: "I asked for it to be built and tested on my main laptop first, and only then put live. The new code was also tried against a fake model server, against the real small model on my main laptop, and in a headless browser to check the status badge.",
+          outcome: "In the copy, the first visit answered in 1.6 seconds, Sonic stopped exactly on time, the model was unloaded, and the next visit woke it in 0.7 seconds. The copy was deleted afterwards. What still hasn't been tested is a reboot of the real server, because it hosts everything else.",
+          sources: [
+            { type: "claude", ref: "2026-10-20-sonic-local-on-demand", label: "Sonic on demand" }
+          ]
+        },
+        {
+          id: "no-streaming",
+          date: "2026-10-20",
+          type: "problem",
+          title: "Replies don't really stream",
+          summary: "The page shows \"Thinking…\" with a timer, and then the whole answer arrives at once.",
+          context: "Sonic asks the model not to think out loud. But the code that streams the answer waits for the end-of-thinking marker before it shows anything, and with thinking off, that marker never comes.",
+          outcome: "Found while testing, and it had been like that from the start. The fix is small: stream straight away when thinking is off. It was left for later because it wasn't what that day's work was about.",
+          sources: [
+            { type: "claude", ref: "2026-10-20-sonic-local-on-demand", label: "Sonic on demand" }
+          ]
+        },
+        {
+          id: "no-dot",
+          date: "2026-10-20",
+          type: "decision",
+          key: true,
+          title: "No Online dot on Sonic's card",
+          summary: "Sonic got a card on this website's home page, and it's the one home-server card with no status dot.",
+          context: "The same evening, the home server started checking every service every five minutes, so the cards can show Online or Offline.",
+          options: [
+            { text: "Check Sonic like the others", chosen: false, note: "Any visit wakes it, so a check every five minutes would keep it awake forever." },
+            { text: "Leave Sonic out of the checks", chosen: true, note: "The card just says the first load takes a few seconds." },
+            { text: "A check that asks the system instead of Sonic", chosen: false, note: "Possible without waking it. Written down in case I ever want it." }
+          ],
+          why: "I asked for it to be left out of the status checks. It also fits the on-demand setup: Sonic only sleeps if nothing keeps poking it.",
+          sources: [
+            { type: "claude", ref: "2026-10-20-website-service-status", label: "Website status dots" }
+          ]
+        },
+        {
+          id: "memory-ceiling",
+          date: "2026-10-20",
+          type: "problem",
+          title: "The server is short on memory",
+          summary: "A look at the home server that night found its swap almost full, and Sonic's model was the likely reason.",
+          context: "While the model was loaded it took about 1.8 GB, on a machine with under 8 GB and around ten other services. At one check only 140 MB of RAM was free.",
+          outcome: "Bigger models were advised against for this machine: 4 cores, no GPU, and 1.7B is about the ceiling. Sleeping when idle matters more because of it.",
+          lesson: "On a small server, memory is the real budget, not disk or CPU.",
+          sources: [
+            { type: "claude", ref: "2026-10-20-remote-box-netdata-scan", label: "Checking the server's monitoring" },
+            { type: "claude", ref: "2026-10-20-remote-box-more-ideas", label: "Ideas for the server" }
+          ]
+        },
+        {
+          id: "others-lean-on-it",
+          date: "2026-10-21",
+          type: "direction",
+          title: "Other projects start to plan around Sonic",
+          summary: "Two newer ideas have Sonic at their centre: smart glasses that show its replies, and a gaming journal it could answer questions from.",
+          context: "My smart glasses research is about see-through text glasses with an \"Ask Sonic\" feature: short replies on a small display. The SONIC Gaming Archive plan ends with Sonic answering things like \"where did I stop last time?\" from my recorded play sessions only, which also means fewer story spoilers.",
+          outcome: "Both are still plans. The glasses aren't bought, and the gaming archive is parked before anything was installed. Sonic itself hasn't changed for them yet.",
+          sources: [
+            { type: "claude", ref: "2026-10-01-smart-glasses-folder", label: "Smart glasses folder" },
+            { type: "claude", ref: "2026-10-21-sonic-gaming-archive-plan", label: "Gaming archive plan" }
+          ]
+        },
+        {
+          id: "broken-by-n8n",
+          date: "2026-10-23",
+          type: "problem",
+          title: "A change for another project broke Sonic",
+          summary: "The model server moved to a new address so my n8n workflows could use it. Sonic was still calling the old one.",
+          context: "n8n runs in a container on the same server, and it couldn't reach the model server where it was. So that evening the model server was set to listen somewhere the container could reach instead. That change wasn't written up anywhere at the time.",
+          outcome: "From then on, opening Sonic said \"Model unavailable\". It stayed broken for nine days, until it turned up on 1 November while I was adding other services to the website.",
+          lesson: "When two things share one model server, changing it for one means checking the other.",
+          sources: [
+            { type: "claude", ref: "2026-11-01-vikunja-home-card", label: "Sonic found broken and fixed" }
+          ]
+        },
+        {
+          id: "follow-the-model",
+          date: "2026-11-01",
+          type: "decision",
+          key: true,
+          title: "Point Sonic at the new address",
+          summary: "Rather than move the model server back, Sonic got one setting telling it where the model server is now.",
+          context: "Sonic already read the model server's address from a setting, so no code had to change. Only the setting had never been filled in.",
+          options: [
+            { text: "Move the model server back", chosen: false, note: "Fixes Sonic, but n8n's container can't reach it there, so that breaks n8n instead." },
+            { text: "Give Sonic the new address", chosen: true, note: "One small override. n8n keeps working and nothing else changes." }
+          ],
+          why: "It leaves n8n working and changes nothing else. I said to go ahead and fix it.",
+          outcome: "Tested from my laptop: the model loaded in 7.8 seconds and a chat answered. The setting is now part of Sonic's installer too, so a reinstall keeps it. If the model server's address ever changes again, both have to change together.",
+          sources: [
+            { type: "claude", ref: "2026-11-01-vikunja-home-card", label: "Sonic found broken and fixed" },
+            { type: "note", ref: "deploy/ollama-url.conf", label: "The model server address setting" }
+          ]
+        }
+      ],
+
+      lessons: [
+        { title: "Asleep is a feature", text: "On a small server, an assistant that only exists while I'm using it is better than one that's always slow because it's always loaded." },
+        { title: "Let the system do the waiting", text: "A built-in Linux feature handles waking and sleeping, so the app stayed a plain app and still runs the old way too." },
+        { title: "Shared pieces break quietly", text: "Moving the model server for n8n broke Sonic for nine days, and nothing told me." },
+        { title: "Checking can be the problem", text: "A status check every five minutes would have kept Sonic awake forever, so its card has no dot." }
+      ],
+
+      focus: "Keeping it working as it is: small, private, and only awake when I'm using it.",
+      next: [
+        "Make replies stream as they're written, instead of arriving all at once",
+        "Check that it still wakes up properly after the server reboots",
+        "Let Sonic answer questions from the gaming archive, once that's built"
+      ]
     },
     {
       slug: "gaming-archive",
