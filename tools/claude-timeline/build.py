@@ -70,7 +70,7 @@ SESSION_DIRS = {"claude": CONTEXT / "sessions", "chatgpt": CHATGPT / "sessions"}
 PAGE_URL = {"claude": "./", "chatgpt": "chatgpt.html"}
 
 # The filter lists show these in this order.
-PROJECTS = ["Website", "Apex Dash", "Claire", "Iris", "PAT-AI", "PrintPlace", "SkyWardrobe",
+PROJECTS = ["Website", "Apex Dash", "Apex Dash 3D Masters", "Claire", "Iris", "PAT-AI", "PrintPlace", "SkyWardrobe",
             "StaySafe", "CrossPaste", "Sonic", "Gaming Archive", "NovaDiagnostics", "PocketDIY", "n8n", "Coles", "Remote box",
             "Music", "Physical projects", "Photos", "OpenRecall", "Workspace"]
 TYPES = ["Built", "Improved", "Fixed", "Ideas", "Research", "Setup", "Sync", "Docs"]

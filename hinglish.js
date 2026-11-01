@@ -371,6 +371,8 @@ const HINGLISH = {
     "About this game": "Is game ke baare mein",
     "System requirements": "System ki zaroorat",
     "Trailer and screenshots": "Trailer aur screenshots",
+    "The sequel": "Agla bhaag (sequel)",
+    "Play in your browser": "Browser mein khelo",
     "Trailer": "Trailer",
     "Previous": "Pichla",
     "Next": "Agla",

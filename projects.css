@@ -1062,6 +1062,42 @@ a.archive-row:focus-visible {
   color: #fff;
 }
 
+/* "Play in your browser": Steam's green play button. When a game has one, the
+   other buttons in the box step back to Steam's blue secondary style. */
+.store-status .pj-btn--play {
+  background: linear-gradient(to right, #75b022 5%, #588a1b 95%);
+  color: #d2efa9;
+}
+
+.store-status .pj-btn--play:hover {
+  background: linear-gradient(to right, #8ed629 5%, #6aa621 95%);
+  color: #fff;
+}
+
+.store-status .pj-btn--play ~ .pj-btn--ghost {
+  background: rgba(103, 193, 245, .2);
+  color: #67c1f5;
+}
+
+.store-status .pj-btn--play ~ .pj-btn--ghost:hover {
+  background: linear-gradient(-60deg, #417a9b 5%, #67c1f5 95%);
+  color: #fff;
+}
+
+/* A sequel's store page, straight after the first one */
+.store-kicker {
+  margin-top: .9rem;
+  color: var(--store-accent);
+  font-size: .8rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.store--sequel .store-title {
+  margin-top: .15rem;
+}
+
 .store-lower {
   display: grid;
   grid-template-columns: minmax(0, 1.85fr) minmax(0, 1fr);

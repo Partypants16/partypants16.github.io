@@ -127,7 +127,7 @@
   const typeOf = e => (TYPES[e.type] ? e.type : "milestone");
   // Oldest first; same-day moments keep the order they're written in.
   const sortEvents = events => events.slice().sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
-  const lastUpdate = p => (hasStory(p) ? sortEvents(p.events).pop().date : p.started);
+  const lastUpdate = p => (hasStory(p) ? sortEvents(p.events).pop().date : p.updated || p.started);
 
   function externalLink(node, href) {
     node.href = href;
@@ -339,6 +339,7 @@
 
     if (DATA.sample) root.append(sampleNote());
     root.append(p.showcase ? storePage(p) : hero(p));
+    if (p.showcase) (p.sequels || []).forEach(game => root.append(storePage(game, p)));
 
     // [id, label in the jump bar, heading, line under it, what goes in it]
     const sections = [];
@@ -728,10 +729,13 @@
   // ---------- a game's store page (projects with `showcase`) ----------
   // Shown in place of the hero, laid out like a Steam store page: media viewer
   // and info panel, then a status box, "About this game" and requirements.
+  // A sequel (an entry in the project's `sequels`, with its own name, tagline,
+  // summary, status, started/updated, technologies and showcase) gets a second
+  // store page right after the first, before the journey.
 
-  function storePage(p) {
+  function storePage(p, parent) {
     const s = p.showcase;
-    const page = el("header", "store");
+    const page = el(parent ? "section" : "header", "store" + (parent ? " store--sequel" : ""));
 
     const crumbs = el("div", "store-crumbs"); // not a <nav>: the site styles every nav as its top bar
     crumbs.setAttribute("role", "navigation");
@@ -740,8 +744,12 @@
     home.href = "projects.html";
     crumbs.append(home);
     (s.breadcrumb || []).forEach(part => crumbs.append(el("span", "store-sep", "›"), data("span", "", part)));
+    if (parent) crumbs.append(el("span", "store-sep", "›"), data("span", "", parent.name));
     crumbs.append(el("span", "store-sep", "›"), data("span", "", p.name));
-    page.append(crumbs, data("h1", "store-title", p.name));
+    if (parent) {
+      page.setAttribute("aria-label", p.name);
+      page.append(crumbs, el("p", "store-kicker", "The sequel"), data("h2", "store-title", p.name));
+    } else page.append(crumbs, data("h1", "store-title", p.name));
 
     const top = el("div", "store-top");
     top.append(storeMedia(s, p.name), storeInfo(p));
@@ -893,7 +901,13 @@
                    el("span", "", stage(p)[0]));
     text.append(heading);
     if (p.focus) text.append(data("p", "", p.focus));
-    box.append(text, lifecycle(p), actions(p));
+    const row = actions(p);
+    if (p.showcase.play) {
+      // a game anyone can play gets Steam's green "Play" button first
+      const play = externalLink(button("pj-btn--play", "resume", p.showcase.play.label || "Play in your browser"), p.showcase.play.href);
+      row.prepend(play);
+    }
+    box.append(text, lifecycle(p), row);
     return box;
   }
 
