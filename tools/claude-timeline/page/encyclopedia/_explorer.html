@@ -1,14 +1,31 @@
 <!-- The visual overview's content: encyclopedia.py puts this into _template.html as explorer.html,
-     and explorer.js draws the map into #ex from explorer.json. -->
+     and explorer.js draws the canvas into #nx-world from explorer.json. -->
 <h1>Visual overview</h1>
-<p class="ex-intro">The whole setup as a map. Pick an area to see what's in it, pick a topic to see what it connects to, or follow a walkthrough. Every topic opens its full page.</p>
-<div class="ex-modes" role="navigation" aria-label="Ways to explore">
-  <a href="#" data-mode="map">Map</a>
-  <a href="#tours" data-mode="tours">Walkthroughs</a>
-  <a href="#all" data-mode="all">Every page</a>
-</div>
-<p class="ex-crumbs" id="ex-crumbs"></p>
-<div class="ex" id="ex">
-  <p class="ex-loading">Loading the map…</p>
-  <noscript><p>The map needs JavaScript. The pages themselves work without it: use the contents on the left.</p></noscript>
+<p class="ex-intro">The whole setup as a flowchart. Click a card for its details; drag to move around.</p>
+<div class="nx" id="nx">
+  <div class="nx-bar">
+    <div class="nx-modes" role="navigation" aria-label="Ways to explore">
+      <a href="#" data-mode="map">Map</a>
+      <a href="#tours" data-mode="tours">Walkthroughs</a>
+      <a href="#all" data-mode="all">Every page</a>
+    </div>
+    <p class="nx-crumbs" id="nx-crumbs" translate="no"></p>
+  </div>
+  <div class="nx-tours" id="nx-tours" role="group" aria-label="Walkthroughs" hidden></div>
+  <div class="nx-stage" id="nx-stage">
+    <div class="nx-viewport" id="nx-viewport">
+      <div class="nx-world" id="nx-world">
+        <p class="nx-loading">Loading the map…</p>
+      </div>
+    </div>
+    <div class="nx-list" id="nx-list" hidden></div>
+    <div class="nx-zoom" id="nx-zoom">
+      <button type="button" data-zoom="in" aria-label="Zoom in" title="Zoom in">+</button>
+      <button type="button" data-zoom="out" aria-label="Zoom out" title="Zoom out">−</button>
+      <button type="button" data-zoom="fit" aria-label="Fit to screen" title="Fit to screen">⤢</button>
+    </div>
+    <p class="nx-hint" id="nx-hint">Drag to move · Ctrl + scroll to zoom · click a card for details</p>
+    <aside class="nx-panel" id="nx-panel" aria-label="Details" hidden></aside>
+  </div>
+  <noscript><p>The map needs JavaScript. The pages themselves work without it: use the contents on the Encyclopedia's front page.</p></noscript>
 </div>

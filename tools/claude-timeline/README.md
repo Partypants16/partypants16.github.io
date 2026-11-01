@@ -63,8 +63,9 @@ Mermaid diagrams from a local copy of `mermaid.min.js` (fetched once into
 `vendor/`, git-ignored). The Markdown is the only thing to edit; the next
 deploy ships it. A link to a page that doesn't exist is a build warning.
 
-Its **visual overview** (`encyclopedia/explorer.html`, since 2026-11-01) is a clickable
-map of the same pages: six areas, each topic's links both ways, and walkthroughs.
+Its **visual overview** (`encyclopedia/explorer.html`, since 2026-11-01) is the same pages
+as a dark n8n-style flowchart (six areas, their groups and pages, and walkthroughs), with a
+details panel on the right for the card you click, like Azure Logic Apps.
 `encyclopedia.py` writes `explorer.json` from the pages (title, summary, status,
 Last checked, headings, links) plus `_workspace/encyclopedia/_explorer/explorer.yaml`
 (the areas, walkthroughs and typed connections, nothing a page already says);
