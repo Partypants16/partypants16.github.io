@@ -10,6 +10,7 @@ update_site.py to ~/claude-timeline/ -> update_site.py swaps the site in place -
 docker compose up (recreated, so a changed Caddyfile is picked up too) -> checks the page
 and data.json answer, and that data.json is the one just built; the same for the ChatGPT
 page (chatgpt.html + chatgpt-data.json, compared byte for byte) and the Encyclopedia.
+Before building, it takes a new Eunomia snapshot if the last one is over a day old.
 dist/ holds the full session logs, so it only ever goes to this private box.
 
 The Encyclopedia's Coles Confluence section (encyclopedia/confluence/, from confluence.py) can
@@ -26,7 +27,27 @@ PUTTY = r"C:\Program Files\PuTTY"
 HERE = os.path.dirname(os.path.abspath(__file__))
 DIST = os.path.join(HERE, "dist")
 
+# The Eunomia page's snapshot (made on this laptop): take a new one when it's more than a day old
+# (Parth, 2026-11-01). If Eunomia is down the deploy goes on with the old one, which the page dates.
+SNAPSHOT = os.path.join(HERE, ".cache", "eunomia.json")
+EUNOMIA = os.path.join(HERE, "..", "..", "..", "..", "_workspace", "eunomia", "scripts", "eunomia.py")
+SNAPSHOT_MAX_AGE = 24 * 3600
+
+
+def refresh_snapshot():
+    if not os.path.isfile(EUNOMIA):
+        return
+    age = time.time() - os.path.getmtime(SNAPSHOT) if os.path.isfile(SNAPSHOT) else None
+    if age is not None and age <= SNAPSHOT_MAX_AGE:
+        print("Eunomia snapshot is %.1f hours old, kept" % (age / 3600))
+        return
+    print("Eunomia snapshot is", "missing" if age is None else "%.1f hours old" % (age / 3600), "- taking a new one")
+    if subprocess.run([sys.executable, EUNOMIA, "snapshot"]).returncode:
+        print("WARNING: Eunomia snapshot failed (is Eunomia running?); deploying the last one")
+
+
 if "--no-build" not in sys.argv:
+    refresh_snapshot()
     subprocess.run([sys.executable, os.path.join(HERE, "build.py")], check=True)
 
 password = os.environ.get("REMOTE_BOX_PW") or getpass.getpass("Password for %s: " % HOST)

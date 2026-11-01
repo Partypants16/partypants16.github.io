@@ -160,8 +160,9 @@ Eunomia only listens on the laptop, so the page reads a **snapshot**:
 `python _workspace/eunomia/scripts/eunomia.py snapshot` (from the workspace
 root, with Eunomia running) writes `.cache/eunomia.json`, and the next build
 copies it to `dist/eunomia-data.json`. The page says when it was taken and
-warns once it's over 7 days old. Nothing refreshes it on a timer; take a new
-one, then deploy.
+warns once it's over 7 days old. `deploy.py` takes a new snapshot first when
+the last one is more than a day old (Parth, 2026-11-01), so every session
+close keeps it fresh. If Eunomia is down, it warns and deploys the old one.
 
 - **What's in it:** every memory in the 16 vaults listed in
   `workspace-map.yaml` (never Personal or the `zz-backup-canary` test vault),
