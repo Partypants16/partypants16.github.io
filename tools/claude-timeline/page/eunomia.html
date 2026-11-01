@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <script src="handoff.js"></script>
+  <script src="hinglish.js"></script>
+  <script src="i18n.js"></script>
+  <script src="settings.js"></script>
+  <script src="motion.js"></script>
+  <title>Eunomia | Parth</title>
+  <meta name="description" content="What Claude and Codex remember about Parth's projects, from a snapshot of Eunomia. Only on the home server.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧩</text></svg>">
+  <link rel="stylesheet" href="movies.css">
+  <link rel="stylesheet" href="projects.css">
+  <link rel="stylesheet" href="settings.css">
+  <link rel="stylesheet" href="motion.css">
+  <link rel="stylesheet" href="claude.css">
+  <link rel="stylesheet" href="eunomia.css">
+</head>
+
+<body>
+  <header>
+    <nav>
+      <p class="logo"><a href="https://partypants16.github.io/profile.html" title="Profile">PS</a></p>
+      <ul>
+        <li><a href="https://partypants16.github.io/index.html">Home</a></li>
+        <li><a href="https://partypants16.github.io/wallpaper.html">Wallpaper</a></li>
+        <li><a href="https://partypants16.github.io/gaming.html">Games</a></li>
+        <li><a href="https://partypants16.github.io/media.html">Media</a></li>
+        <li><a href="https://partypants16.github.io/projects.html" aria-current="page">Projects</a></li>
+      </ul>
+      <button class="settings-toggle" id="settingsToggle" type="button" aria-label="Settings" title="Settings" aria-haspopup="dialog" aria-expanded="false" aria-controls="settingsPanel"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="3.34 3.34"/><circle cx="12" cy="12" r="5.2" fill="none" stroke="currentColor" stroke-width="4.4"/></svg></button>
+    </nav>
+  </header>
+
+  <main class="claude eunomia">
+    <nav class="section-tabs" aria-label="Projects sections">
+      <a href="https://partypants16.github.io/projects.html">Showcase</a>
+      <a href="memory.html" aria-current="page">Memory</a>
+      <a href="todo.html">To do</a>
+      <a href="encyclopedia/">Encyclopedia</a>
+    </nav>
+    <nav class="memory-switch" aria-label="Memory">
+      <a href="./">Claude</a>
+      <a href="chatgpt.html">ChatGPT</a>
+      <a href="eunomia.html" aria-current="page">Eunomia</a>
+    </nav>
+
+    <section class="lists-intro">
+      <h1 translate="no">Eunomia</h1>
+      <p>What Claude and Codex remember about my projects, from Eunomia, the memory they share. It's a snapshot taken on my laptop, so it can be a little behind.</p>
+      <p class="claude-stats" id="stats"></p>
+      <p class="eu-stale" id="stale" hidden></p>
+    </section>
+
+    <div class="claude-controls" id="controls" hidden>
+      <div class="tracker-filters">
+        <label class="filter filter--search">
+          <span>Search</span>
+          <input type="search" id="filter-search" placeholder="Facts, subjects and sources" autocomplete="off">
+        </label>
+        <label class="filter">
+          <span>Project</span>
+          <select id="filter-vault"></select>
+        </label>
+        <label class="filter">
+          <span>Saved by</span>
+          <select id="filter-by"></select>
+        </label>
+        <label class="filter">
+          <span>Status</span>
+          <select id="filter-status"></select>
+        </label>
+        <label class="filter">
+          <span>Kind</span>
+          <select id="filter-type"></select>
+        </label>
+        <button class="filter-reset" id="filter-reset" type="button">Reset</button>
+      </div>
+      <div class="claude-bar">
+        <p class="filter-count" id="filter-count" aria-live="polite"></p>
+        <label class="eu-toggle"><input type="checkbox" id="filter-history"> <span>Show historical facts</span></label>
+      </div>
+    </div>
+
+    <p class="claude-message" id="message">Loading the memories…</p>
+    <p class="filter-empty" id="filter-empty" hidden>Nothing matches these filters.</p>
+    <div id="list"></div>
+  </main>
+
+  <footer>
+    <p>&copy; <span id="year"></span> Parth</p>
+  </footer>
+
+  <script src="eunomia.js"></script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+
+</html>

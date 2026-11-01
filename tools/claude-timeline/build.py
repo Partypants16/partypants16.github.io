@@ -61,6 +61,9 @@ ENCYCLOPEDIA = WORKSPACE / "_workspace" / "encyclopedia"  # the Encyclopedia's M
 CONFLUENCE = WORKSPACE / "Coles" / "Confluence"  # the Coles Confluence copy, the Encyclopedia's Confluence section (since 2026-10-27)
 CHATGPT = CONTEXT / "chatgpt"                 # the ChatGPT page's sessions, index and sources (since 2026-10-27)
 DIST = HERE / "dist"
+# The Eunomia page's data: a snapshot made on the laptop by `_workspace/eunomia/scripts/eunomia.py
+# snapshot` (since 2026-11-01). Built pages use whatever snapshot is there; Eunomia needn't be up.
+EUNOMIA_SNAPSHOT = HERE / ".cache" / "eunomia.json"
 
 # The two collections of session logs, and the page each one's cards are on.
 SESSION_DIRS = {"claude": CONTEXT / "sessions", "chatgpt": CHATGPT / "sessions"}
@@ -352,6 +355,17 @@ def summary(entries, missing=()):
     }
 
 
+def eunomia_summary(snapshot):
+    """The Eunomia card: how many facts, from how many projects, and when the snapshot was taken."""
+    if not snapshot:
+        return None
+    return {
+        "memories": len(snapshot["memories"]),
+        "projects": sum(1 for v in snapshot["vaults"] if v["memories"]),
+        "refreshed": snapshot["generated_at"],
+    }
+
+
 def build():
     built = datetime.datetime.now().astimezone().isoformat(timespec="seconds")
     entries = read_collection(CONTEXT, "claude")
@@ -378,8 +392,13 @@ def build():
         shutil.copy2(path, target)
     (DIST / "data.json").write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     (DIST / "chatgpt-data.json").write_text(json.dumps(chatgpt_data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
-    # The Memory page's two cards (since 2026-10-27): Claude and ChatGPT, side by side.
-    memory = {"built": built, "claude": summary(entries), "chatgpt": summary(chatgpt_entries, chatgpt_data["missing"])}
+    # The Eunomia page (since 2026-11-01): the last snapshot as it is, or no data file if there's none yet.
+    snapshot = json.loads(EUNOMIA_SNAPSHOT.read_text(encoding="utf-8")) if EUNOMIA_SNAPSHOT.exists() else None
+    if snapshot:
+        (DIST / "eunomia-data.json").write_text(json.dumps(snapshot, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    # The Memory page's cards: Claude and ChatGPT (since 2026-10-27), Eunomia (since 2026-11-01).
+    memory = {"built": built, "claude": summary(entries), "chatgpt": summary(chatgpt_entries, chatgpt_data["missing"]),
+              "eunomia": eunomia_summary(snapshot)}
     (DIST / "memory.json").write_text(json.dumps(memory, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     logged = [dict(e, page="claude") for e in entries] + [dict(e, page="chatgpt") for e in chatgpt_entries]
     to_do = todo.make(TODO, WORKSPACE, logged, lambda text: render(text, page="todo", base=CONTEXT), warn)
@@ -393,6 +412,10 @@ def build():
     print(f"{len(entries)} sessions → {DIST.relative_to(SITE)} (data.json {size / 1024:.0f} KB)")
     size = (DIST / "chatgpt-data.json").stat().st_size
     print(f"ChatGPT: {len(chatgpt_entries)} sessions → chatgpt-data.json ({size / 1024:.0f} KB)")
+    if snapshot:
+        print(f"Eunomia: snapshot of {snapshot['generated_at']} → eunomia-data.json ({len(snapshot['memories'])} memories)")
+    else:
+        print("Eunomia: no snapshot yet (run `python _workspace/eunomia/scripts/eunomia.py snapshot`)")
     print(f"To do: TODO.md → todo.json ({len(to_do['html']) / 1024:.0f} KB, git section written now)")
     print(f"Encyclopedia: {pages} pages → {DIST.relative_to(SITE)}/encyclopedia/")
     if confluence_pages:

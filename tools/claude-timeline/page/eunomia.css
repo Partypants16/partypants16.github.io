@@ -1,0 +1,204 @@
+/* The Eunomia page (eunomia.html): Eunomia's facts, grouped by project, then by subject.
+   Built on claude.css, which gives the layout, controls, Memory switch and status colours. */
+
+.eu-stale {
+  margin-top: .5rem;
+  padding: .6rem .9rem;
+  border-radius: 8px;
+  background: var(--st-testing-bg);
+  color: var(--st-testing);
+  font-size: .92rem;
+  font-weight: 600;
+}
+
+.eu-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  font-size: .95rem;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.eu-toggle input {
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: var(--link);
+}
+
+/* ---------- Projects and subjects ---------- */
+
+.eu-vault {
+  margin-top: 1.75rem;
+}
+
+.eu-vault-head {
+  display: flex;
+  align-items: baseline;
+  gap: .6rem;
+  font-size: 1.3rem;
+  margin: 0 0 .75rem;
+  padding-bottom: .4rem;
+  border-bottom: 2px solid var(--rail);
+}
+
+.eu-subject {
+  margin: 0 0 .9rem;
+}
+
+.eu-subject > summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .4rem;
+  padding: .35rem 0;
+  cursor: pointer;
+  font-weight: 700;
+  list-style: none;
+}
+
+.eu-subject > summary::-webkit-details-marker {
+  display: none;
+}
+
+/* a turning arrow in place of the default marker */
+.eu-subject > summary::before {
+  content: "";
+  width: .45rem;
+  height: .45rem;
+  margin-right: .2rem;
+  border-right: 2px solid var(--muted-text);
+  border-bottom: 2px solid var(--muted-text);
+  transform: rotate(-45deg);
+  transition: transform .15s;
+}
+
+.eu-subject[open] > summary::before {
+  transform: rotate(45deg);
+}
+
+.eu-subject > summary:focus-visible,
+.eu-more > summary:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.eu-subject-name {
+  font-size: 1.05rem;
+}
+
+.eu-facts {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: .6rem;
+  margin: .35rem 0 0 1.1rem;
+}
+
+/* ---------- One fact ---------- */
+
+.eu-fact {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: .85rem 1rem;
+}
+
+.eu-fact--historical {
+  opacity: .75;
+  border-style: dashed;
+}
+
+.eu-fact-text {
+  margin: 0 0 .5rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.eu-fact-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .35rem;
+  margin: 0;
+  font-size: .85rem;
+  color: var(--muted-text);
+}
+
+.eu-chip {
+  display: inline-block;
+  padding: .05rem .55rem;
+  border-radius: 999px;
+  font-size: .78rem;
+  font-weight: 700;
+  background: var(--chip-bg);
+  color: var(--muted-text);
+}
+
+.eu-chip--done { background: var(--st-done-bg); color: var(--st-done); }
+.eu-chip--testing { background: var(--st-testing-bg); color: var(--st-testing); }
+.eu-chip--open { background: var(--st-open-bg); color: var(--st-open); }
+.eu-chip--parked { background: var(--st-parked-bg); color: var(--st-parked); }
+
+.eu-seen {
+  font-variant-numeric: tabular-nums;
+}
+
+.eu-more {
+  margin-top: .5rem;
+  font-size: .9rem;
+}
+
+.eu-more > summary {
+  cursor: pointer;
+  color: var(--link);
+  font-weight: 600;
+  width: max-content;
+}
+
+.eu-more dl {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: .3rem .9rem;
+  margin: .6rem 0 0;
+}
+
+.eu-more dt {
+  color: var(--muted-text);
+  font-weight: 600;
+}
+
+.eu-more dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.eu-more code {
+  font-family: Consolas, ui-monospace, monospace;
+  font-size: .85em;
+  background: var(--code-bg);
+  padding: .05rem .3rem;
+  border-radius: 4px;
+}
+
+@media (max-width: 600px) {
+  .eu-facts {
+    margin-left: 0;
+  }
+
+  .eu-more dl {
+    grid-template-columns: minmax(0, 1fr);
+    gap: .1rem;
+  }
+
+  .eu-more dd {
+    margin-bottom: .45rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eu-subject > summary::before {
+    transition: none;
+  }
+}

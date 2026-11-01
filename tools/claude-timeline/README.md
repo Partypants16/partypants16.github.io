@@ -13,9 +13,10 @@ they never go on the public website. It's a section of **Projects** (since
 2026-10-21): the top bar's Projects link opens the public showcase
 (`projects.html`), and its **Memory** tab (since 2026-10-27) goes to
 `memory.html` on the website, which forwards to the box's Memory page: one
-card for this timeline and one for its ChatGPT twin (below), with their
-counts and newest session, from a small `memory.json` the build writes. Both
-timelines have a Claude | ChatGPT switch under the tabs, and the Memory tab
+card for this timeline, one for its ChatGPT twin (below) and, since
+2026-11-01, one for **Eunomia** (what the assistants remember, below), with
+their counts, from a small `memory.json` the build writes. All three pages
+have a Claude | ChatGPT | Eunomia switch under the tabs, and the Memory tab
 leads back to the cards. `claude.html` still forwards straight to this
 timeline, for old links. These pages have the same Showcase / Memory / To do
 / Encyclopedia tabs (styles from `projects.css`), so the way back is the Showcase tab. Off home Wi-Fi, the
@@ -84,10 +85,10 @@ never be committed.
 | `todo.py` | The To do page's text: `_workspace/context/TODO.md`, with section 1 written from what git says about every repo. |
 | `confluence.py` | The Encyclopedia's Confluence section: renders `Coles/Confluence/` into `dist/encyclopedia/confluence/` (pages by content_id, `tree.json` per space, `titles.json`, search shards, `build-hash.txt`), cached in `.cache/confluence/`. |
 | `encyclopedia.py` | The Encyclopedia: renders `_workspace/encyclopedia/**/*.md` into `dist/encyclopedia/` (pages, `search.json`, `pygments.css`, Mermaid). |
-| `page/` | The pages: `memory.html`, `memory.js`, `memory.css` (Memory: the two cards); `index.html`, `claude.js`, `claude.css` (Claude; `chatgpt.html` is the ChatGPT page, the same script and styles) and `todo.html`, `todo.js`, `todo.css` (To do). `handoff.js` copies in the settings the website passes along, on all of them. |
+| `page/` | The pages: `memory.html`, `memory.js`, `memory.css` (Memory: the three cards); `eunomia.html`, `eunomia.js`, `eunomia.css` (Eunomia, on top of `claude.css`); `index.html`, `claude.js`, `claude.css` (Claude; `chatgpt.html` is the ChatGPT page, the same script and styles) and `todo.html`, `todo.js`, `todo.css` (To do). `handoff.js` copies in the settings the website passes along, on all of them. |
 | `page/encyclopedia/` | The Encyclopedia's template (`_template.html`, filled per page), `encyclopedia.css` and `encyclopedia.js` (search, sidebar on a phone, copy buttons, Mermaid). |
 | `vendor/` | `mermaid.min.js` (3.5 MB), fetched once by the build. Git-ignored. |
-| `.cache/` | The rendered Confluence section from the last build, reused while nothing changed. Git-ignored (Coles content). |
+| `.cache/` | The rendered Confluence section from the last build, reused while nothing changed, and `eunomia.json`, the Eunomia page's snapshot. Git-ignored (Coles content, memories). |
 | `deploy.py` | Runs `build.py`, then uploads `dist/` to `~/claude-timeline/` on the box and restarts the container. |
 | `update_site.py`, `Caddyfile`, `docker-compose.yml` | The box side: container `claude-timeline` (`caddy:2-alpine`, port 8120 → 80, `restart: unless-stopped`), same setup as Apex Dash. |
 | `dist/` | The build. **Git-ignored and must never be committed**: it's the full logs, the ChatGPT conversations and the to-do list, and this repo is public. |
@@ -103,6 +104,7 @@ python tools/claude-timeline/deploy.py          # build + deploy (asks for the b
 python tools/claude-timeline/build.py           # build only, to look at dist/ locally
 python tools/claude-timeline/build.py --strict  # warnings stop the build
 python tools/claude-timeline/import_chatgpt.py  # bring in new Codex chats (see below)
+python ../../_workspace/eunomia/scripts/eunomia.py snapshot   # refresh the Eunomia page's data (see below)
 python -m unittest discover -s tools/claude-timeline/tests
 ```
 
@@ -149,6 +151,33 @@ The older logs also keep `project`, `participants` and `status_note` in the
 block. Those aren't shown on the card. A log without a block (or with a value
 that isn't on the lists) still shows up, using its heading, with a
 "No summary yet" badge, and `build.py` prints a warning for it.
+
+## The Eunomia page
+
+`eunomia.html` (since 2026-11-01) shows what Claude and Codex have saved in
+Eunomia, the shared memory on the laptop (`parth_project/_workspace/eunomia/`).
+Eunomia only listens on the laptop, so the page reads a **snapshot**:
+`python _workspace/eunomia/scripts/eunomia.py snapshot` (from the workspace
+root, with Eunomia running) writes `.cache/eunomia.json`, and the next build
+copies it to `dist/eunomia-data.json`. The page says when it was taken and
+warns once it's over 7 days old. Nothing refreshes it on a timer; take a new
+one, then deploy.
+
+- **What's in it:** every memory in the 16 vaults listed in
+  `workspace-map.yaml` (never Personal or the `zz-backup-canary` test vault),
+  read entity by entity (not ranked recall). A memory that names a credential
+  *and* a weakness (leaked, weak, exposed and the like) is left out, and only its
+  count is shown.
+- **Who saved it and its status** come from the tag at the start of each
+  memory (`[src: … | seen: … | by: … | status: …]`); Eunomia's own status
+  field is unused here. Historical facts are hidden unless "Show historical
+  facts" is ticked. A source that's a session log links to its timeline card.
+- **No map:** Eunomia has no links between subjects yet (every vault's graph
+  has 0 edges, checked 2026-11-01), so facts are grouped by project, then by
+  subject. See `EUNOMIA_MEMORY_VISUALISER.md` at the workspace root.
+- If the snapshot fails (Eunomia down, an API error, no memories), it exits
+  with an error and the last good file stays. Without any snapshot the build
+  still works and the card says "No snapshot yet".
 
 ## The ChatGPT page
 

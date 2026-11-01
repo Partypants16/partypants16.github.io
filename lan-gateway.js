@@ -1,5 +1,6 @@
 // The gateway for pages that only live on the home server: claude.html (the
-// Claude page), chatgpt.html (ChatGPT), todo.html (To do) and encyclopedia.html.
+// Claude page), chatgpt.html (ChatGPT), eunomia.html (Eunomia), todo.html (To do)
+// and encyclopedia.html.
 // All are on the remote box (LAN only, plain HTTP), so these pages only send
 // visitors there. The address is in
 // <main data-lan-url="…">.

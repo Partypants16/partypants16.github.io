@@ -452,6 +452,7 @@ mark {
 
 .memory-switch {
   display: flex;
+  flex-direction: row; /* movies.css stacks every nav on phones; this one stays a row */
   justify-content: center;
   gap: .2rem;
   width: max-content;

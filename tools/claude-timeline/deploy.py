@@ -121,6 +121,19 @@ for attempt in range(10):  # Caddy takes a moment to start after the recreate
             if live != local:
                 sys.exit("memory.json on the box (%d bytes) isn't the one just built (%d bytes)" % (len(live), len(local)))
             print("live:", URL + "memory.html", memory_page, "· memory.json", len(live), "bytes, matches the build")
+        # The Eunomia page's snapshot, when the build had one (it's optional: made on the laptop).
+        built_eunomia = os.path.join(DIST, "eunomia-data.json")
+        if os.path.isfile(built_eunomia):
+            request = urllib.request.Request(URL + "eunomia-data.json", headers={"Accept-Encoding": "identity"})
+            with urllib.request.urlopen(request, timeout=15) as response:
+                live = response.read()
+            with open(built_eunomia, "rb") as built:
+                local = built.read()
+            if live != local:
+                sys.exit("eunomia-data.json on the box (%d bytes) isn't the one just built (%d bytes)" % (len(live), len(local)))
+            snapshot = json.loads(live)
+            print("live:", URL + "eunomia.html", "· eunomia-data.json", len(snapshot["memories"]), "memories, snapshot of",
+                  snapshot["generated_at"] + ", matches the build")
         if local_hash:
             live_hash = confluence_hash(lambda: urllib.request.urlopen(URL + CONFLUENCE + "/build-hash.txt", timeout=15).read().decode())
             if live_hash != local_hash:

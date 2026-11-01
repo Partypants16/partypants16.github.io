@@ -1,6 +1,8 @@
 // The Memory page: the two session timelines, Claude (./) and ChatGPT
-// (chatgpt.html), as one card each. memory.json (made by build.py) has the
-// numbers for the cards: sessions, days, what's waiting, and the newest one.
+// (chatgpt.html), as one card each, plus Eunomia (eunomia.html), what they
+// remember. memory.json (made by build.py) has the numbers for the cards:
+// sessions, days, what's waiting, and the newest one; for Eunomia, facts,
+// projects and when its snapshot was taken.
 // The cards are plain links, so they work even if that file doesn't load.
 
 (function () {
@@ -27,7 +29,27 @@
     list.appendChild(item);
   }
 
+  function fillEunomia(card, info) {
+    const latest = card.querySelector(".memory-latest");
+    if (!info) {
+      latest.textContent = "No snapshot yet";
+      latest.hidden = false;
+      return;
+    }
+    const counts = card.querySelector(".feature-counts");
+    counts.textContent = "";
+    count(counts, info.memories, info.memories === 1 ? "Memory" : "Memories");
+    count(counts, info.projects, info.projects === 1 ? "Project" : "Projects");
+    counts.hidden = false;
+    const when = el("span", "", SHORT.format(new Date(info.refreshed)));
+    when.setAttribute("translate", "no");
+    latest.textContent = "";
+    latest.append(el("span", "memory-latest-label", "Last refreshed"), " ", when);
+    latest.hidden = false;
+  }
+
   function fill(card, info) {
+    if (card.dataset.memory === "eunomia") return fillEunomia(card, info);
     if (!info || !info.sessions) return;
     const counts = card.querySelector(".feature-counts");
     counts.textContent = "";
