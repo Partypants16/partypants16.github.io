@@ -628,7 +628,7 @@ const PROJECTS_DATA = {
             { text: "Railway, with a server in front", chosen: true, note: "The server talks to the weather service, so it works." }
           ],
           why: "My notes put it down to browser security rules and the weather service's free plan, which doesn't allow calls straight from a web page. The fix is for the page to ask my server, and the server to ask the weather service.",
-          outcome: "The web version has kept its key on the server ever since. This version stayed on its own branch, the one the hosted site ran from, because what came next was mostly Android.",
+          outcome: "This version stayed on its own branch, the one the hosted site ran from, because what came next was mostly Android.",
           lesson: "Where the code runs decides what it's allowed to do.",
           sources: [
             { type: "git", ref: "595dcc9", label: "Web page branch" },
@@ -643,7 +643,7 @@ const PROJECTS_DATA = {
           title: "Two apps, and a real wardrobe",
           summary: "The project was split into a web version and an Android version, and outfits started coming from a SQLite database of 25 clothes.",
           context: "Each item has a category (top, bottom, outerwear, footwear or accessory), the temperature range it suits, and whether it works in rain, wind and humidity. Above 8 m/s counts as windy, and above 70% as humid.",
-          outcome: "Items made for rain or wind come first when it's raining or windy, then one is picked at random so the outfit changes. If the weather service is down or there's no key, it shows sample weather marked as such, instead of an error. That was the brief's fallback.",
+          outcome: "Items made for rain or wind come first when it's raining or windy, then one is picked at random so the outfit changes. If the weather service is down or isn't set up, it shows sample weather marked as such, instead of an error. That was the brief's fallback.",
           sources: [
             { type: "git", ref: "ee21727", label: "Web and Android split, wardrobe database" },
             { type: "note", ref: "SkyWardrobe-Web/README.md", label: "Web README" }
@@ -662,7 +662,6 @@ const PROJECTS_DATA = {
             { text: "Do it all on the phone", chosen: true, note: "The wardrobe ships as a file inside the app, and the phone calls the weather and radar services itself." }
           ],
           why: "So the app doesn't depend on a server of any kind. A setting to point it at one is still there, but it's left blank.",
-          outcome: "The catch is written up in its README: an app with no server can't keep its weather key secret, so it's meant to use a key of its own, separate from the server's.",
           sources: [
             { type: "git", ref: "1edf346", label: "Android version" },
             { type: "git", ref: "edb7226", label: "Android gets rain, and its README" },
@@ -675,7 +674,7 @@ const PROJECTS_DATA = {
           type: "milestone",
           title: "Rain and radar",
           summary: "A live rain radar map, a rain graph, when the next rain is due, an hourly timeline and a window for being outside. The outfit advice learned about rain too: umbrella, jacket, waterproof shoes.",
-          context: "The radar comes from RainViewer, which needs no key, drawn on a Leaflet map. Everything else comes from a forecast with only one reading every three hours.",
+          context: "The radar comes from RainViewer, drawn on a Leaflet map. Everything else comes from a forecast with only one reading every three hours.",
           why: "So it never claims more than the data has. It never says \"rain in 45 minutes\", only the time rain becomes likely, and every rain section looks at the same 24 hours. When RainViewer has no forecast frames, the radar just shows the past ones. There are no weather alerts and no UV index, because neither is available, and neither is made up.",
           outcome: "The radar's frame logic was split out so it could be tested without a network. The same day, the Android app got all of it.",
           lesson: "False precision is still false. Three-hourly data can't tell you the minute.",
@@ -691,7 +690,7 @@ const PROJECTS_DATA = {
           type: "direction",
           title: "A Docker version for Linux",
           summary: "A third copy of the app, packaged to run on a Linux machine with one command.",
-          context: "It sets itself up. On first start it creates and fills the wardrobe database, keeps it in a volume so it survives restarts, and checks its own health every 30 seconds. Without a weather key it falls back to sample weather.",
+          context: "It sets itself up. On first start it creates and fills the wardrobe database, keeps it in a volume so it survives restarts, and checks its own health every 30 seconds. If it can't get the weather, it falls back to sample weather.",
           sources: [
             { type: "git", ref: "25ed110", label: "Docker version for Linux" },
             { type: "note", ref: "SkyWardrobe-Docker/README.md", label: "Docker README" }
