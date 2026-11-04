@@ -1,0 +1,43 @@
+/* Pixel-art sprite strips: a few effects from pixelfx (MIT, https://github.com/patch-gg/pixelfx), pre-rendered
+   by tools/pixelfx_strips.mjs into one-row PNGs in images/pixelfx/ and stepped through here (no script).
+   Each strip has --n frames of --w x --h sprite pixels, shown --k times bigger, played in --t.
+   A strip is hidden until something plays it. Transitions set to Off, or reduce motion, hide them all. */
+
+.pfx {
+  --k: 1;
+  position: absolute;
+  width: calc(var(--w) * var(--k) * 1px);
+  height: calc(var(--h) * var(--k) * 1px);
+  background-repeat: no-repeat;
+  background-size: calc(var(--w) * var(--n) * var(--k) * 1px) 100%;
+  image-rendering: pixelated;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+@keyframes pfx-play {
+  from { background-position: 0 0; visibility: visible; }
+  to { background-position: calc(var(--w) * var(--n) * var(--k) * -1px) 0; visibility: visible; }
+}
+
+.pfx--loop { animation: pfx-play var(--t) steps(var(--n)) infinite; }
+
+.pfx--sparkle { background-image: url("images/pixelfx/sparkle.png"); --w: 112; --h: 108; --n: 42; --t: 1.4s; }
+.pfx--go { background-image: url("images/pixelfx/go.png"); --w: 152; --h: 136; --n: 51; --t: 2.55s; }
+.pfx--ghost { background-image: url("images/pixelfx/ghost.png"); --w: 96; --h: 100; --n: 48; --t: 2.4s; }
+
+/* Games page: a gold sparkle bursts over a game's icon as you point at its card */
+.game-card .pfx--sparkle { left: 50%; top: 30px; margin-left: -56px; }
+.game-card:hover .pfx--sparkle,
+.game-card:focus-visible .pfx--sparkle { animation: pfx-play var(--t) steps(var(--n)) 1; }
+
+/* A game's story page: GO! bursts out of the top of the Play button (above it, so the label stays readable) */
+.pj-btn--play { position: relative; }
+.pj-btn--play .pfx--go { left: 50%; top: 0; margin: -104px 0 0 -76px; z-index: 2; }
+.pj-btn--play:hover .pfx--go,
+.pj-btn--play:focus-visible .pfx--go { animation: pfx-play var(--t) steps(var(--n)) 1; }
+
+html[data-motion="off"] .pfx { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .pfx { display: none; }
+}

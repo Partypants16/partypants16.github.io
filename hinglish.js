@@ -141,6 +141,13 @@ const HINGLISH = {
     "Gaming Platforms": "Mere Gaming Platforms",
     "My Games": "Mere Games",
 
+    // ---------- 404 page ----------
+    "Page not found | Parth": "Page nahi mila | Parth",
+    "Page not found": "Page nahi mila",
+    "Nothing lives here except a ghost. The link might be old, or the page has moved.": "Yahan ek bhoot ke alawa koi nahi rehta. Link purana ho sakta hai, ya page kahin aur chala gaya hai.",
+    "Back to the home page": "Home page par wapas jao",
+    "See my projects": "Mere projects dekho",
+
     // ---------- Media (media.html: Movies and Music as two cards) ----------
     "Media | Parth": "Media | Parth",
     "What I watch and what I listen to, each with its own page.": "Main kya dekhta hoon aur kya sunta hoon, dono ka apna page.",

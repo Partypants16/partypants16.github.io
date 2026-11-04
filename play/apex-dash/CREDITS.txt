@@ -28,6 +28,7 @@ in the textures; no font files are included.
 |---|---|---|---|
 | Car Kit (the 10 car models and their colour map, repainted per driver) | Kenney (kenney.nl) | https://kenney.nl/assets/car-kit | CC0 1.0 (public domain) |
 | Exo 2 font (menus and HUD) | Natanael Gama | https://fonts.google.com/specimen/Exo+2, bundled via the `@fontsource-variable/exo-2` npm package | SIL Open Font License 1.1 |
+| Pixel-art confetti (results) and slash wipe (between the menus and a race): two pixelfx effects, pre-rendered to sprite sheets in `src/ui/pixelfx/` by `tools/pixelfx_sheets.mjs` (no pixelfx code ships) | Patch; parts adapted from Hugo Duprez (Sprite Fusion) | https://github.com/patch-gg/pixelfx, commit `a841596` | MIT (the notice ships in the build, inside `sheets.json`). Its Patch Pixel font is not MIT and is not used |
 
 ## Code libraries shipped in the build
 

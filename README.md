@@ -14,6 +14,7 @@ A hand-built static site with plain HTML, CSS and JavaScript. It has no framewor
 | **Media** (`media.html`) | Movies (recommendation lists plus franchise trackers like Marvel) and Music (coming soon). |
 | **Projects** (`projects.html`) | A showcase of things I've built. Each one has a story page (`project.html?p=<slug>`) covering the journey, the big decisions, a timeline, what didn't work and what I learned. |
 | **Profile** (`profile.html`) | About me. Click the **PS** logo in the top bar to get there. |
+| **Page not found** (`404.html`) | What GitHub Pages shows for an address that doesn't exist: a pixel-art ghost and links home. |
 
 Some tabs under Projects (Memory, To do, Encyclopedia) only work on my home network. The pages in this repo just forward you there.
 
@@ -23,6 +24,7 @@ Some tabs under Projects (Memory, To do, Encyclopedia) only work on my home netw
 - **Hinglish mode**: the whole site can switch between English and Hinglish.
 - **Page transitions** in four levels: Off, Subtle (default), Full and Extreme.
 - Works on phones down to 360px wide.
+- **Pixel-art touches** (`pixelfx.css`): a gold sparkle when you point at one of my games on the Games page, a GO! burst from a game's Play button, and the 404 ghost. They're one-row PNG strips in `images/pixelfx/`, pre-rendered from [pixelfx](https://github.com/patch-gg/pixelfx) (MIT, licence in that folder) by `tools/pixelfx_strips.mjs`, and played by CSS alone. Transitions set to Off hide them.
 
 ## Running it locally
 
@@ -45,6 +47,7 @@ Then go to <http://localhost:8000>.
 - `tools/` holds helper scripts:
   - `build_franchise_data.py` regenerates `franchise-data.js` (don't edit that file by hand).
   - `build_wallpaper_images.py` draws the images some wallpapers use.
+  - `pixelfx_strips.mjs` re-renders the pixel-art strips in `images/pixelfx/` from a pixelfx checkout (it says how).
   - [`service-status/`](tools/service-status/README.md) is the checker behind the Online/Offline dots.
   - [`claude-timeline/`](tools/claude-timeline/README.md) builds the LAN-only Memory, To do and Encyclopedia pages.
 

@@ -905,6 +905,9 @@
     if (p.showcase.play) {
       // a game anyone can play gets Steam's green "Play" button first
       const play = externalLink(button("pj-btn--play", "resume", p.showcase.play.label || "Play in your browser"), p.showcase.play.href);
+      const go = el("span", "pfx pfx--go"); // GO! bursts out of it on hover (pixelfx.css)
+      go.setAttribute("aria-hidden", "true");
+      play.append(go);
       row.prepend(play);
     }
     box.append(text, lifecycle(p), row);
