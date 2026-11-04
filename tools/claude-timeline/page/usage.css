@@ -1,0 +1,306 @@
+/* The Usage tab (since 2026-11-04): Claude Code use per day, per person, from usage-data.json.
+   Series colours are the dataviz reference palette's first three slots (validated together,
+   light and dark): Parth blue, Mridul orange, Other (test runs) aqua. */
+
+.usage-root {
+  --series-parth: #2a78d6;
+  --series-mridul: #eb6834;
+  --series-other: #1baf7a;
+  --grid: #e8e8e5;
+  --axis: #8a8a86;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+:root[data-theme="dark"] .usage-root {
+  --series-parth: #3987e5;
+  --series-mridul: #d95926;
+  --series-other: #199e70;
+  --grid: #2c2c2b;
+  --axis: #77766f;
+}
+
+.usage-message,
+.usage-meta {
+  max-width: 1000px;
+  margin: 1rem auto;
+  color: var(--muted-text);
+  text-align: center;
+}
+
+/* Filters: one row above the charts. A <nav>-free group, so movies.css's phone rules don't apply. */
+.usage-filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .6rem;
+  margin-bottom: 1.2rem;
+}
+
+.usage-segment {
+  display: inline-flex;
+  padding: .2rem;
+  border-radius: 999px;
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+}
+
+.usage-segment button {
+  padding: .3rem .9rem;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--muted-text);
+  font: inherit;
+  font-size: .88rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.usage-segment button[aria-pressed="true"] {
+  background: var(--accent, #1464c0);
+  color: #fff;
+}
+
+.usage-segment button:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+}
+
+/* Stat tiles */
+.usage-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: .8rem;
+  margin-bottom: 1rem;
+}
+
+.usage-tile {
+  padding: .9rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+}
+
+.usage-tile .label {
+  display: block;
+  color: var(--muted-text);
+  font-size: .8rem;
+  font-weight: 700;
+}
+
+.usage-tile .value {
+  display: block;
+  margin-top: .2rem;
+  color: var(--text);
+  font-size: 1.7rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.usage-tile .sub {
+  display: block;
+  color: var(--muted-text);
+  font-size: .8rem;
+}
+
+/* Cards */
+.usage-card,
+.usage-notes {
+  margin-bottom: 1rem;
+  padding: 1rem 1.1rem;
+  border-radius: 12px;
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+}
+
+.usage-card h2,
+.usage-notes h2 {
+  margin: 0 0 .6rem;
+  font-size: 1.05rem;
+}
+
+.usage-pair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 0 1rem;
+}
+
+.usage-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .3rem 1rem;
+  margin-bottom: .4rem;
+  color: var(--muted-text);
+  font-size: .85rem;
+}
+
+.usage-legend span::before {
+  content: "";
+  display: inline-block;
+  width: .7rem;
+  height: .7rem;
+  margin-right: .35rem;
+  border-radius: 3px;
+  background: var(--swatch);
+  vertical-align: -1px;
+}
+
+/* The daily bar chart (SVG drawn by usage.js) */
+.usage-chart {
+  position: relative;
+}
+
+.usage-chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.usage-chart .grid line {
+  stroke: var(--grid);
+  stroke-width: 1;
+}
+
+.usage-chart .tick {
+  fill: var(--muted-text);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.usage-chart .axis {
+  stroke: var(--axis);
+  stroke-width: 1;
+}
+
+.usage-chart .hit {
+  fill: transparent;
+  cursor: default;
+}
+
+.usage-chart .hit:hover,
+.usage-chart .hit.active {
+  fill: var(--text);
+  fill-opacity: .06;
+}
+
+.usage-tip {
+  position: absolute;
+  z-index: 2;
+  min-width: 150px;
+  padding: .5rem .65rem;
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .15);
+  color: var(--text);
+  font-size: .82rem;
+  pointer-events: none;
+}
+
+.usage-tip b {
+  display: block;
+  margin-bottom: .2rem;
+}
+
+.usage-tip .row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.usage-tip .row span:first-child::before {
+  content: "";
+  display: inline-block;
+  width: .55rem;
+  height: .55rem;
+  margin-right: .3rem;
+  border-radius: 2px;
+  background: var(--swatch, transparent);
+}
+
+/* Horizontal bars: projects and models */
+.usage-bars {
+  display: grid;
+  gap: .55rem;
+}
+
+.usage-bar .top {
+  display: flex;
+  justify-content: space-between;
+  gap: .6rem;
+  font-size: .88rem;
+}
+
+.usage-bar .top span:last-child {
+  color: var(--muted-text);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.usage-bar .track {
+  height: 10px;
+  margin-top: .2rem;
+  border-radius: 4px;
+  background: var(--grid);
+  overflow: hidden;
+}
+
+.usage-bar .fill {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--swatch);
+}
+
+/* Tables */
+.usage-table-wrap {
+  overflow-x: auto;
+}
+
+.usage-root table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .86rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.usage-root th,
+.usage-root td {
+  padding: .35rem .5rem;
+  border-bottom: 1px solid var(--card-border);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.usage-root th:first-child,
+.usage-root td:first-child {
+  text-align: left;
+}
+
+.usage-root th {
+  color: var(--muted-text);
+  font-size: .78rem;
+}
+
+.usage-table-toggle {
+  margin-top: .6rem;
+}
+
+.usage-table-toggle summary {
+  color: var(--link);
+  font-size: .88rem;
+  cursor: pointer;
+}
+
+.usage-notes ul {
+  margin: 0;
+  padding-left: 1.2rem;
+  color: var(--muted-text);
+  font-size: .9rem;
+}
+
+.usage-notes li + li {
+  margin-top: .35rem;
+}

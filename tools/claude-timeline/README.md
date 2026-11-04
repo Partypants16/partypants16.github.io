@@ -245,6 +245,29 @@ importer at every session close (step 6 of the root `CLAUDE.md` routine).
 Conversation text is rendered from Markdown with raw HTML turned off (so a
 `<script>` in a chat shows as text), with the same link rules as the logs.
 
+## The Usage page
+
+`usage.html` (since 2026-11-04, the fifth Projects tab; gateway `usage.html` on the public site)
+shows how much Claude Code gets used per day, with a **Parth | Mridul | Both** switch, 30 / 90
+days / everything, cost or tokens, stat tiles, a stacked daily bar chart (hover for the day, or
+"Show as a table"), and bars by project and by model, plus a table by month.
+
+- **Where the numbers come from:** `usage.py` runs ccusage (pinned in the script, through `npx`)
+  for daily usage per chat folder and merges it into a ledger outside this repo,
+  `parth_project/_workspace/context/usage/daily.json`. Claude Code deletes a chat 30 days after
+  it was last used, so the ledger is what keeps older days: a day/folder row is only replaced by
+  a bigger total. `build.py` ships it as `usage-data.json` (no file, a "no record yet" note).
+- **Who's who:** by the folder a chat ran in, the same rule as `import_mridul.py`: inside
+  parth_project is Parth's, a temporary folder is "Other" (test runs), anything else is Mridul's
+  (his folder names become words: `family-tree` is "Family Tree"). One Windows account and one
+  Claude login, so it's by folder, not by person.
+- **When it runs:** at every `/close-session` (its `imports` step), and from a weekly Windows task
+  ("parth_project usage ledger", Sundays 7pm, catches up if the laptop was off) that runs
+  `_workspace/context/usage/run_weekly.cmd` and logs to `usage.log` next to it. The task only
+  updates the ledger; the page shows it after the next deploy.
+- **Costs** are ccusage's API-price estimates, not a bill. Colours are the dataviz reference
+  palette's first three slots (validated together, light and dark).
+
 ## How the pieces talk
 
 - The website and the box are different sites, so settings saved in the

@@ -54,6 +54,7 @@ import todo  # the To do page's text (todo.py, next to this file)
 import encyclopedia  # the Encyclopedia tab (encyclopedia.py, next to this file)
 import confluence  # its Coles Confluence section (confluence.py, next to this file)
 import chatgpt  # the ChatGPT page's extra fields (chatgpt.py, next to this file)
+import usage  # the Usage tab's ledger (usage.py, next to this file)
 
 HERE = Path(__file__).resolve().parent
 SITE = HERE.parent.parent                     # my-website/
@@ -423,6 +424,10 @@ def build():
     logged = [dict(e, page="claude") for e in entries] + [dict(e, page="chatgpt") for e in chatgpt_entries]
     to_do = todo.make(TODO, WORKSPACE, logged, lambda text: render(text, page="todo", base=CONTEXT), warn)
     (DIST / "todo.json").write_text(json.dumps(to_do, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    # The Usage tab (since 2026-11-04): the ledger usage.py keeps, or no data file if there's none yet.
+    usage_data = usage.page_data()
+    if usage_data:
+        (DIST / "usage-data.json").write_text(json.dumps(usage_data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
     spaces = [(key, name) for key, name, _ in confluence.spaces(CONFLUENCE)]
     pages = encyclopedia.build(ENCYCLOPEDIA, DIST / "encyclopedia", WORKSPACE, CONTEXT, warn, spaces)
@@ -439,6 +444,7 @@ def build():
     else:
         print("Eunomia: no snapshot yet (run `python _workspace/eunomia/scripts/eunomia.py snapshot`)")
     print(f"To do: TODO.md → todo.json ({len(to_do['html']) / 1024:.0f} KB, git section written now)")
+    print(f"Usage: {len(usage_data['rows'])} day/folder rows → usage-data.json" if usage_data else "Usage: no ledger yet (run usage.py)")
     print(f"Encyclopedia: {pages} pages → {DIST.relative_to(SITE)}/encyclopedia/")
     if confluence_pages:
         print(f"Confluence: {confluence_pages} pages in {len(spaces)} spaces → {DIST.relative_to(SITE)}/encyclopedia/confluence/")

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <script src="handoff.js"></script>
+  <script src="hinglish.js"></script>
+  <script src="i18n.js"></script>
+  <script src="settings.js"></script>
+  <script src="motion.js"></script>
+  <title>Usage | Parth</title>
+  <meta name="description" content="How much Claude Code Parth and Mridul use, day by day, kept before old chats are deleted. Only on the home server.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+  <link rel="stylesheet" href="movies.css">
+  <link rel="stylesheet" href="projects.css">
+  <link rel="stylesheet" href="settings.css">
+  <link rel="stylesheet" href="motion.css">
+  <link rel="stylesheet" href="person.css">
+  <link rel="stylesheet" href="usage.css">
+</head>
+
+<body>
+  <header>
+    <nav>
+      <p class="logo"><a href="https://partypants16.github.io/profile.html" title="Profile">PS</a></p>
+      <ul>
+        <li><a href="https://partypants16.github.io/index.html">Home</a></li>
+        <li><a href="https://partypants16.github.io/wallpaper.html">Wallpaper</a></li>
+        <li><a href="https://partypants16.github.io/gaming.html">Games</a></li>
+        <li><a href="https://partypants16.github.io/media.html">Media</a></li>
+        <li><a href="https://partypants16.github.io/projects.html" aria-current="page">Projects</a></li>
+      </ul>
+      <button class="settings-toggle" id="settingsToggle" type="button" aria-label="Settings" title="Settings" aria-haspopup="dialog" aria-expanded="false" aria-controls="settingsPanel"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="3.34 3.34"/><circle cx="12" cy="12" r="5.2" fill="none" stroke="currentColor" stroke-width="4.4"/></svg></button>
+    </nav>
+  </header>
+
+  <main class="projects usage">
+    <nav class="section-tabs" aria-label="Projects sections">
+      <a href="https://partypants16.github.io/projects.html">Showcase</a>
+      <a href="memory.html">Memory</a>
+      <a href="todo.html">To do</a>
+      <a href="encyclopedia/">Encyclopedia</a>
+      <a href="usage.html" aria-current="page">Usage</a>
+    </nav>
+    <nav class="person-switch" aria-label="Whose usage">
+      <span class="person-switch-label">Person</span>
+      <a href="usage.html" data-person="parth" translate="no">Parth</a>
+      <a href="usage.html?person=mridul" data-person="mridul" translate="no">Mridul</a>
+      <a href="usage.html?person=both" data-person="both">Both</a>
+    </nav>
+
+    <section class="lists-intro">
+      <h1>Usage</h1>
+      <p>How much Claude Code gets used, day by day. Claude deletes chats after 30 days, so the numbers are saved before that happens.</p>
+    </section>
+
+    <p class="usage-message" id="message" hidden></p>
+
+    <div class="usage-root" id="usage" hidden>
+      <div class="usage-filters">
+        <div class="usage-segment" role="group" aria-label="Time range">
+          <button type="button" data-range="30">Last 30 days</button>
+          <button type="button" data-range="90">Last 90 days</button>
+          <button type="button" data-range="all">Everything</button>
+        </div>
+        <div class="usage-segment" role="group" aria-label="Measure">
+          <button type="button" data-measure="cost">Cost</button>
+          <button type="button" data-measure="tokens">Tokens</button>
+        </div>
+      </div>
+
+      <div class="usage-tiles" id="tiles"></div>
+
+      <section class="usage-card">
+        <h2 id="dailyTitle">Per day</h2>
+        <div class="usage-legend" id="legend"></div>
+        <div class="usage-chart" id="daily"></div>
+        <details class="usage-table-toggle">
+          <summary>Show as a table</summary>
+          <div class="usage-table-wrap"><table id="dailyTable"></table></div>
+        </details>
+      </section>
+
+      <div class="usage-pair">
+        <section class="usage-card">
+          <h2>By project</h2>
+          <div id="projects"></div>
+        </section>
+        <section class="usage-card">
+          <h2>By model</h2>
+          <div id="models"></div>
+        </section>
+      </div>
+
+      <section class="usage-card">
+        <h2>By month (everything)</h2>
+        <div class="usage-table-wrap"><table id="months"></table></div>
+      </section>
+
+      <section class="usage-notes">
+        <h2>Reading the numbers</h2>
+        <ul>
+          <li><b>Cost</b> is what the same use would cost at Claude's API prices, worked out by ccusage. It isn't a bill: the subscription is a flat price.</li>
+          <li><b>Most tokens are cache reads</b>: Claude re-reads the conversation so far on every turn, at about a tenth of the normal price. That's why the token totals look huge next to the cost.</li>
+          <li><b>Who's who</b> is by the folder a chat ran in: chats in parth_project are Parth's, everything else is Mridul's, and test runs in temporary folders are "Other". Both use one laptop account, so it's by folder, not by person.</li>
+          <li>The record starts with the oldest chats still on the laptop when it began (4 Nov 2026). Anything older had already been deleted.</li>
+        </ul>
+      </section>
+    </div>
+
+    <p class="usage-meta" id="meta"></p>
+  </main>
+
+  <footer>
+    <p>&copy; <span id="year"></span> Parth</p>
+  </footer>
+
+  <script src="usage.js"></script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+
+</html>
