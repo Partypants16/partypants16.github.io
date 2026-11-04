@@ -1415,6 +1415,13 @@ const PROJECTS_DATA = {
       commits: 3,
       sessions: 4,
 
+      photos: [
+        { src: "images/projects/sonic-laptop/bezel-off.jpg", alt: "The Dell Latitude E7240 open on the carpet with its screen off and the plastic bezel around the screen removed, showing the panel's edges, hinges and cables.", caption: "29 Sep: the Latitude E7240 with its screen bezel off. It's staying off for good." },
+        { src: "images/projects/sonic-laptop/lid-and-insides.jpg", alt: "The laptop standing on its edge, half open: the grey lid covered in stickers on one side, and the open underside with the fan, RAM and SSD showing on the other.", caption: "29 Sep: the stickered lid, where the small display will go, next to the open underside." },
+        { src: "images/projects/sonic-laptop/underside.jpg", alt: "The laptop's underside with the bottom cover removed: fan and heat pipe, two RAM sticks, the SSD, the Wi-Fi card and the empty battery bay.", caption: "29 Sep: no bottom cover. The underglow will light these insides from below, through a clear acrylic plate." },
+        { src: "images/projects/sonic-laptop/right-side.jpg", alt: "The laptop open, seen side-on from the right: SD card slot, headphone jack, a USB port and a Mini DisplayPort.", caption: "29 Sep: the right side, with the SD slot, headphone jack, USB and Mini DisplayPort." }
+      ],
+
       evolution: [
         { label: "The idea", text: "A cheap colour screen taped to the back of an old laptop's lid, playing loops." },
         { label: "First build", text: "The laptop itself: key-click sounds, a screen that never sleeps and Sonic games, all set up over SSH." },
