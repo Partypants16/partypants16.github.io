@@ -35,47 +35,62 @@
   <!-- Everything below is drawn by music.js from music-data.js
        (made from the Spotify export by tools/build_music_data.py). -->
   <main class="mu">
-    <a class="back-link" href="media.html">&larr; Media</a>
+    <a class="back-link mu-back" href="media.html">&larr; Media</a>
 
-    <section class="lists-intro">
-      <h1>Music</h1>
-      <p>Everything I've played on Spotify, turned into charts.</p>
-      <p class="mu-range" id="mu-range"></p>
+    <section class="mu-hero">
+      <div class="mu-hero-text">
+        <span class="mu-eyebrow"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1v-6h3zM3 19a2 2 0 0 0 2 2h1v-6H3z"/></svg><span>Spotify listening history</span></span>
+        <h1>Music</h1>
+        <p class="mu-hero-lead">Everything I've played on Spotify, turned into charts.</p>
+        <p class="mu-range" id="mu-range"></p>
+      </div>
+      <div class="mu-hero-stat">
+        <span class="mu-hero-label" id="mu-hero-label"></span>
+        <span class="mu-hero-number" id="mu-hero-hours">0</span>
+        <span class="mu-hero-unit">hours listened</span>
+        <span class="mu-hero-note" id="mu-hero-note"></span>
+        <ul class="mu-hero-chips" id="mu-hero-chips"></ul>
+      </div>
+      <div class="mu-eq" id="mu-eq" aria-hidden="true"></div>
     </section>
 
     <p class="mu-missing" id="mu-missing" hidden>The listening data didn't load. Try refreshing the page.</p>
 
-    <div class="mu-years" id="mu-years" role="group" aria-label="Pick a year"></div>
+    <div class="mu-yearbar">
+      <div class="mu-years" id="mu-years" role="group" aria-label="Pick a year"><span class="mu-years-pill" aria-hidden="true"></span></div>
+    </div>
 
     <section class="mu-section" aria-labelledby="mu-h-numbers">
-      <h2 id="mu-h-numbers" class="mu-view-title"></h2>
+      <div class="mu-head"><span class="mu-kicker">01</span><h2 id="mu-h-numbers">In numbers</h2></div>
       <ul class="mu-tiles" id="mu-tiles"></ul>
       <ul class="mu-records" id="mu-records"></ul>
     </section>
 
     <section class="mu-section" aria-labelledby="mu-h-top">
-      <h2 id="mu-h-top">Top of the charts</h2>
+      <div class="mu-head"><span class="mu-kicker">02</span><h2 id="mu-h-top">Top of the charts</h2></div>
       <div class="mu-grid">
         <div class="mu-card">
           <h3>Top artists</h3>
           <p class="mu-sub">By hours listened</p>
-          <ol class="mu-bars" id="mu-artists"></ol>
+          <ol class="mu-podium" id="mu-artists-top"></ol>
+          <ol class="mu-bars mu-ranked" id="mu-artists"></ol>
         </div>
         <div class="mu-card">
           <h3>Top songs</h3>
           <p class="mu-sub">By plays</p>
-          <ol class="mu-bars" id="mu-songs"></ol>
+          <ol class="mu-podium is-square" id="mu-songs-top"></ol>
+          <ol class="mu-bars mu-ranked" id="mu-songs"></ol>
         </div>
       </div>
       <div class="mu-card">
         <h3>Top albums</h3>
         <p class="mu-sub">By hours listened</p>
-        <ol class="mu-bars mu-bars--two" id="mu-albums"></ol>
+        <ol class="mu-albums" id="mu-albums"></ol>
       </div>
     </section>
 
     <section class="mu-section" aria-labelledby="mu-h-when">
-      <h2 id="mu-h-when">When I listen</h2>
+      <div class="mu-head"><span class="mu-kicker">03</span><h2 id="mu-h-when">When I listen</h2></div>
       <div class="mu-card">
         <h3 id="mu-timeline-title"></h3>
         <p class="mu-sub" id="mu-timeline-sub"></p>
@@ -100,20 +115,20 @@
       </div>
       <div class="mu-card">
         <h3>Every day</h3>
-        <p class="mu-sub">One square per day. Darker means more minutes.</p>
+        <p class="mu-sub" id="mu-cal-sub">One square per day. Darker means more minutes.</p>
         <div class="mu-scroll" id="mu-calendar"></div>
         <div class="mu-scale" id="mu-cal-scale"></div>
       </div>
     </section>
 
     <section class="mu-section" aria-labelledby="mu-h-how">
-      <h2 id="mu-h-how">How I listen</h2>
-      <div class="mu-card">
-        <h3>Devices</h3>
-        <p class="mu-sub">Share of hours listened</p>
-        <div id="mu-devices"></div>
-      </div>
-      <div class="mu-grid">
+      <div class="mu-head"><span class="mu-kicker">04</span><h2 id="mu-h-how">How I listen</h2></div>
+      <div class="mu-grid mu-grid--three">
+        <div class="mu-card">
+          <h3>Devices</h3>
+          <p class="mu-sub">Share of hours listened</p>
+          <div id="mu-devices"></div>
+        </div>
         <div class="mu-card">
           <h3>How songs start</h3>
           <p class="mu-sub">Share of plays</p>
@@ -128,7 +143,7 @@
     </section>
 
     <section class="mu-section mu-alltime" aria-labelledby="mu-h-years">
-      <h2 id="mu-h-years">Across the years</h2>
+      <div class="mu-head"><span class="mu-kicker">05</span><h2 id="mu-h-years">Across the years</h2></div>
       <p class="mu-lead">These cover every year. Click a year to see it in the charts above.</p>
       <div class="mu-card">
         <h3>Hours listened each year</h3>
@@ -136,9 +151,9 @@
       </div>
       <div class="mu-card">
         <h3>My top artists, year by year</h3>
-        <p class="mu-sub">Where my 8 biggest artists of all time ranked each year. A gap means they weren't in that year's top 25.</p>
+        <p class="mu-sub">Where my 8 biggest artists of all time ranked each year. A gap means they weren't in that year's top 25. Point at a name to follow it.</p>
         <div class="mu-legend" id="mu-bump-legend"></div>
-        <div class="mu-chart" id="mu-bump"></div>
+        <div class="mu-chart mu-bump" id="mu-bump"></div>
       </div>
       <div class="mu-grid">
         <div class="mu-card">
@@ -164,7 +179,7 @@
         <div class="mu-legend" id="mu-dev-legend"></div>
         <div class="mu-chart" id="mu-dev-years"></div>
       </div>
-      <div class="mu-grid">
+      <div class="mu-grid mu-grid--wide">
         <div class="mu-card">
           <h3>Always in rotation</h3>
           <p class="mu-sub">Artists I've played in the most different years</p>
