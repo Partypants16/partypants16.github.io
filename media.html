@@ -9,7 +9,7 @@
   <script src="settings.js"></script>
   <script src="motion.js"></script>
   <title>Media | Parth</title>
-  <meta name="description" content="Parth's media pages: movie recommendation lists and franchise trackers, and soon a look back at his music listening history.">
+  <meta name="description" content="Parth's media pages: movie recommendation lists and franchise trackers, and his music listening history in charts.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎞️</text></svg>">
   <link rel="stylesheet" href="movies.css">
   <link rel="stylesheet" href="projects.css">
@@ -49,14 +49,15 @@
           <span class="feature-cta"><span>Open Movies</span><svg class="pj-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></span>
         </div>
       </a>
-      <div class="feature-card media-card is-soon" aria-disabled="true">
+      <a class="feature-card media-card" href="music.html">
         <div class="feature-body">
           <span class="pj-eyebrow">Listening history</span>
           <h2>Music</h2>
           <p class="feature-tagline">Charts of what I've listened to over the years: top artists and songs, and when I listen most.</p>
-          <span class="feature-cta"><span>Coming soon</span></span>
+          <ul class="feature-counts" id="music-counts" hidden></ul>
+          <span class="feature-cta"><span>Open Music</span><svg class="pj-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></span>
         </div>
-      </div>
+      </a>
     </div>
   </main>
 
@@ -66,6 +67,7 @@
 
   <script src="movie-lists.js"></script>
   <script src="franchise-data.js"></script>
+  <script src="music-data.js"></script>
   <script>
     // The Movies card's numbers. The card is a plain link, so it still works if these don't load.
     function count(list, number, label) {
@@ -86,6 +88,16 @@
       count(counts, lists, lists === 1 ? "List" : "Lists");
       count(counts, franchises.length, franchises.length === 1 ? "Franchise" : "Franchises");
       count(counts, titles, titles === 1 ? "Title tracked" : "Titles tracked");
+      counts.hidden = false;
+    }
+
+    // The Music card's numbers, from the same summary the Music page draws.
+    if (typeof MUSIC !== "undefined") {
+      const counts = document.getElementById("music-counts");
+      const s = MUSIC.views.all.stats;
+      count(counts, Math.round(s.hours).toLocaleString("en-AU"), "Hours");
+      count(counts, s.artists.toLocaleString("en-AU"), "Artists");
+      count(counts, MUSIC.meta.years.length, "Years");
       counts.hidden = false;
     }
 

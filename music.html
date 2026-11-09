@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="hinglish.js"></script>
+  <script src="i18n.js"></script>
+  <script src="settings.js"></script>
+  <script src="motion.js"></script>
+  <title>Music | Parth</title>
+  <meta name="description" content="Parth's Spotify listening history in charts: top artists, songs and albums, when he listens, every day since 2017, and how his taste changed year by year.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎧</text></svg>">
+  <link rel="stylesheet" href="movies.css">
+  <link rel="stylesheet" href="settings.css">
+  <link rel="stylesheet" href="motion.css">
+  <link rel="stylesheet" href="music.css">
+</head>
+
+<body>
+  <header>
+    <nav>
+      <p class="logo"><a href="profile.html" title="Profile">PS</a></p>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="wallpaper.html">Wallpaper</a></li>
+        <li><a href="gaming.html">Games</a></li>
+        <li><a href="media.html" aria-current="page">Media</a></li>
+        <li><a href="projects.html">Projects</a></li>
+      </ul>
+      <button class="settings-toggle" id="settingsToggle" type="button" aria-label="Settings" title="Settings" aria-haspopup="dialog" aria-expanded="false" aria-controls="settingsPanel"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="3.34 3.34"/><circle cx="12" cy="12" r="5.2" fill="none" stroke="currentColor" stroke-width="4.4"/></svg></button>
+    </nav>
+  </header>
+
+  <!-- Everything below is drawn by music.js from music-data.js
+       (made from the Spotify export by tools/build_music_data.py). -->
+  <main class="mu">
+    <a class="back-link" href="media.html">&larr; Media</a>
+
+    <section class="lists-intro">
+      <h1>Music</h1>
+      <p>Everything I've played on Spotify, turned into charts.</p>
+      <p class="mu-range" id="mu-range"></p>
+    </section>
+
+    <p class="mu-missing" id="mu-missing" hidden>The listening data didn't load. Try refreshing the page.</p>
+
+    <div class="mu-years" id="mu-years" role="group" aria-label="Pick a year"></div>
+
+    <section class="mu-section" aria-labelledby="mu-h-numbers">
+      <h2 id="mu-h-numbers" class="mu-view-title"></h2>
+      <ul class="mu-tiles" id="mu-tiles"></ul>
+      <ul class="mu-records" id="mu-records"></ul>
+    </section>
+
+    <section class="mu-section" aria-labelledby="mu-h-top">
+      <h2 id="mu-h-top">Top of the charts</h2>
+      <div class="mu-grid">
+        <div class="mu-card">
+          <h3>Top artists</h3>
+          <p class="mu-sub">By hours listened</p>
+          <ol class="mu-bars" id="mu-artists"></ol>
+        </div>
+        <div class="mu-card">
+          <h3>Top songs</h3>
+          <p class="mu-sub">By plays</p>
+          <ol class="mu-bars" id="mu-songs"></ol>
+        </div>
+      </div>
+      <div class="mu-card">
+        <h3>Top albums</h3>
+        <p class="mu-sub">By hours listened</p>
+        <ol class="mu-bars mu-bars--two" id="mu-albums"></ol>
+      </div>
+    </section>
+
+    <section class="mu-section" aria-labelledby="mu-h-when">
+      <h2 id="mu-h-when">When I listen</h2>
+      <div class="mu-card">
+        <h3 id="mu-timeline-title"></h3>
+        <p class="mu-sub" id="mu-timeline-sub"></p>
+        <div class="mu-chart" id="mu-timeline"></div>
+      </div>
+      <div class="mu-card">
+        <h3>Day and hour</h3>
+        <p class="mu-sub">Darker means more listening. Melbourne time.</p>
+        <div class="mu-chart mu-scroll" id="mu-heat"></div>
+      </div>
+      <div class="mu-grid">
+        <div class="mu-card">
+          <h3>By hour of day</h3>
+          <p class="mu-sub">Hours listened, from midnight to midnight</p>
+          <div class="mu-chart" id="mu-hours"></div>
+        </div>
+        <div class="mu-card">
+          <h3>By day of the week</h3>
+          <p class="mu-sub">Hours listened</p>
+          <ol class="mu-bars" id="mu-weekdays"></ol>
+        </div>
+      </div>
+      <div class="mu-card">
+        <h3>Every day</h3>
+        <p class="mu-sub">One square per day. Darker means more minutes.</p>
+        <div class="mu-scroll" id="mu-calendar"></div>
+        <div class="mu-scale" id="mu-cal-scale"></div>
+      </div>
+    </section>
+
+    <section class="mu-section" aria-labelledby="mu-h-how">
+      <h2 id="mu-h-how">How I listen</h2>
+      <div class="mu-card">
+        <h3>Devices</h3>
+        <p class="mu-sub">Share of hours listened</p>
+        <div id="mu-devices"></div>
+      </div>
+      <div class="mu-grid">
+        <div class="mu-card">
+          <h3>How songs start</h3>
+          <p class="mu-sub">Share of plays</p>
+          <ol class="mu-bars" id="mu-starts"></ol>
+        </div>
+        <div class="mu-card">
+          <h3>How songs end</h3>
+          <p class="mu-sub">Share of plays</p>
+          <ol class="mu-bars" id="mu-ends"></ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="mu-section mu-alltime" aria-labelledby="mu-h-years">
+      <h2 id="mu-h-years">Across the years</h2>
+      <p class="mu-lead">These cover every year. Click a year to see it in the charts above.</p>
+      <div class="mu-card">
+        <h3>Hours listened each year</h3>
+        <div class="mu-chart" id="mu-yearly"></div>
+      </div>
+      <div class="mu-card">
+        <h3>My top artists, year by year</h3>
+        <p class="mu-sub">Where my 8 biggest artists of all time ranked each year. A gap means they weren't in that year's top 25.</p>
+        <div class="mu-legend" id="mu-bump-legend"></div>
+        <div class="mu-chart" id="mu-bump"></div>
+      </div>
+      <div class="mu-grid">
+        <div class="mu-card">
+          <h3>New artists each year</h3>
+          <p class="mu-sub">Artists I played for the first time</p>
+          <div class="mu-chart" id="mu-new"></div>
+        </div>
+        <div class="mu-card">
+          <h3>Old favourites or new finds?</h3>
+          <p class="mu-sub">Share of each year's hours</p>
+          <div class="mu-legend" id="mu-share-legend"></div>
+          <div class="mu-chart" id="mu-share"></div>
+        </div>
+      </div>
+      <div class="mu-card">
+        <h3>Skip rate by month</h3>
+        <p class="mu-sub">Share of plays I skipped. Spotify only started marking skips in late 2022, so before that only the next button counts. Months with fewer than 30 plays are left out.</p>
+        <div class="mu-chart" id="mu-skips"></div>
+      </div>
+      <div class="mu-card">
+        <h3>Devices over the years</h3>
+        <p class="mu-sub">Share of each year's hours</p>
+        <div class="mu-legend" id="mu-dev-legend"></div>
+        <div class="mu-chart" id="mu-dev-years"></div>
+      </div>
+      <div class="mu-grid">
+        <div class="mu-card">
+          <h3>Always in rotation</h3>
+          <p class="mu-sub">Artists I've played in the most different years</p>
+          <ol class="mu-loyal" id="mu-loyal"></ol>
+        </div>
+        <div class="mu-card">
+          <h3>Podcasts</h3>
+          <p class="mu-sub" id="mu-pod-sub"></p>
+          <ol class="mu-bars" id="mu-podcasts"></ol>
+        </div>
+      </div>
+      <div class="mu-card">
+        <h3>Year by year</h3>
+        <div class="mu-scroll">
+          <table class="mu-table" id="mu-table"></table>
+        </div>
+      </div>
+    </section>
+
+    <details class="mu-notes">
+      <summary>How this is counted</summary>
+      <ul>
+        <li>A play counts once a song has played for 30 seconds, the same rule Spotify uses. Hours listened count every second, short plays included.</li>
+        <li>Spotify records times in UTC. They're shown here in Melbourne time.</li>
+        <li>A skip is a play Spotify marked as skipped, or one I ended with the next button. Spotify only started marking skips in late 2022, so earlier years look lower.</li>
+        <li>A listening session ends after 30 minutes with nothing playing.</li>
+        <li>Only totals and top lists are on this page. The raw history stays private.</li>
+      </ul>
+    </details>
+  </main>
+
+  <div class="mu-tip" id="mu-tip" role="tooltip" hidden></div>
+
+  <footer>
+    <p>&copy; <span id="year"></span> Parth</p>
+  </footer>
+
+  <script src="music-data.js"></script>
+  <script src="music.js"></script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+
+</html>

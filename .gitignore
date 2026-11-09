@@ -13,3 +13,8 @@ tools/claude-timeline/vendor/
 
 # Python bytecode (build.py imports todo.py)
 __pycache__/
+
+# Parth's raw Spotify export (copied from ai/PAT-AI/Parth_Info/). It has IP
+# addresses and devices: never commit it. tools/build_music_data.py turns it
+# into music-data.js, which holds only totals and top lists.
+_spotify_raw/

@@ -1,0 +1,537 @@
+/* The Music page (music.html): Parth's Spotify history as charts.
+   Charts are drawn by music.js. Colours are tokens here, so light and dark
+   each get their own steps, and the single-colour charts follow the accent
+   colour from Settings. The eight series colours are the validated
+   categorical palette (same order in both modes: colour follows the entity). */
+
+.mu {
+  --mu-surface: var(--card-bg, #fff);
+  --mu-accent: var(--accent, #1464c0);
+  --mu-grid: #e6e6e3;
+  --mu-axis: #6b6b6b;
+  --mu-empty: #ecece9;
+  --mu-dim: #c8c8c4;
+  --mu-unknown: #a3a39e;
+  --mu-s1: #2a78d6;
+  --mu-s2: #eb6834;
+  --mu-s3: #1baf7a;
+  --mu-s4: #eda100;
+  --mu-s5: #e87ba4;
+  --mu-s6: #008300;
+  --mu-s7: #6250d6;
+  --mu-s8: #e34948;
+  max-width: 1120px;
+}
+
+:root[data-theme="dark"] .mu {
+  --mu-accent: var(--accent-bright, #4d8fe8);
+  --mu-grid: #2e2e2e;
+  --mu-axis: #9a9a9a;
+  --mu-empty: #272727;
+  --mu-dim: #474747;
+  --mu-unknown: #6f6f6b;
+  --mu-s1: #3987e5;
+  --mu-s2: #d95926;
+  --mu-s3: #199e70;
+  --mu-s4: #c98500;
+  --mu-s5: #d55181;
+  --mu-s6: #008300;
+  --mu-s7: #9085e9;
+  --mu-s8: #e66767;
+}
+
+.mu .lists-intro {
+  margin-bottom: 1.5rem;
+}
+
+.mu-range {
+  margin-top: .4rem !important;
+  font-size: .95rem !important;
+}
+
+.mu-missing {
+  text-align: center;
+  color: var(--muted-text);
+}
+
+/* ---------- Year switcher ---------- */
+.mu-years {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .5rem;
+  margin: 0 auto 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  padding: .6rem 0;
+  background: var(--bg);
+}
+
+.mu-years button {
+  font: inherit;
+  font-size: .95rem;
+  font-weight: 600;
+  padding: .35rem .85rem;
+  border-radius: 999px;
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.mu-years button:hover {
+  border-color: var(--mu-accent);
+}
+
+.mu-years button[aria-pressed="true"] {
+  background: var(--mu-accent);
+  border-color: var(--mu-accent);
+  color: #fff;
+}
+
+.mu-years button:focus-visible,
+.mu [tabindex]:focus-visible {
+  outline: 2px solid var(--mu-accent);
+  outline-offset: 2px;
+}
+
+/* ---------- Sections and cards ---------- */
+.mu-section {
+  margin-bottom: 2.5rem;
+}
+
+.mu-section > h2 {
+  font-size: 1.6rem;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.mu-lead {
+  color: var(--muted-text);
+  margin: -.5rem 0 1rem;
+}
+
+.mu-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.mu-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 1.25rem 1.25rem 1rem;
+  margin-bottom: 1rem;
+  min-width: 0;
+}
+
+.mu-card h3 {
+  font-size: 1.1rem;
+  line-height: 1.3;
+}
+
+.mu-sub {
+  color: var(--muted-text);
+  font-size: .88rem;
+  margin-bottom: .9rem;
+}
+
+.mu-chart {
+  width: 100%;
+}
+
+.mu-chart svg,
+.mu-scroll svg {
+  display: block;
+  overflow: visible;
+}
+
+.mu-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mu svg text {
+  fill: var(--mu-axis);
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+}
+
+.mu svg text.mu-label {
+  fill: var(--text);
+  font-size: 12px;
+}
+
+.mu .mu-gridline {
+  stroke: var(--mu-grid);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+/* ---------- Stat tiles and records ---------- */
+.mu-tiles {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.mu-tiles li,
+.mu-records li {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  min-width: 0;
+}
+
+.mu-tile-label {
+  display: block;
+  color: var(--muted-text);
+  font-size: .88rem;
+}
+
+.mu-tile-value {
+  display: block;
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+
+.mu-tile-note {
+  display: block;
+  color: var(--muted-text);
+  font-size: .82rem;
+  overflow-wrap: anywhere;
+}
+
+.mu-records {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.mu-records .mu-tile-value {
+  font-size: 1.35rem;
+}
+
+/* ---------- Ranked bars (HTML) ---------- */
+.mu-bars {
+  list-style: none;
+  display: grid;
+  gap: .55rem;
+}
+
+.mu-bars--two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 2rem;
+}
+
+.mu-bar {
+  display: grid;
+  grid-template-columns: 1.6rem minmax(0, 1fr) auto;
+  grid-template-areas: "rank name value" "rank track track";
+  column-gap: .5rem;
+  row-gap: .2rem;
+  align-items: baseline;
+  border-radius: 6px;
+}
+
+.mu-bar.no-rank {
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "name value" "track track";
+}
+
+.mu-bar-rank {
+  grid-area: rank;
+  color: var(--muted-text);
+  font-size: .85rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.mu-bar-name {
+  grid-area: name;
+  font-size: .95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mu-bar-name small {
+  color: var(--muted-text);
+  font-size: .82rem;
+}
+
+.mu-bar-value {
+  grid-area: value;
+  color: var(--muted-text);
+  font-size: .85rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.mu-bar-track {
+  grid-area: track;
+  height: 8px;
+}
+
+.mu-bar-fill {
+  display: block;
+  height: 100%;
+  min-width: 3px;
+  border-radius: 0 4px 4px 0;
+  background: var(--mu-accent);
+}
+
+/* ---------- Segmented bar (devices) and legends ---------- */
+.mu-seg {
+  display: flex;
+  gap: 2px;
+  height: 22px;
+  margin-bottom: .75rem;
+}
+
+.mu-seg span {
+  display: block;
+  height: 100%;
+  min-width: 2px;
+}
+
+.mu-seg span:first-child {
+  border-radius: 4px 0 0 4px;
+}
+
+.mu-seg span:last-child {
+  border-radius: 0 4px 4px 0;
+}
+
+.mu-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem 1rem;
+  font-size: .88rem;
+  margin-bottom: .6rem;
+}
+
+.mu-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+}
+
+.mu-legend i {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  flex: none;
+}
+
+.mu-legend i.line {
+  height: 3px;
+  width: 14px;
+  border-radius: 2px;
+}
+
+.mu-legend b {
+  font-weight: 400;
+  color: var(--muted-text);
+}
+
+/* ---------- Calendar ---------- */
+.mu-cal-year {
+  font-weight: 700;
+  font-size: .9rem;
+  margin: .5rem 0 .2rem;
+}
+
+.mu-scale {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  justify-content: flex-end;
+  color: var(--muted-text);
+  font-size: .8rem;
+  margin-top: .5rem;
+}
+
+.mu-scale i {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+}
+
+.mu-scale span {
+  margin: 0 .3rem;
+}
+
+/* ---------- Always in rotation ---------- */
+.mu-loyal {
+  list-style: none;
+  display: grid;
+  gap: .5rem;
+}
+
+.mu-loyal li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .75rem;
+  font-size: .95rem;
+}
+
+.mu-loyal .mu-bar-name {
+  grid-area: auto;
+}
+
+.mu-loyal .mu-bar-name small {
+  display: block;
+  color: var(--muted-text);
+}
+
+.mu-table a {
+  color: var(--link);
+  font-weight: 600;
+}
+
+.mu-dots {
+  display: flex;
+  gap: 3px;
+}
+
+.mu-dots i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--mu-empty);
+}
+
+.mu-dots i.on {
+  background: var(--mu-accent);
+}
+
+/* ---------- Year-by-year table ---------- */
+.mu-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .9rem;
+  min-width: 720px;
+}
+
+.mu-table th,
+.mu-table td {
+  text-align: left;
+  padding: .45rem .6rem;
+  border-bottom: 1px solid var(--card-border);
+  vertical-align: top;
+}
+
+.mu-table th {
+  color: var(--muted-text);
+  font-weight: 600;
+  font-size: .82rem;
+}
+
+.mu-table td.num,
+.mu-table th.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.mu-table tr.is-current td {
+  background: color-mix(in srgb, var(--mu-accent) 12%, transparent);
+}
+
+.mu-table td small {
+  display: block;
+  color: var(--muted-text);
+}
+
+/* ---------- Tooltip ---------- */
+.mu-tip {
+  position: fixed;
+  z-index: 50;
+  pointer-events: none;
+  max-width: 280px;
+  background: var(--tip-bg, #111);
+  color: var(--tip-text, #fff);
+  border-radius: 8px;
+  padding: .45rem .65rem;
+  font-size: .85rem;
+  line-height: 1.4;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .25);
+}
+
+.mu-tip b {
+  display: block;
+}
+
+.mu-tip span {
+  display: block;
+  opacity: .85;
+}
+
+.mu [data-tip] {
+  cursor: default;
+}
+
+.mu .mu-hit {
+  fill: transparent;
+}
+
+/* ---------- Notes ---------- */
+.mu-notes {
+  color: var(--muted-text);
+  font-size: .9rem;
+  margin-top: 1rem;
+}
+
+.mu-notes summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.mu-notes ul {
+  margin: .5rem 0 0 1.25rem;
+}
+
+@media (max-width: 860px) {
+  .mu-tiles,
+  .mu-records {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .mu-grid,
+  .mu-bars--two {
+    grid-template-columns: 1fr;
+  }
+
+  .mu-bars--two {
+    row-gap: .55rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .mu-card {
+    padding: 1rem .85rem .85rem;
+  }
+
+  .mu-tile-value {
+    font-size: 1.5rem;
+  }
+
+  .mu-records .mu-tile-value {
+    font-size: 1.15rem;
+  }
+
+  .mu-years button {
+    padding: .3rem .65rem;
+    font-size: .88rem;
+  }
+}

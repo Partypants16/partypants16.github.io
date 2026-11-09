@@ -11,7 +11,7 @@ A hand-built static site with plain HTML, CSS and JavaScript. It has no framewor
 | **Home** (`index.html`) | Welcome cards and two groups of links: *LAN Only* services I run on my home server (each with a live Online/Offline dot), and *Projects & Ideas*. |
 | **Wallpaper** (`wallpaper.html`) | 15 live wallpapers (animated scenes, Melbourne weather, countdowns, quotes, F1 and more) to view full screen. |
 | **Games** (`gaming.html`) | My gaming platforms, what I'm playing, and my own games under "My Games". |
-| **Media** (`media.html`) | Movies (recommendation lists plus franchise trackers like Marvel) and Music (coming soon). |
+| **Media** (`media.html`) | Movies (recommendation lists plus franchise trackers like Marvel) and Music (`music.html`): my Spotify history since 2017 in charts (top artists, songs and albums, when I listen, every day, devices, and how it changed year by year), from a summary made by `tools/build_music_data.py`. |
 | **Projects** (`projects.html`) | A showcase of things I've built. Each one has a story page (`project.html?p=<slug>`) covering the journey, the big decisions, a timeline, what didn't work and what I learned. |
 | **Profile** (`profile.html`) | About me. Click the **PS** logo in the top bar to get there. |
 | **Page not found** (`404.html`) | What GitHub Pages shows for an address that doesn't exist: a pixel-art ghost and links home. |
