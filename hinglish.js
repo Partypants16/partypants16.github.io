@@ -107,7 +107,7 @@ const HINGLISH = {
     "Victoria Crime Prediction and Community Safety Map. This is a self-hosted local copy; the original online version has been shut down.": "Victoria ka Crime Prediction aur Community Safety Map. Yeh self-hosted local copy hai; asli online version band ho chuka hai.",
     "Experimental": "Experiment",
     "Vibe-coded experiment, not a finished product": "Vibe-coding wala experiment, poora product nahi",
-    "Pure vibe coding to test the capabilities and experiment with new technolgies. No fleshed out products.": "Bas vibe coding, nayi technologies try karne aur unki capabilities test karne ke liye. Koi poora bana hua product nahi.",
+    "Pure vibe coding to test the capabilities and experiment with new technologies. No fleshed out products.": "Bas vibe coding, nayi technologies try karne aur unki capabilities test karne ke liye. Koi poora bana hua product nahi.",
     "Melbourne, AU weather translated into what to wear now.": "Melbourne ka mausam, seedha is baat mein ki abhi kya pehnein.",
     "Coming Soon": "Jaldi aa raha hai",
     "Not built yet": "Abhi bana nahi hai",
