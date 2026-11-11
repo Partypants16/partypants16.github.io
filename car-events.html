@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="hinglish.js"></script>
+  <script src="i18n.js"></script>
+  <script src="settings.js"></script>
+  <script src="motion.js"></script>
+  <title>Car Shows | Parth</title>
+  <meta name="description" content="Upcoming car shows, meets and motorsport around Melbourne and Victoria, collected every morning from three event sites.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚗</text></svg>">
+  <link rel="stylesheet" href="movies.css">
+  <link rel="stylesheet" href="projects.css">
+  <link rel="stylesheet" href="settings.css">
+  <link rel="stylesheet" href="motion.css">
+  <link rel="stylesheet" href="car-events.css">
+</head>
+
+<body>
+  <header>
+    <nav>
+      <p class="logo"><a href="profile.html" title="Profile">PS</a></p>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="wallpaper.html">Wallpaper</a></li>
+        <li><a href="gaming.html">Games</a></li>
+        <li><a href="media.html">Media</a></li>
+        <li><a href="projects.html">Projects</a></li>
+      </ul>
+      <button class="settings-toggle" id="settingsToggle" type="button" aria-label="Settings" title="Settings" aria-haspopup="dialog" aria-expanded="false" aria-controls="settingsPanel"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="3.34 3.34"/><circle cx="12" cy="12" r="5.2" fill="none" stroke="currentColor" stroke-width="4.4"/></svg></button>
+    </nav>
+  </header>
+
+  <main class="projects car-events">
+    <section class="lists-intro">
+      <h1>Car Shows</h1>
+      <p>Melbourne &amp; Victoria: shows, meets, cruises and track days coming up, collected every morning.</p>
+      <p class="ce-updated" id="ce-updated" hidden></p>
+    </section>
+
+    <section class="ce-sources" aria-labelledby="ce-sources-head">
+      <h2 id="ce-sources-head" class="ce-head">Sources</h2>
+      <ul class="ce-source-list" id="ce-sources"></ul>
+    </section>
+
+    <div class="ce-filters" id="ce-filters" role="group" aria-label="Filter by type" hidden></div>
+
+    <div id="ce-list" aria-live="polite"></div>
+    <p class="pj-empty" id="ce-loading">Loading the event list…</p>
+    <p class="pj-empty" id="ce-empty" hidden>No upcoming events right now.</p>
+    <p class="pj-empty" id="ce-error" hidden>Couldn't load the event list. Try again later.</p>
+  </main>
+
+  <footer>
+    <p>&copy; <span id="year"></span> Parth</p>
+  </footer>
+
+  <script src="car-events.js"></script>
+</body>
+
+</html>

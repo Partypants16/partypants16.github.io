@@ -1,0 +1,169 @@
+/* Car Shows (car-events.html): sources, a type filter, then event cards by weekend and month.
+   Colours come from movies.css / projects.css / settings.js, so light and dark both work. */
+
+main.car-events {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.ce-updated {
+  font-size: .9rem;
+  color: var(--muted-text);
+}
+
+.ce-head {
+  font-size: 1.35rem;
+  margin: 2rem 0 .75rem;
+}
+
+.ce-month {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--muted-text);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin: 1.25rem 0 .6rem;
+}
+
+/* ---------- sources ---------- */
+.ce-sources .ce-head { margin-top: 1rem; }
+
+.ce-source-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+}
+
+.ce-source {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .25rem .6rem;
+  padding: .55rem .85rem;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 999px;
+  font-size: .92rem;
+}
+
+.ce-source-name {
+  font-weight: 600;
+  color: var(--link);
+  text-decoration: none;
+}
+.ce-source-name:hover { text-decoration: underline; }
+
+.ce-source-count { color: var(--muted-text); }
+
+.ce-source.is-stale { border-color: #d08a2a; }
+.ce-source-status { color: #b06a10; font-size: .85rem; }
+:root[data-theme="dark"] .ce-source-status { color: #f0b35c; }
+
+/* ---------- filter (a group of buttons, not a <nav>: movies.css restyles every nav on phones) ---------- */
+.ce-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+  margin: 1.5rem 0 0;
+}
+
+.ce-filter {
+  font: inherit;
+  font-size: .88rem;
+  padding: .35rem .8rem;
+  border-radius: 999px;
+  border: 1px solid var(--control-border);
+  background: var(--control-bg);
+  color: var(--text);
+  cursor: pointer;
+}
+.ce-filter[aria-pressed="true"] {
+  background: var(--accent, #1464c0);
+  border-color: var(--accent, #1464c0);
+  color: #fff;
+}
+.ce-filter:focus-visible { outline: 2px solid var(--accent, #1464c0); outline-offset: 2px; }
+
+/* ---------- event cards ---------- */
+.ce-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 1rem;
+}
+
+.ce-card {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  box-shadow: var(--pj-shadow, none);
+  min-width: 0;
+}
+
+.ce-date {
+  flex: 0 0 auto;
+  width: 3.6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: .45rem 0;
+  border-radius: 10px;
+  background: var(--accent-soft, #e8f0fb);
+  color: var(--text);
+  align-self: flex-start;
+  line-height: 1.1;
+}
+:root[data-theme="dark"] .ce-date { background: var(--accent-soft-dark, #1d2a3d); }
+.ce-dow, .ce-mon { font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted-text); }
+.ce-day { font-size: 1.45rem; font-weight: 700; }
+
+.ce-body { min-width: 0; flex: 1; }
+
+.ce-name {
+  font-size: 1.02rem;
+  line-height: 1.3;
+  margin: 0 0 .3rem;
+  overflow-wrap: anywhere;
+}
+.ce-name a { color: var(--text); text-decoration: none; }
+.ce-name a:hover { color: var(--link); text-decoration: underline; }
+
+.ce-where, .ce-when {
+  margin: 0 0 .25rem;
+  font-size: .9rem;
+  color: var(--muted-text);
+  overflow-wrap: anywhere;
+}
+
+.ce-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .35rem .7rem;
+  margin-top: .55rem;
+  font-size: .82rem;
+}
+
+.ce-cat {
+  padding: .15rem .55rem;
+  border-radius: 999px;
+  background: var(--chip-bg);
+  border: 1px solid var(--card-border);
+}
+
+.ce-link { color: var(--link); text-decoration: none; }
+.ce-link:hover { text-decoration: underline; }
+
+.ce-none { color: var(--muted-text); margin: 0; }
+
+@media (max-width: 480px) {
+  .ce-grid { grid-template-columns: 1fr; }
+  .ce-card { padding: .85rem; gap: .8rem; }
+  .ce-head { font-size: 1.2rem; }
+}

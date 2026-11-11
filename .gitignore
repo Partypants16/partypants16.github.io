@@ -21,3 +21,7 @@ _spotify_raw/
 
 # React pages: dependencies (react-src/ is built into music-explorer.js and movie-tracker.js)
 react-src/node_modules/
+
+# Car Shows: the home-network address of n8n (pull_car_events.py). Never commit it.
+tools/car_events/source_url.txt
+data/*.tmp

@@ -8,12 +8,13 @@ A hand-built static site with plain HTML, CSS and JavaScript. It has no framewor
 
 | Page | What it is |
 |---|---|
-| **Home** (`index.html`) | Welcome cards and two groups of links: *LAN Only* services I run on my home server (each with a live Online/Offline dot), and *Projects & Ideas*. |
+| **Home** (`index.html`) | Swipe cards at the top (welcome, Vibe Testing Zone, Car Shows), then the *LAN Only* services I run on my home server, each with a live Online/Offline dot. |
 | **Wallpaper** (`wallpaper.html`) | 15 live wallpapers (animated scenes, Melbourne weather, countdowns, quotes, F1 and more) to view full screen. |
 | **Games** (`gaming.html`) | My gaming platforms, what I'm playing, and my own games under "My Games". |
 | **Media** (`media.html`) | Movies (recommendation lists plus franchise trackers like Marvel) and Music (`music.html`): my Spotify history since 2017 in charts (top artists, songs and albums, when I listen, every day, devices, and how it changed year by year), from a summary made by `tools/build_music_data.py`. |
 | **Music Explorer** (`music-explorer.html`) | Every artist and song I've played since 2017: pick a year, click an artist or song to see when I played it, search everything, or compare two years side by side. A React page. |
 | **Movie Tracker** (`movie-tracker.html`) | Tick off films in each franchise and recommendation list, see progress bars and the next film in watch order. Starts from the shared spreadsheet's marks; ticks are saved in your browser. A React page. |
+| **Car Shows** (`car-events.html`) | Car shows, meets, cruises and track days coming up around Melbourne and Victoria, from three event sites (Trading Garage, Drivesome, Shannons Club), grouped into this weekend and then by month, with a type filter. See "Car Shows data" below. |
 | **Projects** (`projects.html`) | A showcase of things I've built. Each one has a story page (`project.html?p=<slug>`) covering the journey, the big decisions, a timeline, what didn't work and what I learned. |
 | **Profile** (`profile.html`) | About me. Click the **PS** logo in the top bar to get there. |
 | **Page not found** (`404.html`) | What GitHub Pages shows for an address that doesn't exist: a pixel-art ghost and links home. |
@@ -41,6 +42,16 @@ npm run build      # or: npm run watch
 ```
 
 Then commit the rebuilt `.js` files with the source. Don't edit the built files by hand. Visible text still needs its Hinglish line in `hinglish.js`; put names and titles in `translate="no"`, and build each sentence as one string (not `{n} plays` split into pieces) so the Hinglish switch sees it whole.
+
+## Car Shows data
+
+`data/car-events.json` is made by **n8n on my home server**, not by hand. Never edit it.
+
+- n8n's *Car Events - Scraper* workflow reads the three sites every morning at 4am and saves the list on the server. Its *Car Events - Weekly Digest* sends me the week's shows on Discord every Monday at 7am. The workflows live in `apps/n8n-home/workflows/` in my workspace.
+- The file reaches this site **with the next commit**: a git pre-commit hook runs `tools/car_events/pull_car_events.py --stage`, which fetches the latest list from n8n (home Wi-Fi only) and adds it to the commit. If n8n can't be reached it changes nothing, and the commit still goes through. So the page is as fresh as the last push.
+- To refresh the page on its own: `python tools/car_events/pull_car_events.py`, then commit and push.
+- One-time setup per clone: `python tools/car_events/install_hook.py`, plus the n8n address in `tools/car_events/source_url.txt` (git-ignored; it's a home-network address, so it never goes in this public repo).
+- The page hides events that have already happened, so a list that's a few days old still looks right.
 
 ## Running it locally
 
