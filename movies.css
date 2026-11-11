@@ -784,3 +784,10 @@ a.person-card:hover {
     gap: 0;
   }
 }
+
+/* Link to the Movie Tracker (movie-tracker.html, a React page) */
+.tracker-link {
+  font-weight: 600;
+  color: var(--link);
+  text-underline-offset: 3px;
+}

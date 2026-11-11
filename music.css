@@ -1308,3 +1308,24 @@
     font-size: .86rem;
   }
 }
+
+/* Link to the Music Explorer (music-explorer.html, a React page). The hero is
+   dark in both themes, so it's a light pill like the eyebrow chip. */
+.mu-explore-link {
+  display: inline-block;
+  margin-top: .9rem;
+  padding: .5rem 1rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: .92rem;
+  color: #fff;
+  text-decoration: none;
+  background: rgba(255, 255, 255, .12);
+  border: 1px solid rgba(255, 255, 255, .28);
+  transition: background .2s ease;
+}
+
+.mu-explore-link:hover,
+.mu-explore-link:focus-visible {
+  background: rgba(255, 255, 255, .22);
+}

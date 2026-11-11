@@ -33,6 +33,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SITE = os.path.dirname(HERE)
 RAW = os.path.join(SITE, "_spotify_raw")
 OUT = os.path.join(SITE, "music-data.js")
+OUT_EXPLORER = os.path.join(SITE, "music-explorer-data.js")
 
 MELBOURNE = ZoneInfo("Australia/Melbourne")
 ZONES = {"IN": ZoneInfo("Asia/Kolkata")}
@@ -321,6 +322,57 @@ def all_time(plays, episodes, years):
     }
 
 
+def explorer(plays, years):
+    """The Music Explorer's data (music-explorer-data.js): every artist and song
+    with counted plays, plays per year for each song, and plays per month for
+    each artist. Still no raw plays or exact times: dates are whole days."""
+    counted = [p for p in plays if p["ms"] >= MIN_PLAY_MS]
+    first, last = plays[0]["local"], plays[-1]["local"]
+    months = []
+    y, mo = first.year, first.month
+    while (y, mo) <= (last.year, last.month):
+        months.append(f"{y}-{mo:02d}")
+        y, mo = (y + 1, 1) if mo == 12 else (y, mo + 1)
+    month_index = {k: i for i, k in enumerate(months)}
+    year_index = {yr: i for i, yr in enumerate(years)}
+
+    artist_ms = collections.Counter()
+    song_ms = collections.Counter()
+    for p in plays:
+        artist_ms[p["artist"]] += p["ms"]
+        song_ms[(p["track"], p["artist"])] += p["ms"]
+
+    artist_n = collections.Counter()
+    artist_month = collections.defaultdict(collections.Counter)
+    artist_days = {}
+    song_years = collections.defaultdict(lambda: [0] * len(years))
+    for p in counted:
+        a, day = p["artist"], p["local"].date()
+        artist_n[a] += 1
+        artist_month[a][month_index[p["local"].strftime("%Y-%m")]] += 1
+        lo, hi = artist_days.get(a, (day, day))
+        artist_days[a] = (min(lo, day), max(hi, day))
+        song_years[(p["track"], a)][year_index[p["local"].year]] += 1
+
+    order = sorted(artist_n, key=lambda a: (-artist_ms[a], a))
+    index = {a: i for i, a in enumerate(order)}
+    artists = []
+    for a in order:
+        flat = []
+        for i, n in sorted(artist_month[a].items()):
+            flat += [i, n]
+        artists.append([a, m(artist_ms[a]), artist_n[a], str(artist_days[a][0]), str(artist_days[a][1]), flat])
+    songs = sorted(song_years, key=lambda k: (-sum(song_years[k]), k))
+    return {
+        "meta": {"from": first.date().isoformat(), "to": last.date().isoformat(),
+                 "built": dt.date.today().isoformat(), "years": years, "months": months},
+        # [name, minutes, plays, first day, last day, [month index, plays, ...]]
+        "artists": artists,
+        # [title, artist index, minutes, plays per year (same order as meta.years)]
+        "songs": [[t, index[a], m(song_ms[(t, a)]), song_years[(t, a)]] for (t, a) in songs],
+    }
+
+
 def main():
     plays, episodes = parse(load())
     years = sorted({p["local"].year for p in plays})
@@ -345,6 +397,15 @@ def main():
     s = data["views"]["all"]["stats"]
     print(f"Wrote {OUT} ({len(body) // 1024} KB): {s['hours']} h, {s['plays']} plays, "
           f"{s['artists']} artists, {s['songs']} songs, {data['meta']['from']} to {data['meta']['to']}")
+
+    x = explorer(plays, years)
+    body = json.dumps(x, ensure_ascii=False, separators=(",", ":"))
+    with open(OUT_EXPLORER, "w", encoding="utf-8", newline="\n") as fh:
+        fh.write("// Made by tools/build_music_data.py from Parth's Spotify export. Don't edit by hand.\n")
+        fh.write("// For music-explorer.html: every artist and song with play counts per year / month.\n")
+        fh.write("// No raw plays, exact times, IP addresses, countries or devices.\n")
+        fh.write("const MUSIC_X = " + body + ";\n")
+    print(f"Wrote {OUT_EXPLORER} ({len(body) // 1024} KB): {len(x['artists'])} artists, {len(x['songs'])} songs")
 
 
 if __name__ == "__main__":

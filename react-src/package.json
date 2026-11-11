@@ -1,0 +1,16 @@
+{
+  "name": "my-website-react",
+  "private": true,
+  "description": "Source of the site's React pages (Music Explorer, Movie Tracker). build.mjs bundles each into one plain script at the site root.",
+  "scripts": {
+    "build": "node build.mjs",
+    "watch": "node build.mjs --watch"
+  },
+  "dependencies": {
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}

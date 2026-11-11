@@ -18,3 +18,6 @@ __pycache__/
 # addresses and devices: never commit it. tools/build_music_data.py turns it
 # into music-data.js, which holds only totals and top lists.
 _spotify_raw/
+
+# React pages: dependencies (react-src/ is built into music-explorer.js and movie-tracker.js)
+react-src/node_modules/
