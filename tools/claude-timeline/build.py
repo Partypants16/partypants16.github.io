@@ -77,7 +77,7 @@ PAGE_URL = {"claude": "./", "chatgpt": "chatgpt.html", "mridul": "mridul.html"}
 
 # The filter lists show these in this order.
 PROJECTS = ["Website", "Apex Dash", "Apex Dash 3D Masters", "Claire", "Iris", "PAT-AI", "PrintPlace", "SkyWardrobe",
-            "StaySafe", "CrossPaste", "Sonic", "Gaming Archive", "NovaDiagnostics", "PocketDIY", "n8n", "Coles", "Remote box",
+            "StaySafe", "CrossPaste", "Sonic", "Gaming Archive", "NovaDiagnostics", "PocketDIY", "Automation Bot", "n8n", "Coles", "Remote box",
             "Music", "Physical projects", "Photos", "OpenRecall", "Workspace"]
 # Mridul's page has its own (his projects aren't in parth_project).
 MRIDUL_PROJECTS = ["Family Tree", "Katha Event", "Photo Library", "Food Tech", "Kanban", "Work", "Home admin",
