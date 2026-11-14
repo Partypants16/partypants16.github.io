@@ -330,6 +330,26 @@ section p {
   font-size: 0.95rem;
 }
 
+/* A service with no card (the Discord bot): its name and the pill on one small line */
+.status-line {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 0.4rem auto 0;
+  padding: 0 20px;
+  color: var(--muted-text);
+  font-size: 0.85rem;
+}
+
+.status-line[hidden] {
+  display: none;
+}
+
+.status-line .status-pill {
+  position: static;
+}
+
 /* Sits top-left on the card, across from the badge */
 .status-pill {
   position: absolute;

@@ -20,6 +20,8 @@ Files:
 
 import argparse
 import json
+import shutil
+import subprocess
 import sys
 import time
 import urllib.error
@@ -29,6 +31,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 # id (matches data-service on the home page card), URL the card links to
+# (or docker:<container> for something with no web page)
 SERVICES = [
     ("staysafe", "http://192.168.212.60:8100/"),
     ("skywardrobe", "http://192.168.212.60:3000/"),
@@ -43,6 +46,9 @@ SERVICES = [
     ("n8n", "http://192.168.212.60:5678/"),
     ("searxng", "http://192.168.212.60:8081/"),
     ("apexdash", "http://192.168.212.60:8110/"),
+    # No web port: up while its Docker container is running (shown on the home
+    # page as a small line, not a card).
+    ("discordbot", "docker:personal-automation-bot"),
 ]
 
 TIMEOUT_SECONDS = 5
@@ -106,8 +112,22 @@ def write_json(path, data):
     tmp.replace(path)
 
 
+def container_running(name):
+    """True if the Docker container is running and not stuck restarting."""
+    docker = shutil.which("docker") or "/usr/bin/docker"  # cron's PATH is short
+    try:
+        result = subprocess.run([docker, "inspect", "-f", "{{.State.Running}} {{.State.Restarting}}", name],
+                                capture_output=True, text=True, timeout=TIMEOUT_SECONDS)
+    except (OSError, subprocess.SubprocessError):
+        return False
+    return result.returncode == 0 and result.stdout.split() == ["true", "false"]
+
+
 def probe(url):
-    """True if the service answers with any HTTP status below 500."""
+    """True if the service answers with any HTTP status below 500
+    (or, for docker:<name>, if that container is running)."""
+    if url.startswith("docker:"):
+        return container_running(url[len("docker:"):])
     try:
         with OPENER.open(urllib.request.Request(url, method="GET"), timeout=TIMEOUT_SECONDS) as response:
             return response.status < 500

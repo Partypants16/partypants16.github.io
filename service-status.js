@@ -78,6 +78,7 @@ const STATUS_URL = "https://gist.githubusercontent.com/Partypants16/bed505978930
         ? "The home server hasn't reported since " + when(checked) + "."
         : (info.up ? "Online" : "Offline") + (info.since ? " since " + when(new Date(info.since)) : "") + ". Updated " + ago(checked) + ".";
       card.appendChild(pill);
+      card.hidden = false; // status lines (no card) wait hidden until there's a status
     });
   }
 
