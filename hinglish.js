@@ -458,6 +458,9 @@ const HINGLISH = {
     // ---------- To do (todo.html, and the page on the home server) ----------
     "To do": "Karna hai",
     "To do | Parth": "Karna hai | Parth",
+    "Portfolio | Parth": "Portfolio | Parth",
+    "Portfolio": "Portfolio",
+    "Parth's share and ETF planner. It lives on the home server, so it only opens on home Wi-Fi.": "Parth ka shares aur ETF planner. Yeh home server par hai, isliye sirf ghar ke Wi-Fi par khulta hai.",
     "Git checked": "Git check hua",
     "Couldn't load the to-do list. Try reloading the page.": "To-do list load nahi hui. Page reload karke dekho.",
     "What's waiting on Parth across his projects. It lives on the home server, so it only opens on home Wi-Fi.": "Parth ke projects mein kya baaki hai. Yeh home server pe rehta hai, isliye sirf ghar ke Wi-Fi pe khulta hai.",

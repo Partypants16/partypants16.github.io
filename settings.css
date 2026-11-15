@@ -668,21 +668,21 @@ html[data-backdrop][data-theme="dark"] {
 }
 
 /* ---------- Top bar on small phones ----------
-   The top bar's links (Home … Projects; the PS logo is the way to Profile)
+   The top bar's six links (Home … Portfolio; the PS logo is the way to Profile)
    crowd one row at 360px with the pages' own phone styles, so on small screens
    the links get a little smaller and closer. Here rather than in each page's
    stylesheet because every page loads this one last. */
 @media (max-width: 420px) {
   header {
-    padding-left: .75rem;
-    padding-right: .75rem;
+    padding-left: .5rem;
+    padding-right: .5rem;
   }
 
   header nav ul {
-    gap: .5rem;
+    gap: .35rem;
   }
 
   header nav ul a {
-    font-size: .875rem;
+    font-size: .78rem;
   }
 }
