@@ -9,7 +9,7 @@
   <script src="settings.js"></script>
   <script src="motion.js"></script>
   <title>3D Scan Viewer | Parth</title>
-  <meta name="description" content="Open an STL file (or a GLB or PLY scan) and look at it in full colour and light. The file stays on your device.">
+  <meta name="description" content="Open an STL file (or a GLB, PLY or USDZ scan) and look at it in full colour and light. The file stays on your device.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧊</text></svg>">
   <link rel="stylesheet" href="movies.css">
   <link rel="stylesheet" href="projects.css">
@@ -45,7 +45,7 @@
   <main class="projects sv">
     <section class="lists-intro">
       <h1>3D Scan Viewer</h1>
-      <p>Open an STL file and see it in full colour and light, using everything the file stores. GLB and PLY scans work too.</p>
+      <p>Open an STL file and see it in full colour and light, using everything the file stores. GLB, PLY and USDZ scans work too.</p>
       <p class="sv-private">Your file stays on your device. Nothing is uploaded anywhere.</p>
     </section>
 
@@ -56,8 +56,8 @@
         <div class="sv-drop" id="sv-drop">
           <div class="sv-drop-inner">
             <p class="sv-drop-title">Drop a 3D file here</p>
-            <p class="sv-drop-sub">STL, GLB or PLY</p>
-            <label class="fancy-button sv-pick">Choose a file<input type="file" id="sv-file" accept=".stl,.glb,.ply,model/stl,model/gltf-binary"></label>
+            <p class="sv-drop-sub">STL, GLB, PLY or USDZ</p>
+            <label class="fancy-button sv-pick">Choose a file<input type="file" id="sv-file" accept=".stl,.glb,.ply,.usdz,model/stl,model/gltf-binary,model/vnd.usdz+zip"></label>
           </div>
         </div>
 

@@ -1,4 +1,4 @@
-// 3D Scan Viewer (stl-viewer.html). Opens an STL (or a GLB / PLY scan) that the
+// 3D Scan Viewer (stl-viewer.html). Opens an STL (or a GLB / PLY / USDZ scan) that the
 // visitor picks or drops, entirely in the browser: the file is never uploaded.
 //
 // STL is read by our own parser (not three.js's STLLoader) so we can use
@@ -10,7 +10,7 @@
 //   - VisCAM / SolidView: bit 15 = 1 means "this triangle has a colour", stored
 //     B (bits 0-4), G (5-9), R (10-14).
 // Most STLs (scanner exports included) have no colour at all; the page says so
-// and points at GLB/PLY, which carry colour.
+// and points at GLB/PLY/USDZ, which carry colour.
 //
 // three.js is vendored in vendor/three/ (0.186.1, from games/apex-dash-3d-masters)
 // so the page loads nothing from other sites.
@@ -21,6 +21,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { mergeVertices, toCreasedNormals } from 'three/addons/utils/BufferGeometryUtils.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { PLYLoader } from 'three/addons/loaders/PLYLoader.js';
+import { USDLoader } from 'three/addons/loaders/USDLoader.js';
 
 const $ = id => document.getElementById(id);
 $('year').textContent = new Date().getFullYear();
@@ -301,10 +302,8 @@ function loadPLY(buf, name) {
   };
 }
 
-// ---------- GLB ----------
-async function loadGLB(buf, name) {
-  const gltf = await new GLTFLoader().parseAsync(buf, '');
-  const root = gltf.scene;
+// ---------- GLB and USDZ (whole scenes with their own materials) ----------
+function sceneInfo(root) {
   let triangles = 0, meshes = 0, textured = false, vcol = false, tinted = false;
   const materials = new Set();
   root.traverse(o => {
@@ -321,12 +320,33 @@ async function loadGLB(buf, name) {
     }
     o.userData.fileMaterial = o.material;   // kept to switch back to "From the file"
   });
+  return { triangles: Math.round(triangles), meshes, materials: materials.size, textured, vcol, tinted };
+}
+
+async function loadGLB(buf, name) {
+  const gltf = await new GLTFLoader().parseAsync(buf, '');
+  const info = sceneInfo(gltf.scene);
   const asset = (gltf.parser && gltf.parser.json && gltf.parser.json.asset) || {};
   return {
-    kind: 'glb', object: root, hasColour: textured || vcol || tinted, vertexColours: vcol, points: false,
-    up: 'y', unit: 'm', glb: { triangles: Math.round(triangles), meshes, materials: materials.size, textured, vcol, generator: asset.generator || '' },
-    name,
+    kind: 'glb', scene: true, object: gltf.scene, hasColour: info.textured || info.vcol || info.tinted, vertexColours: info.vcol,
+    points: false, up: 'y', unit: 'm', info: { ...info, format: 'GLB (glTF, binary)', generator: asset.generator || '' }, name,
   };
+}
+
+// USDZ is Apple's format (iPhone scanning apps export it): a zip holding a USD
+// scene and its texture images. three.js's USDLoader reads text and binary USD.
+function loadUSDZ(buf, name) {
+  return new Promise((resolve, reject) => {
+    new USDLoader().parse(buf, '', group => {
+      try {
+        const info = sceneInfo(group);
+        resolve({
+          kind: 'usdz', scene: true, object: group, hasColour: info.textured || info.vcol || info.tinted, vertexColours: info.vcol,
+          points: false, up: 'y', unit: 'm', info: { ...info, format: 'USDZ (Apple)', generator: '' }, name,
+        });
+      } catch (e) { reject(e); }
+    }, reject);
+  });
 }
 
 // ---------- materials ----------
@@ -350,7 +370,7 @@ function applyMaterials() {
     return;
   }
 
-  if (model.kind === 'glb' && fromFile) {
+  if (model.scene && fromFile) {
     model.object.traverse(o => {
       if (!o.isMesh) return;
       o.material = o.userData.fileMaterial;
@@ -461,8 +481,8 @@ function renderFacts() {
     for (const c of p.comments.slice(0, 3)) add('Note in file', { data: c });
     for (const [el, count] of p.elements) add('Element', { data: `${el}: ${fmtNum(+count)}` });
   } else {
-    const g = m.glb;
-    add('Format', 'GLB (glTF, binary)');
+    const g = m.info;
+    add('Format', g.format);
     if (g.generator) add('Made by', { data: g.generator });
     add('Triangles', { data: fmtNum(g.triangles) });
     add('Parts', { data: fmtNum(g.meshes) });
@@ -470,7 +490,7 @@ function renderFacts() {
   }
 
   // Units: STL and PLY don't say, so we guess and let the visitor change it.
-  if (m.kind !== 'glb') {
+  if (!m.scene) {
     const sel = document.createElement('select');
     sel.setAttribute('aria-label', "The file's units");
     for (const [u, label] of [['mm', 'Millimetres'], ['cm', 'Centimetres'], ['m', 'Metres'], ['in', 'Inches']]) {
@@ -508,7 +528,7 @@ function renderFacts() {
     add('Colour', m.ply.splat ? 'Per point (Gaussian splat)' : m.hasColour ? 'Per point' : 'None stored');
     if (m.points) add('Shape', 'Points only, no surface');
   } else {
-    const g = m.glb;
+    const g = m.info;
     add('Colour', g.textured ? 'Photo texture' : g.vcol ? 'Per point' : m.hasColour ? 'Material colours' : 'None stored');
   }
 
@@ -527,7 +547,7 @@ function clearModel() {
   disposeOwnMaterials();
   model.object.traverse(o => {
     if (o.geometry) o.geometry.dispose();
-    if (model.kind === 'glb' && o.isMesh) {
+    if (model.scene && o.isMesh) {
       for (const m of [].concat(o.userData.fileMaterial || [])) {
         for (const v of Object.values(m)) if (v && v.isTexture) v.dispose();
         m.dispose();
@@ -545,7 +565,7 @@ function show(m, file) {
   holder.add(m.object);
 
   state.up = m.up;
-  // Units: GLB is metres by definition; otherwise a model under 5 units across is
+  // Units: GLB and USDZ are metres here; otherwise a model under 5 units across is
   // most likely metres (scanners), anything bigger millimetres (CAD, 3D printing).
   m.object.geometry?.computeBoundingBox();
   const raw = new THREE.Box3().setFromObject(m.object).getSize(new THREE.Vector3());
@@ -566,8 +586,8 @@ function show(m, file) {
 async function openFile(file) {
   if (!file) return;
   const ext = (file.name.split('.').pop() || '').toLowerCase();
-  if (!['stl', 'glb', 'ply'].includes(ext)) {
-    showError("That file type isn't supported here. Use an STL, GLB or PLY file.");
+  if (!['stl', 'glb', 'ply', 'usdz'].includes(ext)) {
+    showError("That file type isn't supported here. Use an STL, GLB, PLY or USDZ file.");
     return;
   }
   hideError();
@@ -575,7 +595,8 @@ async function openFile(file) {
   await nextPaint();
   try {
     const buf = await file.arrayBuffer();
-    const m = ext === 'stl' ? loadSTL(buf, file.name) : ext === 'ply' ? loadPLY(buf, file.name) : await loadGLB(buf, file.name);
+    const m = ext === 'stl' ? loadSTL(buf, file.name) : ext === 'ply' ? loadPLY(buf, file.name)
+      : ext === 'usdz' ? await loadUSDZ(buf, file.name) : await loadGLB(buf, file.name);
     show(m, file);
   } catch (e) {
     console.error(e);
@@ -598,7 +619,7 @@ function syncButtons() {
   pressed('up', state.up);
   const fileBtn = document.querySelector('[data-colour="file"]');
   fileBtn.disabled = !model || !model.hasColour;
-  const ownColours = model && model.kind === 'glb' && state.colour === 'file';
+  const ownColours = model && model.scene && state.colour === 'file';
   document.querySelectorAll('[data-finish]').forEach(b => { b.disabled = !!(model && (model.points || ownColours)); });
   document.querySelectorAll('[data-shade]').forEach(b => { b.disabled = !!(model && model.points); });
   $('sv-colour').disabled = state.colour !== 'single';
@@ -607,7 +628,7 @@ function syncButtons() {
   const note = $('sv-colour-note');
   if (model && !model.hasColour) {
     note.textContent = model.kind === 'stl'
-      ? "This STL has no colour in it: like most STL files it only holds the shape. Scanning apps (Scaniverse, Polycam) keep the colour in their GLB, PLY or OBJ exports, so export the scan as GLB and open that here to see it in colour."
+      ? "This STL has no colour in it: like most STL files it only holds the shape. Scanning apps (Scaniverse, Polycam) keep the colour in their USDZ, GLB, PLY or OBJ exports, so export the scan as USDZ or GLB and open that here to see it in colour."
       : 'This file has no colour in it, so it is shown in one colour.';
     note.hidden = false;
   } else note.hidden = true;
