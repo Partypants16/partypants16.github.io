@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="settings.css">
   <link rel="stylesheet" href="motion.css">
+  <link rel="stylesheet" href="home-diagram.css">
 </head>
 
 <body>
@@ -32,52 +33,69 @@
     </nav>
   </header>
 
-  <main>
-    <section id="hero" class="widget-stack" aria-label="Home highlights" aria-roledescription="carousel">
-      <div class="widget-track" id="home-widgets" tabindex="0" aria-label="Swipe through cards">
-        <div class="widget-slide" role="group" aria-roledescription="slide" aria-label="1 / 4">
-          <h2>Welcome to Parth's Palace</h2>
-          <p>where you will find everything...</p>
-          <a href="projects.html" class="fancy-button">Are you ready?</a>
-        </div>
-        <div class="widget-slide" role="group" aria-roledescription="slide" aria-label="2 / 4">
-          <h2>Vibe Testing Zone</h2>
-          <p>Pure vibe coding to test the capabilities and experiment with new technologies. No fleshed out products.</p>
-          <a href="vibe-testing-zone/home.html" class="fancy-button">Step inside</a>
-        </div>
-        <div class="widget-slide" role="group" aria-roledescription="slide" aria-label="3 / 4">
-          <h2>Car Shows</h2>
-          <p>Upcoming car shows, meets and track days around Melbourne and Victoria, refreshed every morning.</p>
-          <a href="car-events.html" class="fancy-button">See the shows</a>
-        </div>
-        <div class="widget-slide" role="group" aria-roledescription="slide" aria-label="4 / 4">
-          <h2>3D Scan Viewer</h2>
-          <p>Open an STL file or a 3D scan and see it in full colour and light. Your file never leaves your device.</p>
-          <a href="stl-viewer.html" class="fancy-button">Open the viewer</a>
-        </div>
-      </div>
-      <div class="widget-controls" hidden>
-        <button type="button" class="widget-prev" aria-label="Previous card" aria-controls="home-widgets">&#8592;</button>
-        <div class="widget-dots">
-          <button type="button" aria-label="Show card 1" aria-current="true" aria-controls="home-widgets"></button>
-          <button type="button" aria-label="Show card 2" aria-controls="home-widgets"></button>
-          <button type="button" aria-label="Show card 3" aria-controls="home-widgets"></button>
-          <button type="button" aria-label="Show card 4" aria-controls="home-widgets"></button>
-        </div>
-        <button type="button" class="widget-next" aria-label="Next card" aria-controls="home-widgets">&#8594;</button>
-      </div>
-    </section>
+  <main class="hd">
+    <!-- The Palace map: a centre node with Melbourne's clock and weather, wired to the rest of the site.
+         Built by home-diagram.js (data: the service-status gist's weather.json and status.json, data/car-events.json). -->
+    <div class="hd-stage" role="region" aria-label="The Palace map">
+      <svg class="hd-wires" aria-hidden="true"></svg>
 
+      <button type="button" class="hd-node hd-node--hub" data-node="melbourne" aria-haspopup="dialog" aria-controls="hd-panel">
+        <span class="hd-icon" aria-hidden="true">PS</span>
+        <span class="hd-title" translate="no">Parth's Palace</span>
+        <span class="hd-clock" data-clock="seconds"></span>
+        <span class="hd-weather-line"><span translate="no">Melbourne</span> · <span data-weather>…</span></span>
+      </button>
+
+      <button type="button" class="hd-node" data-node="play" style="--hd-colour:#e5484d" aria-haspopup="dialog" aria-controls="hd-panel">
+        <span class="hd-icon" aria-hidden="true">🎮</span>
+        <span class="hd-title">Play</span>
+        <span class="hd-sub">My games, in your browser</span>
+      </button>
+
+      <button type="button" class="hd-node" data-node="media" style="--hd-colour:#8e4ec6" aria-haspopup="dialog" aria-controls="hd-panel">
+        <span class="hd-icon" aria-hidden="true">🎬</span>
+        <span class="hd-title">Watch &amp; Listen</span>
+        <span class="hd-sub">Movies, music and wallpapers</span>
+      </button>
+
+      <button type="button" class="hd-node" data-node="cars" style="--hd-colour:#f76b15" aria-haspopup="dialog" aria-controls="hd-panel">
+        <span class="hd-icon" aria-hidden="true">🏎️</span>
+        <span class="hd-title">Car Shows</span>
+        <span class="hd-sub">See what's coming up</span>
+      </button>
+
+      <button type="button" class="hd-node" data-node="homelab" style="--hd-colour:#1464c0" aria-haspopup="dialog" aria-controls="hd-panel">
+        <span class="hd-icon" aria-hidden="true">🏠</span>
+        <span class="hd-title">Home Lab</span>
+        <span class="hd-sub">Self-hosted services</span>
+      </button>
+
+      <button type="button" class="hd-node" data-node="projects" style="--hd-colour:#30a46c" aria-haspopup="dialog" aria-controls="hd-panel">
+        <span class="hd-icon" aria-hidden="true">🛠️</span>
+        <span class="hd-title">Projects</span>
+        <span class="hd-sub">The stories behind them</span>
+      </button>
+
+      <button type="button" class="hd-node" data-node="about" style="--hd-colour:#ffb224" aria-haspopup="dialog" aria-controls="hd-panel">
+        <span class="hd-icon" aria-hidden="true">👋</span>
+        <span class="hd-title">About me</span>
+        <span class="hd-sub">Who I am and how to reach me</span>
+      </button>
+
+      <p class="hd-hint">Click a node to open it. On a computer you can drag them around.</p>
+    </div>
+
+    <aside class="hd-panel" id="hd-panel" role="dialog" aria-label="Details" aria-hidden="true">
+      <div class="hd-panel-head">
+        <span class="hd-icon hd-panel-icon" aria-hidden="true"></span>
+        <h2></h2>
+        <button type="button" class="hd-close" aria-label="Close">×</button>
+      </div>
+      <div class="hd-panel-body"></div>
+    </aside>
   </main>
 
-  <footer>
-    <p>&copy; <span id="year"></span> Parth</p>
-  </footer>
-
-  <script src="home-widgets.js"></script>
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
-  </script>
+  <script src="home-diagram.js"></script>
 </body>
 
 </html>
