@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="hinglish.js"></script>
+  <script src="i18n.js"></script>
+  <script src="settings.js"></script>
+  <script src="motion.js"></script>
+  <title>3D Scan Viewer | Parth</title>
+  <meta name="description" content="Open an STL file (or a GLB or PLY scan) and look at it in full colour and light. The file stays on your device.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧊</text></svg>">
+  <link rel="stylesheet" href="movies.css">
+  <link rel="stylesheet" href="projects.css">
+  <link rel="stylesheet" href="settings.css">
+  <link rel="stylesheet" href="motion.css">
+  <link rel="stylesheet" href="stl-viewer.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./vendor/three/build/three.module.js",
+        "three/addons/": "./vendor/three/addons/"
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <p class="logo"><a href="profile.html" title="Profile">PS</a></p>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="wallpaper.html">Wallpaper</a></li>
+        <li><a href="gaming.html">Games</a></li>
+        <li><a href="media.html">Media</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="portfolio.html">Portfolio</a></li>
+      </ul>
+      <button class="settings-toggle" id="settingsToggle" type="button" aria-label="Settings" title="Settings" aria-haspopup="dialog" aria-expanded="false" aria-controls="settingsPanel"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="3.34 3.34"/><circle cx="12" cy="12" r="5.2" fill="none" stroke="currentColor" stroke-width="4.4"/></svg></button>
+    </nav>
+  </header>
+
+  <main class="projects sv">
+    <section class="lists-intro">
+      <h1>3D Scan Viewer</h1>
+      <p>Open an STL file and see it in full colour and light, using everything the file stores. GLB and PLY scans work too.</p>
+      <p class="sv-private">Your file stays on your device. Nothing is uploaded anywhere.</p>
+    </section>
+
+    <div class="sv-layout">
+      <section class="sv-stage" id="sv-stage" aria-label="3D view">
+        <canvas id="sv-canvas" aria-label="The model. Drag to turn it, scroll or pinch to zoom, right-drag or two fingers to move it."></canvas>
+
+        <div class="sv-drop" id="sv-drop">
+          <div class="sv-drop-inner">
+            <p class="sv-drop-title">Drop a 3D file here</p>
+            <p class="sv-drop-sub">STL, GLB or PLY</p>
+            <label class="fancy-button sv-pick">Choose a file<input type="file" id="sv-file" accept=".stl,.glb,.ply,model/stl,model/gltf-binary"></label>
+          </div>
+        </div>
+
+        <p class="sv-busy" id="sv-busy" hidden>Reading the file…</p>
+        <p class="sv-error" id="sv-error" role="alert" hidden></p>
+
+        <div class="sv-tools" id="sv-tools" hidden>
+          <button type="button" id="sv-reset" title="Reset the view">Reset view</button>
+          <button type="button" id="sv-shot" title="Save a picture of the view">Screenshot</button>
+          <button type="button" id="sv-full" title="Full screen">Full screen</button>
+          <button type="button" id="sv-open" title="Open another file">Open another</button>
+        </div>
+        <p class="sv-hint" id="sv-hint" hidden>Drag to turn · scroll or pinch to zoom · right-drag to move</p>
+      </section>
+
+      <aside class="sv-panel" id="sv-panel" hidden>
+        <fieldset class="sv-group">
+          <legend>Colour</legend>
+          <div class="sv-seg" role="radiogroup" aria-label="Colour">
+            <button type="button" data-colour="file" aria-pressed="true">From the file</button>
+            <button type="button" data-colour="single" aria-pressed="false">One colour</button>
+          </div>
+          <label class="sv-row">Pick a colour <input type="color" id="sv-colour" value="#c9b8a6"></label>
+          <p class="sv-note" id="sv-colour-note" hidden></p>
+        </fieldset>
+
+        <fieldset class="sv-group">
+          <legend>Lighting</legend>
+          <div class="sv-seg" role="radiogroup" aria-label="Lighting">
+            <button type="button" data-light="studio" aria-pressed="true">Studio</button>
+            <button type="button" data-light="even" aria-pressed="false">Even</button>
+            <button type="button" data-light="daylight" aria-pressed="false">Daylight</button>
+            <button type="button" data-light="dramatic" aria-pressed="false">Dramatic</button>
+          </div>
+        </fieldset>
+
+        <fieldset class="sv-group" id="sv-finish-group">
+          <legend>Finish</legend>
+          <div class="sv-seg" role="radiogroup" aria-label="Finish">
+            <button type="button" data-finish="matte" aria-pressed="false">Matte</button>
+            <button type="button" data-finish="satin" aria-pressed="true">Satin</button>
+            <button type="button" data-finish="glossy" aria-pressed="false">Glossy</button>
+            <button type="button" data-finish="metal" aria-pressed="false">Metal</button>
+          </div>
+        </fieldset>
+
+        <fieldset class="sv-group">
+          <legend>Surface</legend>
+          <div class="sv-seg" role="radiogroup" aria-label="Surface">
+            <button type="button" data-shade="smooth" aria-pressed="true">Smooth</button>
+            <button type="button" data-shade="flat" aria-pressed="false">Facets</button>
+            <button type="button" data-shade="wire" aria-pressed="false">Wireframe</button>
+          </div>
+        </fieldset>
+
+        <fieldset class="sv-group">
+          <legend>View</legend>
+          <div class="sv-seg" role="radiogroup" aria-label="Which way is up">
+            <button type="button" data-up="y" aria-pressed="true">Y is up</button>
+            <button type="button" data-up="z" aria-pressed="false">Z is up</button>
+          </div>
+          <label class="sv-check"><input type="checkbox" id="sv-shadow" checked> Shadow on the floor</label>
+          <label class="sv-check"><input type="checkbox" id="sv-spin"> Turn slowly</label>
+        </fieldset>
+
+        <section class="sv-group sv-info" aria-labelledby="sv-info-head">
+          <h2 id="sv-info-head">What's in the file</h2>
+          <dl id="sv-facts"></dl>
+          <p class="sv-note" id="sv-info-note" hidden></p>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; <span id="year"></span> Parth</p>
+  </footer>
+
+  <script type="module" src="stl-viewer.js"></script>
+</body>
+
+</html>

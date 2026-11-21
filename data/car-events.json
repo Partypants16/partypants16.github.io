@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-11-15T17:00:44.477Z",
+  "generatedAt": "2026-11-20T17:00:28.336Z",
   "sources": [
     {
       "id": "trading-garage",
       "name": "Trading Garage",
       "url": "https://www.tradinggarage.com/events?state=vic",
-      "lastOk": "2026-11-15T17:00:44.477Z",
+      "lastOk": "2026-11-20T17:00:28.336Z",
       "count": 20,
       "status": "ok"
     },
@@ -13,7 +13,7 @@
       "id": "drivesome",
       "name": "Drivesome",
       "url": "https://drivesome.com/events/in/victoria",
-      "lastOk": "2026-11-15T17:00:44.477Z",
+      "lastOk": "2026-11-20T17:00:28.336Z",
       "count": 25,
       "status": "ok",
       "note": "first 25 listed (what the page publishes for search engines)"
@@ -22,10 +22,9 @@
       "id": "shannons",
       "name": "Shannons Club",
       "url": "https://club.shannons.com.au/club/events/search/?mode=upcoming&postcodeorsuburb=3000&distance=100",
-      "lastOk": "2026-11-13T17:00:26.981Z",
-      "count": 15,
-      "status": "failed",
-      "error": "getaddrinfo EAI_AGAIN club.shannons.com.au"
+      "lastOk": "2026-11-20T17:00:28.336Z",
+      "count": 16,
+      "status": "ok"
     }
   ],
   "events": [
@@ -43,40 +42,6 @@
         {
           "source": "trading-garage",
           "url": "https://tradinggarage.com/events/island-magic"
-        }
-      ]
-    },
-    {
-      "id": "fat-associates-chills-dinner-meet-2026-11-20",
-      "name": "Fat Associates Chills & Dinner Car Meet",
-      "start": "2026-11-20",
-      "end": null,
-      "time": "8:00 pm",
-      "venue": "Brownstone Micro Brewery",
-      "suburb": null,
-      "category": "Car Meet",
-      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmuc69pbp00kzkv3zrxughvg1.jpg",
-      "links": [
-        {
-          "source": "drivesome",
-          "url": "https://drivesome.com/events/fat-associates-halloween-chills-dinner-car-meet"
-        }
-      ]
-    },
-    {
-      "id": "mega-meet-sunbury-2026-11-20",
-      "name": "Mega Meet - Sunbury",
-      "start": "2026-11-20",
-      "end": null,
-      "time": "9:00 pm",
-      "venue": "90 Vineyard Road",
-      "suburb": "Sunbury",
-      "category": "Car Meet",
-      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmuc6abnz00pdkv3zwli8oy3o.jpg",
-      "links": [
-        {
-          "source": "drivesome",
-          "url": "https://drivesome.com/events/mega-meet-sunbury"
         }
       ]
     },
@@ -178,23 +143,6 @@
       ]
     },
     {
-      "id": "wangaratta-cruise-night-2026-11-21",
-      "name": "Wangaratta Cruise Night",
-      "start": "2026-11-21",
-      "end": null,
-      "time": "10:00 am",
-      "venue": null,
-      "suburb": "Wangaratta",
-      "category": "Drive/Cruise",
-      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmreoyjib00xt9qg9r5eftk84.jpg",
-      "links": [
-        {
-          "source": "drivesome",
-          "url": "https://drivesome.com/events/wangaratta-cruise-night"
-        }
-      ]
-    },
-    {
       "id": "castlemaine-rod-shop-invitational-2026-11-21",
       "name": "Castlemaine Rod Shop Invitational 2026",
       "start": "2026-11-21",
@@ -212,6 +160,23 @@
         {
           "source": "shannons",
           "url": "https://club.shannons.com.au/club/events/castlemaine-rod-shop-invitational/"
+        }
+      ]
+    },
+    {
+      "id": "wangaratta-cruise-night-2026-11-21",
+      "name": "Wangaratta Cruise Night",
+      "start": "2026-11-21",
+      "end": null,
+      "time": "10:00 am",
+      "venue": null,
+      "suburb": "Wangaratta",
+      "category": "Drive/Cruise",
+      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmreoyjib00xt9qg9r5eftk84.jpg",
+      "links": [
+        {
+          "source": "drivesome",
+          "url": "https://drivesome.com/events/wangaratta-cruise-night"
         }
       ]
     },
@@ -533,6 +498,40 @@
       ]
     },
     {
+      "id": "buninyong-hotel-2026-11-28",
+      "name": "Buninyong Hotel Car Show 2026",
+      "start": "2026-11-28",
+      "end": null,
+      "time": "11:00 am",
+      "venue": null,
+      "suburb": "Buninyong",
+      "category": "Car Show",
+      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/inbox/285f5deb-7f52-4392-af67-a6cc0a154061.jpg",
+      "links": [
+        {
+          "source": "drivesome",
+          "url": "https://drivesome.com/events/buninyong-hotel-car-show"
+        }
+      ]
+    },
+    {
+      "id": "northern-gal-willy-laps-cruise-2026-11-28",
+      "name": "Northern Gal: Willy Laps Cruise",
+      "start": "2026-11-28",
+      "end": null,
+      "time": "5:00 pm",
+      "venue": "Amart Campbellfield",
+      "suburb": "Campbellfield",
+      "category": "Drive/Cruise",
+      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmu6ri7bt000r3ole2yu78v8k.webp",
+      "links": [
+        {
+          "source": "drivesome",
+          "url": "https://drivesome.com/events/northern-gal-willy-laps-cruise"
+        }
+      ]
+    },
+    {
       "id": "classic-japan-2026-11-29",
       "name": "Classic Japan 2026",
       "start": "2026-11-29",
@@ -614,6 +613,23 @@
         {
           "source": "trading-garage",
           "url": "https://tradinggarage.com/events/frankston-rotary-motor-show"
+        }
+      ]
+    },
+    {
+      "id": "december-cars-coffee-x-mas-edition-2026-12-06",
+      "name": "December Cars & Coffee- X-mas Edition",
+      "start": "2026-12-06",
+      "end": null,
+      "time": "8am-11am",
+      "venue": "Marque Collective",
+      "suburb": null,
+      "category": "Car Meet",
+      "image": "https://club.shannons.com.au/img-library/676x956x1/events/BA88FC1F99G1K33I_feature/december-cars-coffee-x-mas-edition.jpg",
+      "links": [
+        {
+          "source": "shannons",
+          "url": "https://club.shannons.com.au/club/events/december-cars-coffee-x-mas-edition/"
         }
       ]
     },
@@ -741,6 +757,40 @@
         {
           "source": "shannons",
           "url": "https://club.shannons.com.au/club/events/40th-annual-picnic-at-hanging-rock-car-show/"
+        }
+      ]
+    },
+    {
+      "id": "morwell-swap-meet-2027-02-21",
+      "name": "Morwell Swap Meet",
+      "start": "2027-02-21",
+      "end": null,
+      "time": "6.00am to 2.00pm",
+      "venue": "Morwell",
+      "suburb": null,
+      "category": "Swap Meet",
+      "image": "/club/assets/images/placeholder-events.png",
+      "links": [
+        {
+          "source": "shannons",
+          "url": "https://club.shannons.com.au/club/events/morwell-swap-meet-2/"
+        }
+      ]
+    },
+    {
+      "id": "australian-amc-rambler-2027-02-26",
+      "name": "12th annual Australian AMC Rambler show",
+      "start": "2027-02-26",
+      "end": "2027-02-28",
+      "time": "Various",
+      "venue": "Wodonga Showgrounds Victoria",
+      "suburb": null,
+      "category": "Car Show",
+      "image": "https://club.shannons.com.au/img-library/676x956x1/events/KE66F2BACW7V259D_feature/12th-annual-australian-amc-rambler-show.jpg",
+      "links": [
+        {
+          "source": "shannons",
+          "url": "https://club.shannons.com.au/club/events/12th-annual-australian-amc-rambler-show/"
         }
       ]
     },

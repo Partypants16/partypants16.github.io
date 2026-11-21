@@ -1,0 +1,236 @@
+/* 3D Scan Viewer (stl-viewer.html): a dark "studio" stage for the model, with
+   the controls and the file's details beside it (below it on a phone).
+   Page colours come from movies.css / projects.css / settings.js, so light and
+   dark both work; the stage itself stays dark like a photo studio. */
+
+main.sv {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.sv-private {
+  font-size: .9rem;
+  color: var(--muted-text);
+}
+
+.sv-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 1rem;
+  align-items: start;
+}
+
+/* ---------- the stage ---------- */
+.sv-stage {
+  position: relative;
+  height: min(78vh, 820px);
+  min-height: 380px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 35%, #34373d 0%, #1b1c20 70%);
+  border: 1px solid var(--card-border);
+}
+
+/* The backdrop follows the lighting choice (set by stl-viewer.js). */
+.sv-stage[data-light="even"] { background: radial-gradient(ellipse at 50% 35%, #4a4d53 0%, #2a2c30 75%); }
+.sv-stage[data-light="daylight"] { background: linear-gradient(#8fb3d9 0%, #c9d9ea 55%, #b9b2a6 100%); }
+.sv-stage[data-light="dramatic"] { background: radial-gradient(ellipse at 50% 40%, #15171c 0%, #050506 70%); }
+
+.sv-stage:fullscreen {
+  height: 100%;
+  border-radius: 0;
+  border: 0;
+}
+
+#sv-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  outline: none;
+}
+
+.sv-drop {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  color: #eee;
+  text-align: center;
+  transition: background-color .15s ease;
+}
+
+.sv-drop-inner {
+  border: 2px dashed rgba(255, 255, 255, .35);
+  border-radius: 14px;
+  padding: 2rem 1.5rem;
+  max-width: 420px;
+  width: 100%;
+}
+
+.sv-drop.is-over { background: rgba(80, 140, 255, .18); }
+.sv-drop.is-over .sv-drop-inner { border-color: #8db4ff; }
+/* With a model loaded, the drop area only shows while something is dragged over it. */
+.sv-drop.is-hidden { opacity: 0; pointer-events: none; }
+.sv-drop.is-hidden.is-over { opacity: 1; }
+
+.sv-drop-title { font-size: 1.3rem; font-weight: 600; margin: 0 0 .25rem; }
+.sv-drop-sub { margin: 0 0 1.25rem; color: #bbb; }
+
+.sv-pick { cursor: pointer; }
+.sv-pick input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+.sv-pick:focus-within { outline: 2px solid #8db4ff; outline-offset: 3px; }
+
+.sv-busy,
+.sv-error {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  padding: .7rem 1rem;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, .75);
+  color: #fff;
+  max-width: calc(100% - 32px);
+  text-align: center;
+}
+.sv-error { background: rgba(150, 30, 30, .9); top: auto; bottom: 16px; transform: translateX(-50%); }
+
+.sv-tools {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+  max-width: calc(100% - 20px);
+}
+
+.sv-tools button {
+  font: inherit;
+  font-size: .85rem;
+  padding: .4rem .7rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, .2);
+  background: rgba(20, 20, 24, .7);
+  color: #f2f2f2;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+}
+.sv-tools button:hover { background: rgba(60, 60, 70, .85); }
+
+.sv-hint {
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
+  margin: 0;
+  font-size: .8rem;
+  color: rgba(255, 255, 255, .6);
+  pointer-events: none;
+}
+
+/* ---------- the side panel ---------- */
+.sv-panel {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: .9rem 1rem;
+}
+
+.sv-group {
+  border: 0;
+  margin: 0 0 1rem;
+  padding: 0;
+  min-width: 0;
+}
+
+.sv-group legend,
+.sv-info h2 {
+  font-size: .8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--muted-text);
+  margin: 0 0 .45rem;
+  padding: 0;
+}
+
+.sv-seg {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.sv-seg button {
+  flex: 1 1 auto;
+  font: inherit;
+  font-size: .85rem;
+  padding: .38rem .55rem;
+  border-radius: 8px;
+  border: 1px solid var(--control-border);
+  background: var(--control-bg);
+  color: var(--text);
+  cursor: pointer;
+}
+.sv-seg button[aria-pressed="true"] {
+  background: var(--link);
+  border-color: var(--link);
+  color: #fff;
+}
+.sv-seg button:disabled { opacity: .45; cursor: not-allowed; }
+
+.sv-row,
+.sv-check {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin-top: .5rem;
+  font-size: .9rem;
+}
+.sv-row { justify-content: space-between; }
+.sv-row input[type="color"] {
+  width: 44px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--control-border);
+  border-radius: 6px;
+  background: none;
+  cursor: pointer;
+}
+.sv-row.is-off { opacity: .45; }
+
+.sv-note {
+  font-size: .82rem;
+  color: var(--muted-text);
+  margin: .5rem 0 0;
+  line-height: 1.4;
+}
+
+.sv-info { margin-bottom: 0; }
+.sv-info dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: .3rem .75rem;
+  margin: 0;
+  font-size: .86rem;
+}
+.sv-info dt { color: var(--muted-text); }
+.sv-info dd { margin: 0; overflow-wrap: anywhere; }
+
+@media (max-width: 860px) {
+  .sv-layout { grid-template-columns: minmax(0, 1fr); }
+  .sv-stage { height: 62vh; min-height: 320px; }
+}
+
+@media (max-width: 600px) {
+  .sv-hint { display: none !important; }
+}
