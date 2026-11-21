@@ -79,12 +79,17 @@
 
     <div class="platform-container platform-container--games">
 
-        <a href="play/apex-dash/" target="_blank" rel="noopener noreferrer" class="platform-card game-card">
-            <span class="pfx pfx--sparkle" aria-hidden="true"></span>
-            <span class="game-icon" aria-hidden="true">🏎️</span>
-            <h2>Apex Dash</h2>
-            <p>My arcade racer: ten drivers, ten circuits and drift boosts, with art and music made just for it. Plays right here in your browser with a keyboard, gamepad or touch.</p>
-        </a>
+        <!-- Two ways to play: the link plays the copy on this site, the itch.io widget opens its itch.io page.
+             An iframe can't sit inside a link, so the card is a div with the link on top. -->
+        <div class="platform-card game-card game-card--two-ways">
+            <a href="play/apex-dash/" target="_blank" rel="noopener noreferrer" class="game-card-link">
+                <span class="pfx pfx--sparkle" aria-hidden="true"></span>
+                <span class="game-icon" aria-hidden="true">🏎️</span>
+                <h2>Apex Dash</h2>
+                <p>My arcade racer: ten drivers, ten circuits and drift boosts, with art and music made just for it. Plays right here in your browser with a keyboard, gamepad or touch.</p>
+            </a>
+            <iframe class="itch-embed" data-itch-embed="5412673" title="Apex Dash on itch.io" height="167" loading="lazy" frameborder="0"><a href="https://partypants16.itch.io/apex-dash">Apex Dash by Partypants16</a></iframe>
+        </div>
 
         <a href="play/apex-dash-3d-masters/" target="_blank" rel="noopener noreferrer" class="platform-card game-card">
             <span class="pfx pfx--sparkle" aria-hidden="true"></span>
@@ -119,6 +124,19 @@
     <script src="service-status.js"></script>
     <script>
         document.getElementById("year").textContent = new Date().getFullYear();
+
+        // itch.io widgets in the site's light or dark colours (settings.js sets data-theme="dark" on <html>).
+        const itchFrames = document.querySelectorAll("iframe[data-itch-embed]");
+        const itchDark = "?bg_color=1e1e1e&fg_color=eeeeee&link_color=fa5c5c&border_color=333333";
+        function setItchTheme() {
+            const dark = document.documentElement.getAttribute("data-theme") === "dark";
+            itchFrames.forEach((f) => {
+                const src = "https://itch.io/embed/" + f.dataset.itchEmbed + (dark ? itchDark : "");
+                if (f.getAttribute("src") !== src) f.setAttribute("src", src);
+            });
+        }
+        setItchTheme();
+        new MutationObserver(setItchTheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
     </script>
 </body>
 
