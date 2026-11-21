@@ -87,7 +87,7 @@ STATUSES = ["Done", "Needs testing", "Open", "Parked"]
 TITLE_MAX, SUMMARY_MAX = 60, 240
 
 # Files from my-website that the page uses as they are.
-SHARED = ["movies.css", "projects.css", "settings.css", "motion.css", "hinglish.js", "i18n.js", "settings.js",
+SHARED = ["movies.css", "projects.css", "settings.css", "motion.css", "hinglish.js", "i18n.js", "settings.js", "topbar.js",
           "motion.js", "wallpaper.js"]
 SHARED_DIRS = {"wallpapers": "*.js"}  # the scenes behind "Wallpaper behind every page"
 

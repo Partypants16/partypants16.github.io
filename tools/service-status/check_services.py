@@ -47,6 +47,7 @@ SERVICES = [
     ("searxng", "http://192.168.212.60:8081/"),
     ("apexdash", "http://192.168.212.60:8110/"),
     ("scanrunner", "http://192.168.212.60:8113/"),
+    ("portfolio", "http://192.168.212.60:8112/"),
     # No web port: up while its Docker container is running (shown on the home
     # page as a small line, not a card).
     ("discordbot", "docker:personal-automation-bot"),

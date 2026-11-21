@@ -461,6 +461,185 @@ html.settings-open .settings-panel {
 }
 
 /* ------------------------------ */
+/* Top bar extras (topbar.js): search button, Home Lab status dot, quick launcher */
+/* ------------------------------ */
+.launcher-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: white;
+  padding: .35em .5em;
+  border-radius: 999px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color .2s ease;
+}
+
+.launcher-toggle:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.launcher-toggle:focus-visible {
+  outline: 2px solid var(--accent-line, #e0f7fa);
+  outline-offset: 2px;
+}
+
+.launcher-toggle svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+
+.topbar-status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-left: .35em;
+  border-radius: 50%;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+  background: #9e9e9e;
+}
+
+.topbar-status-dot[data-state="up"] {
+  background: #2ecc40;
+  box-shadow: 0 0 6px rgba(46, 204, 64, 0.7);
+}
+
+.topbar-status-dot[data-state="some-down"] {
+  background: #ffb020;
+  box-shadow: 0 0 6px rgba(255, 176, 32, 0.7);
+}
+
+.topbar-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* The launcher box: a native <dialog>, near the top like a command palette */
+html.launcher-open {
+  overflow: hidden;
+}
+
+.launcher {
+  width: min(560px, calc(100vw - 32px));
+  max-height: min(520px, calc(100vh - 120px));
+  margin: 12vh auto auto;
+  padding: 0;
+  border: 1px solid var(--settings-border);
+  border-radius: 14px;
+  background: var(--settings-bg);
+  color: var(--settings-text);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+.launcher::backdrop {
+  background: var(--settings-backdrop);
+}
+
+.launcher-box {
+  display: flex;
+  flex-direction: column;
+  max-height: inherit;
+}
+
+.launcher-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 1rem 1.1rem;
+  border: 0;
+  border-bottom: 1px solid var(--settings-border);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 1.05rem;
+  outline: none;
+}
+
+.launcher-list {
+  list-style: none;
+  margin: 0;
+  padding: .4rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.launcher-group {
+  padding: .7rem .7rem .3rem;
+  color: var(--settings-muted);
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.launcher-item {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .6rem .7rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.launcher-item[aria-selected="true"] {
+  background: var(--settings-choice-bg);
+}
+
+.launcher-name {
+  flex: 1;
+  font-weight: 600;
+}
+
+.launcher-tag {
+  padding: .15em .6em;
+  border-radius: 999px;
+  background: var(--settings-tag-bg);
+  color: var(--settings-muted);
+  font-size: .7rem;
+  font-weight: 700;
+}
+
+.launcher-tag--lan {
+  background: #1464c0;
+  color: #fff;
+}
+
+.launcher-empty {
+  padding: 1rem .7rem;
+  color: var(--settings-muted);
+}
+
+.launcher-hint {
+  margin: 0;
+  padding: .55rem 1.1rem;
+  border-top: 1px solid var(--settings-border);
+  color: var(--settings-muted);
+  font-size: .75rem;
+}
+
+@media (max-width: 600px) {
+  .launcher {
+    margin-top: 10px;
+  }
+
+  .launcher-hint {
+    display: none; /* no arrow keys on a phone */
+  }
+}
+
+/* ------------------------------ */
 /* More kinds of setting          */
 /* ------------------------------ */
 
@@ -668,8 +847,8 @@ html[data-backdrop][data-theme="dark"] {
 }
 
 /* ---------- Top bar on small phones ----------
-   The top bar's six links (Home … Portfolio; the PS logo is the way to Profile)
-   crowd one row at 360px with the pages' own phone styles, so on small screens
+   The top bar's five links (Home … Home Lab, since 2026-11-21; the PS logo is the way to
+   Profile) and three buttons (search, language, settings) crowd one row at 360px with the pages' own phone styles, so on small screens
    the links get a little smaller and closer. Here rather than in each page's
    stylesheet because every page loads this one last. */
 @media (max-width: 420px) {

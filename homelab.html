@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="hinglish.js"></script>
+  <script src="i18n.js"></script>
+  <script src="settings.js"></script>
+  <script src="motion.js"></script>
+  <script src="topbar.js" defer></script>
+  <title>Parth | Home Lab</title>
+  <meta name="description" content="Parth's Home Lab: the self-hosted services on his home server (home Wi-Fi only).">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏠</text></svg>">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="settings.css">
+  <link rel="stylesheet" href="motion.css">
+</head>
+
+<body>
+  <header>
+    <nav>
+      <p class="logo"><a href="profile.html" title="Profile">PS</a></p>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="gaming.html">Games</a></li>
+        <li><a href="media.html">Media</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="homelab.html" aria-current="page">Home Lab</a></li>
+      </ul>
+      <button class="settings-toggle" id="settingsToggle" type="button" aria-label="Settings" title="Settings" aria-haspopup="dialog" aria-expanded="false" aria-controls="settingsPanel"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="3.34 3.34"/><circle cx="12" cy="12" r="5.2" fill="none" stroke="currentColor" stroke-width="4.4"/></svg></button>
+    </nav>
+  </header>
+
+  <main>
+    <div class="card-group card-group--lan card-group--page">
+      <div class="group-head">
+        <h1><span>Home Lab</span></h1>
+        <p>Everything running on the home server. It only opens on the home Wi-Fi.</p>
+      </div>
+
+      <!-- Filled in by service-status.js once the home server's status loads -->
+      <p class="status-summary" id="status-summary" hidden></p>
+      <!-- The Discord events bot has no page to open, so it gets a status line instead of a card -->
+      <p class="status-line" data-service="discordbot" hidden><span translate="no">Discord bot</span></p>
+
+      <h3 class="subgroup-head">Family</h3>
+      <div class="card-container">
+
+        <a href="http://192.168.212.160:2283/" target="_blank" rel="noopener noreferrer" class="card-link">
+          <div class="section card" data-service="immich">
+            <h2>Immich</h2>
+            <p>Takes you to the self-hosted Immich family photo library.</p>
+          </div>
+        </a>
+
+        <a href="http://192.168.212.60:8095" target="_blank" rel="noopener noreferrer" class="card-link">
+          <div class="section card" data-service="khane">
+            <h2>Khane main Kya hai?</h2>
+            <p>What's on the menu today? Takes you to the self-hosted family meal planner.</p>
+          </div>
+        </a>
+
+        <a href="http://192.168.212.60:3456" target="_blank" rel="noopener noreferrer" class="card-link">
+          <div class="section card" data-service="vikunja">
+            <h2>Vikunja</h2>
+            <p>The family's to-do lists and kanban boards, with reminders and recurring tasks. Takes you to the self-hosted Vikunja.</p>
+          </div>
+        </a>
+
+        <a href="http://192.168.212.60:8090" target="_blank" rel="noopener noreferrer" class="card-link">
+          <div class="section card" data-service="katha">
+            <h2>Katha Sankalp</h2>
+            <p>The planning board for the family's Shrimad Bhagwat Katha: guests and rooms, meal counts, tasks, budget and the pooja samagri list. Takes you to the self-hosted Katha Sankalp.</p>
+          </div>
+        </a>
+
+        <a href="sports.html?feature=Family+Tree" class="card-link">
+          <div class="section card">
+            <span class="badge badge--soon" title="Not built yet">Coming Soon</span>
+            <h2>Family Tree</h2>
+            <p>Digital family tree builder and genealogy tool.</p>
+          </div>
+        </a>
+      </div>
+
+      <h3 class="subgroup-head">Everyday tools</h3>
+      <div class="card-container">
+
+        <a href="http://192.168.212.60:3000" target="_blank" rel="noopener noreferrer" class="card-link">
+          <div class="section card" data-service="skywardrobe">
+            <h2>SkyWardrobe</h2>
+            <p>Melbourne, AU weather translated into what to wear now.</p>
+          </div>
+        </a>
+
+        <a href="http://192.168.212.60:8100" target="_blank" rel="noopener noreferrer" class="card-link">
+          <div class="section card" data-service="staysafe">
+            <h2>StaySafe (Local)</h2>
+            <p>Victoria Crime Prediction and Community Safety Map. This is a self-hosted local copy; the original online version has been shut down.</p>
+          </div>
+        </a>
+
+        <a href="http://192.168.212.60:4533" target="_blank" rel="noopener noreferrer" class="card-link">
+          <div class="section card" data-service="navidrome">
+            <h2>Navidrome</h2>
+            <p>Takes you to the self-hosted Navidrome music server.</p>
+          </div>
+        </a>
+
+        <a href="http://192.168.212.60" target="_blank" rel="noopener noreferrer" class="card-link">
+          <div class="section card" data-service="crosspaste">
+            <h2>CrossPaste</h2>
+            <p>One shared clipboard for moving text, images and files between your own devices. Takes you to the self-hosted CrossPaste.</p>
+          </div>
+        </a>
+
+        <a href="http://192.168.212.60:8081" target="_blank" rel="noopener noreferrer" class="card-link">
+          <div class="section card" data-service="searxng">
+            <h2>SearXNG</h2>
+            <p>A private search engine that asks Google, Bing and others for you, with no ads or tracking. It's also n8n's web search. Takes you to the self-hosted SearXNG.</p>
+          </div>
+        </a>
+
+        <a href="http://192.168.212.60:8000" target="_blank" rel="noopener noreferrer" class="card-link">
+          <div class="section card">
+            <h2>Sonic</h2>
+            <p>My local AI personal assistant, running on the home server. It starts up when you open it, so the first load takes a few seconds.</p>
+          </div>
+        </a>
+
+        <a href="http://192.168.212.60:8112" target="_blank" rel="noopener noreferrer" class="card-link">
+          <div class="section card" data-service="portfolio">
+            <h2>Portfolio</h2>
+            <p>My rules-based planner for US shares and ETFs: buy plans, a trade log and a ten-year backtest. Takes you to the Portfolio Manager.</p>
+          </div>
+        </a>
+      </div>
+
+      <h3 class="subgroup-head">Server &amp; automation</h3>
+      <div class="card-container">
+
+        <a href="http://192.168.212.60:5678" target="_blank" rel="noopener noreferrer" class="card-link">
+          <div class="section card" data-service="n8n">
+            <h2>n8n</h2>
+            <p>Automations built by picking triggers and actions on a visual canvas, like Azure Logic Apps, running on the home server. Takes you to the self-hosted n8n.</p>
+          </div>
+        </a>
+
+        <a href="http://192.168.212.60:19999" target="_blank" rel="noopener noreferrer" class="card-link">
+          <div class="section card" data-service="netdata">
+            <h2>Netdata</h2>
+            <p>Live health of the home server: CPU, memory, disks, network and every container, updated every second. Takes you to the self-hosted Netdata dashboard.</p>
+          </div>
+        </a>
+
+        <a href="http://192.168.212.60:8080" target="_blank" rel="noopener noreferrer" class="card-link">
+          <div class="section card" data-service="codeserver">
+            <h2>Code Server</h2>
+            <p>VS Code in the browser, running on the home server. Takes you to the self-hosted code-server.</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; <span id="year"></span> Parth</p>
+  </footer>
+
+  <script src="service-status.js"></script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+
+</html>

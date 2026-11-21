@@ -8,6 +8,7 @@
   <script src="i18n.js"></script>
   <script src="settings.js"></script>
   <script src="motion.js"></script>
+  <script src="topbar.js" defer></script>
   <title>Media | Parth</title>
   <meta name="description" content="Parth's media pages: movie recommendation lists and franchise trackers, and his music listening history in charts.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎞️</text></svg>">
@@ -24,11 +25,10 @@
       <p class="logo"><a href="profile.html" title="Profile">PS</a></p>
       <ul>
         <li><a href="index.html">Home</a></li>
-        <li><a href="wallpaper.html">Wallpaper</a></li>
         <li><a href="gaming.html">Games</a></li>
         <li><a href="media.html" aria-current="page">Media</a></li>
         <li><a href="projects.html">Projects</a></li>
-        <li><a href="portfolio.html">Portfolio</a></li>
+        <li><a href="homelab.html">Home Lab</a></li>
       </ul>
       <button class="settings-toggle" id="settingsToggle" type="button" aria-label="Settings" title="Settings" aria-haspopup="dialog" aria-expanded="false" aria-controls="settingsPanel"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="3.34 3.34"/><circle cx="12" cy="12" r="5.2" fill="none" stroke="currentColor" stroke-width="4.4"/></svg></button>
     </nav>
@@ -37,7 +37,7 @@
   <main class="projects media">
     <section class="lists-intro">
       <h1>Media</h1>
-      <p>What I watch and what I listen to, each with its own page.</p>
+      <p>What I watch, what I listen to, and the wallpapers I made, each with its own page.</p>
     </section>
 
     <div class="media-cards">
@@ -57,6 +57,14 @@
           <p class="feature-tagline">Charts of what I've listened to over the years: top artists and songs, and when I listen most.</p>
           <ul class="feature-counts" id="music-counts" hidden></ul>
           <span class="feature-cta"><span>Open Music</span><svg class="pj-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></span>
+        </div>
+      </a>
+      <a class="feature-card media-card" href="wallpaper.html">
+        <div class="feature-body">
+          <span class="pj-eyebrow">Made in code</span>
+          <h2>Wallpaper</h2>
+          <p class="feature-tagline">Fifteen live wallpapers and a start page with a clock. Pick one to sit behind every page of this site.</p>
+          <span class="feature-cta"><span>Open Wallpaper</span><svg class="pj-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></span>
         </div>
       </a>
     </div>

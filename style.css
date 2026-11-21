@@ -190,12 +190,17 @@ section p {
   margin: 3.5rem auto 1rem;
 }
 
+/* The Home Lab page starts with the group, so less space above it */
+.card-group--page {
+  margin-top: 2rem;
+}
+
 .group-head {
   padding: 0 20px;
   text-align: center;
 }
 
-.group-head h2 {
+.group-head :is(h1, h2) {
   display: flex;
   align-items: center;
   gap: 1.25rem;
@@ -203,8 +208,8 @@ section p {
   line-height: 1;
 }
 
-.group-head h2::before,
-.group-head h2::after {
+.group-head :is(h1, h2)::before,
+.group-head :is(h1, h2)::after {
   content: "";
   flex: 1;
   height: 2px;
@@ -212,11 +217,11 @@ section p {
   background: linear-gradient(to left, var(--group-colour), transparent);
 }
 
-.group-head h2::after {
+.group-head :is(h1, h2)::after {
   background: linear-gradient(to right, var(--group-colour), transparent);
 }
 
-.group-head h2 span {
+.group-head :is(h1, h2) span {
   padding: 0.55em 1.4em;
   border-radius: 999px;
   background: var(--group-colour);
@@ -267,11 +272,15 @@ section p {
     margin-top: 2.5rem;
   }
 
-  .group-head h2 {
+  .card-group--page {
+    margin-top: 1.5rem;
+  }
+
+  .group-head :is(h1, h2) {
     gap: 0.75rem;
   }
 
-  .group-head h2 span {
+  .group-head :is(h1, h2) span {
     font-size: 0.9rem;
     padding: 0.5em 1.1em;
   }

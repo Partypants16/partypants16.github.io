@@ -163,6 +163,23 @@ const HINGLISH = {
     "Franchise": "Franchise",
     "Franchises": "Franchises",
     "Title tracked": "Title track hua",
+    "What I watch, what I listen to, and the wallpapers I made, each with its own page.": "Main kya dekhta hoon, kya sunta hoon, aur maine jo wallpapers banaye, sabka apna page.",
+    "Made in code": "Code se bana",
+    "Fifteen live wallpapers and a start page with a clock. Pick one to sit behind every page of this site.": "Pandrah live wallpapers aur ghadi wala ek start page. Ek chuno aur woh is site ke har page ke peeche lag jaayega.",
+    "Open Wallpaper": "Wallpaper kholo",
+
+    // ---------- Home Lab (homelab.html) and the top bar extras (topbar.js) ----------
+    "Parth | Home Lab": "Parth | Home Lab",
+    "Everything running on the home server. It only opens on the home Wi-Fi.": "Ghar ke server pe jo kuch chal raha hai, sab yahan. Yeh sirf ghar ke Wi-Fi pe khulta hai.",
+    "My rules-based planner for US shares and ETFs: buy plans, a trade log and a ten-year backtest. Takes you to the Portfolio Manager.": "US shares aur ETFs ke liye mera rules wala planner: buy plans, trade log aur das saal ka backtest. Portfolio Manager pe le jaata hai.",
+    "All home services are online": "Ghar ki saari services online hain",
+    "The home server isn't reporting": "Ghar ka server report nahi kar raha",
+    "Quick launcher": "Quick launcher",
+    "Search pages, games and home services": "Pages, games aur ghar ki services dhoondo",
+    "No matches": "Kuch nahi mila",
+    "Games": "Games",
+    "Only opens on the home Wi-Fi": "Sirf ghar ke Wi-Fi pe khulta hai",
+    "↑ ↓ to choose, Enter to open, Esc to close. LAN ones only open on the home Wi-Fi.": "↑ ↓ se chuno, Enter se kholo, Esc se band karo. LAN wale sirf ghar ke Wi-Fi pe khulte hain.",
     "Titles tracked": "Titles track hue",
     "← Media": "← Media",
 
