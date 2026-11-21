@@ -25,6 +25,7 @@ import subprocess
 import sys
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
@@ -71,6 +72,15 @@ PUBLISHED_FILE = DATA_DIR / "published.json"
 LOG_FILE = DATA_DIR / "status.log"
 
 GIST_FILENAME = "status.json"
+# Melbourne's weather for the website's clock-and-weather (since 2026-11-21): fetched from
+# OpenWeatherMap with SkyWardrobe's key, read from its .env on this box each run so the key
+# never leaves the box (the website is public and can't hold a key). Only the numbers are
+# published, as weather.json in the same gist.
+WEATHER_GIST_FILENAME = "weather.json"
+WEATHER_FILE = DATA_DIR / "weather.json"
+WEATHER_ENV = HOME / "Desktop" / "SkyWardrobe" / "SkyWardrobe-Docker" / ".env"
+WEATHER_EVERY_MINUTES = 15
+MELBOURNE = (-37.8136, 144.9631)
 GIST_DESCRIPTION = "Service status for partypants16.github.io, updated by the home server every few minutes."
 
 
@@ -164,8 +174,60 @@ def github(method, url, token, body=None):
         return json.loads(response.read().decode("utf-8"))
 
 
-def publish(payload, verbose):
-    """Sends the payload to the gist (making the gist the first time). Returns True on success."""
+def openweather_key():
+    try:
+        for line in WEATHER_ENV.read_text(encoding="utf-8").splitlines():
+            if line.startswith("OPENWEATHER_KEY="):
+                return line.split("=", 1)[1].strip().strip('"').strip("'")
+    except OSError:
+        pass
+    return ""
+
+
+def iso_from_unix(seconds):
+    return datetime.fromtimestamp(seconds, timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def fetch_weather(verbose):
+    """Melbourne's current weather from OpenWeatherMap, or None. Never logs the URL (it holds the key)."""
+    key = openweather_key()
+    if not key:
+        log("Weather: no OPENWEATHER_KEY in %s" % WEATHER_ENV)
+        return None
+    query = urllib.parse.urlencode({"lat": MELBOURNE[0], "lon": MELBOURNE[1], "units": "metric", "appid": key})
+    try:
+        with urllib.request.urlopen("https://api.openweathermap.org/data/2.5/weather?" + query, timeout=15) as response:
+            data = json.loads(response.read().decode("utf-8"))
+        main, sky, sys_info = data["main"], data["weather"][0], data["sys"]
+        return {
+            "fetched_at": now_iso(),
+            "place": "Melbourne",
+            "source": "OpenWeatherMap",
+            "temp": round(main["temp"], 1),
+            "feels_like": round(main["feels_like"], 1),
+            "temp_min": round(main["temp_min"], 1),
+            "temp_max": round(main["temp_max"], 1),
+            "humidity": main.get("humidity"),
+            "wind_kmh": round(data.get("wind", {}).get("speed", 0) * 3.6),
+            "main": sky.get("main"),
+            "description": sky.get("description"),
+            "icon": sky.get("icon"),
+            "is_day": str(sky.get("icon", "")).endswith("d"),
+            "sunrise": iso_from_unix(sys_info["sunrise"]),
+            "sunset": iso_from_unix(sys_info["sunset"]),
+        }
+    except urllib.error.HTTPError as error:
+        log("Weather: OpenWeatherMap answered HTTP %d" % error.code)
+    except (urllib.error.URLError, OSError, ValueError, KeyError, IndexError) as error:
+        log("Weather: %s" % type(error).__name__)
+    if verbose:
+        print("Weather: couldn't fetch it (see the log).")
+    return None
+
+
+def publish(payload, verbose, weather=None):
+    """Sends the payload (and fresh weather, if any) to the gist (making the gist the first time).
+    Returns True on success."""
     try:
         token = TOKEN_FILE.read_text(encoding="utf-8").strip()
     except OSError:
@@ -176,6 +238,8 @@ def publish(payload, verbose):
         return False
 
     files = {GIST_FILENAME: {"content": json.dumps(payload, indent=2) + "\n"}}
+    if weather:
+        files[WEATHER_GIST_FILENAME] = {"content": json.dumps(weather, indent=2) + "\n"}
     gist_id = GIST_ID_FILE.read_text(encoding="utf-8").strip() if GIST_ID_FILE.exists() else ""
     try:
         if gist_id:
@@ -237,6 +301,20 @@ def main():
         for service_id, info in services.items():
             print("  %-12s %s" % (service_id, "up" if info["up"] else "DOWN"))
 
+    # Weather every WEATHER_EVERY_MINUTES (a free OpenWeatherMap key allows far more).
+    weather = None
+    saved = read_json(WEATHER_FILE) or {}
+    try:
+        weather_age = (parse_iso(checked_at) - parse_iso(saved["fetched_at"])).total_seconds() / 60
+    except (KeyError, ValueError):
+        weather_age = float("inf")
+    if args.force or weather_age >= WEATHER_EVERY_MINUTES - 1:
+        weather = fetch_weather(args.verbose)
+        if weather:
+            write_json(WEATHER_FILE, weather)
+            if args.verbose:
+                print("  weather      %s C, %s" % (weather["temp"], weather["description"]))
+
     published = read_json(PUBLISHED_FILE) or {}
     changed = {k: v["up"] for k, v in published.get("services", {}).items()} != {k: v["up"] for k, v in services.items()}
     try:
@@ -244,8 +322,8 @@ def main():
     except (KeyError, ValueError):
         age_minutes = float("inf")
 
-    if args.force or changed or age_minutes >= HEARTBEAT_MINUTES - 1:
-        if publish(payload, args.verbose):
+    if args.force or changed or weather or age_minutes >= HEARTBEAT_MINUTES - 1:
+        if publish(payload, args.verbose, weather):
             write_json(PUBLISHED_FILE, payload)
             if args.verbose:
                 print("Published.")
