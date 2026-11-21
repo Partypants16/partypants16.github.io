@@ -130,6 +130,7 @@ def collect(key, name, folder):
         pages.append({"key": key, "space": name, "folder": folder, "path": path, "rel": rel.as_posix(), "meta": meta,
                       "body": body, "title": title, "id": cid, "out": f"{key}/{cid}.html",
                       "pos": order.get(rel.as_posix(), 10**9)})
+    add_placeholders(folder, pages)
     ids = {p["id"] for p in pages}
     for p in pages:
         parent = p["meta"].get("parent_content_id", "")
@@ -140,6 +141,53 @@ def collect(key, name, folder):
     for group in children.values():
         group.sort(key=lambda p: (p["pos"], p["title"].lower()))
     return pages, children
+
+
+def add_placeholders(folder, pages):
+    """Stand-ins for parent pages a partial export hasn't reached yet (DSRE, 2026-11-01).
+
+    An export keeps a page in its parent's folder even while the parent itself is still pending,
+    so the folder says where it belongs. Each missing parent gets a placeholder at that folder's
+    path, under its own content_id when a child names it (so its URL is the same once the real
+    page arrives), and the folder above decides the placeholder's own parent, the same way.
+    """
+    by_rel = {p["rel"]: p for p in pages}
+    ids = {p["id"] for p in pages}
+    roots = [p for p in pages if not p["meta"].get("parent_content_id") and "/" not in p["rel"]]
+    home = roots[0]["id"] if len(roots) == 1 else ""
+
+    def placeholder(dir_rel, cid, url):
+        rel = dir_rel + ".md"
+        if rel in by_rel:
+            return by_rel[rel]["id"]
+        if cid in ids:
+            return cid
+        up = dir_rel.rpartition("/")[0]
+        parent = placeholder(up, "", "") if up else home
+        known = cid
+        cid = cid or "p" + hashlib.sha1(rel.encode()).hexdigest()[:12]
+        title = dir_rel.rpartition("/")[2]
+        page = {"key": pages[0]["key"], "space": pages[0]["space"], "folder": folder, "path": folder / rel, "rel": rel,
+                "meta": {"parent_content_id": parent, "confluence_url": url, "content_id": known},
+                "body": f"# {title}\n\n*This page hasn't been exported from Confluence yet. "
+                        "The pages under it that have been are listed below.*\n",
+                "title": f"{title} (not exported yet)", "id": cid, "out": f"{pages[0]['key']}/{cid}.html", "pos": 10**9, "placeholder": True}
+        pages.append(page)
+        by_rel[rel] = page
+        ids.add(cid)
+        return cid
+
+    for p in list(pages):
+        parent = p["meta"].get("parent_content_id", "")
+        if parent and parent not in ids and "/" in p["rel"]:
+            url = re.sub(r"/pages/\d+.*$", f"/pages/{parent}", p["meta"].get("confluence_url", "")) if PAGE_ID.search(
+                p["meta"].get("confluence_url", "")) else ""
+            got = placeholder(p["rel"].rpartition("/")[0], parent, url)
+            p["meta"]["parent_content_id"] = got
+
+
+def placeholder_children(page, children):
+    return f'<h2 id="pages">Pages under it</h2>\n<div class="cf-fulltree">{tree_html(page["id"], children)}</div>'
 
 
 # ---------- Rendering ----------
@@ -335,6 +383,8 @@ def render_all(source, dest, template_path, warn, space_list):
             headings = env.get("headings", [])
             extra = source_panel(page) + notes_box(page, notes_root, resolve) + encyclopedia.toc_html(headings)
             rendered = rendered.replace("</h1>", "</h1>\n" + extra, 1)
+            if page.get("placeholder"):
+                rendered += placeholder_children(page, children)
             (dest / page["out"]).write_text(fill(
                 template, root="../../", site="../../../",
                 tab_title=f"{page['title']} · {key} · Encyclopedia | Parth", title=page["title"],
@@ -342,11 +392,14 @@ def render_all(source, dest, template_path, warn, space_list):
                 crumbs_html=crumbs(page, by_id), nav_html=nav(space_list, key, page["id"]), content=rendered,
                 neighbours_html=neighbours(page, children), source=f"Coles/Confluence/{folder.name}/{page['rel']}",
                 mermaid=env.get("mermaid")), encoding="utf-8")
+            if page.get("placeholder"):
+                continue
             heads = [t for level, t, _ in headings if level > 1]
             titles.append({"u": f"confluence/{page['out']}", "t": page["title"], "s": f"Confluence · {key}", "h": heads[:30]})
             shard.append({"u": f"confluence/{page['out']}", "t": page["title"], "s": f"Confluence · {key}", "h": heads[:30],
                           "b": encyclopedia.plain(page["body"])[:SEARCH_BODY_MAX]})
-        total += len(pages)
+        real = [p for p in pages if not p.get("placeholder")]
+        total += len(real)
         if missing:
             warn(f"confluence/{key}", f"{len(missing)} link(s) to pages that aren't in the mirror (shown as plain text)")
 
@@ -354,7 +407,7 @@ def render_all(source, dest, template_path, warn, space_list):
                                               encoding="utf-8")
         (dest / "search" / f"{key}.json").write_text(json.dumps(shard, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
         write_space_pages(key, name, folder, pages, children, space_list, template, dest, by_path, by_id)
-        summary.append((key, name, folder, len(pages)))
+        summary.append((key, name, folder, len(real)))
 
     write_landing(source, summary, space_list, template, dest)
     (dest / "titles.json").write_text(json.dumps(titles, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
@@ -387,7 +440,9 @@ def write_space_pages(key, name, folder, pages, children, space_list, template, 
             source=f"Coles/Confluence/{folder.name}/{src}", mermaid=env.get("mermaid")), encoding="utf-8")
         extras.append(f'<a href="{out}">{label}</a>')
 
-    rows = [("Space key", key), ("Pages here", str(len(pages))), ("Export", status), ("Exported", exported)]
+    waiting = sum(1 for p in pages if p.get("placeholder"))
+    rows = [("Space key", key), ("Pages here", str(len(pages) - waiting)), ("Export", status), ("Exported", exported),
+            ("Parent pages not exported yet", str(waiting) if waiting else "")]
     panel = "<aside class=\"cf-source\"><dl>" + "".join(f"<div><dt>{k}</dt><dd>{html.escape(v)}</dd></div>" for k, v in rows if v) + "</dl>"
     panel += (f'<p class="cf-open">{" · ".join(extras)}</p>' if extras else "") + "</aside>"
     content = (f"<h1>{html.escape(name)}</h1>\n{panel}\n<h2 id=\"pages\">Pages<a class=\"anchor\" href=\"#pages\" aria-label=\"Link to this heading\">#</a></h2>\n"
