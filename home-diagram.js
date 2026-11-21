@@ -184,11 +184,16 @@
       return out;
     },
     projects() {
-      return [para(t("The stories behind what I've built: the journey, the big calls and what I learned.")), links([
-        [t("See my projects"), "projects.html"],
-        [t("3D Scan Viewer"), "stl-viewer.html", t("Open an STL or 3D scan")],
-        [t("Vibe Testing Zone"), "vibe-testing-zone/home.html", t("Quick experiments")]
-      ])];
+      return [para(t("The stories behind what I've built: the journey, the big calls and what I learned.")), links([[t("See my projects"), "projects.html"]])];
+    },
+    scanviewer() {
+      return [para(t("Open an STL file or a 3D scan and see it in full colour and light. Your file never leaves your device.")),
+        para(t("Works with STL, GLB, PLY and USDZ files.")),
+        links([[t("Open the viewer"), "stl-viewer.html"]])];
+    },
+    vibe() {
+      return [para(t("Pure vibe coding to test the capabilities and experiment with new technologies. No fleshed out products.")),
+        links([[t("Step inside"), "vibe-testing-zone/home.html"]])];
     },
     about() {
       return [para(t("Who I am, what I use and how to reach me.")), links([[t("Profile"), "profile.html"], ["GitHub", "https://github.com/Partypants16"]])];
@@ -233,8 +238,8 @@
   // ---------- Layout and wires ----------
   // Where each node sits, as a fraction of the stage (centre = hub). Dragging changes these.
   const SPOTS = {
-    play: [0.2, 0.22], media: [0.2, 0.5], cars: [0.2, 0.78],
-    homelab: [0.8, 0.22], projects: [0.8, 0.5], about: [0.8, 0.78]
+    play: [0.2, 0.15], media: [0.2, 0.38], cars: [0.2, 0.62], scanviewer: [0.2, 0.85],
+    homelab: [0.8, 0.15], projects: [0.8, 0.38], vibe: [0.8, 0.62], about: [0.8, 0.85]
   };
   const pos = {};
   function place() {

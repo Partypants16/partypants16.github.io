@@ -39,7 +39,7 @@
   position: relative;
   width: 100%;
   height: calc(100svh - 72px);
-  min-height: 560px;
+  min-height: 640px;
 }
 
 .hd-wires {

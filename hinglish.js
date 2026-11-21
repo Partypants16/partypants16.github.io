@@ -169,6 +169,8 @@ const HINGLISH = {
     "Open Wallpaper": "Wallpaper kholo",
 
     // ---------- Home page diagram (index.html + home-diagram.js) ----------
+    "Works with STL, GLB, PLY and USDZ files.": "STL, GLB, PLY aur USDZ files ke saath chalta hai.",
+    "Vibe Testing Zone": "Vibe Testing Zone",
     "Play": "Khelo",
     "Watch & Listen": "Dekho aur Suno",
     "Movies, music and wallpapers": "Movies, gaane aur wallpapers",
