@@ -76,7 +76,7 @@ SESSION_DIRS = {"claude": CONTEXT / "sessions", "chatgpt": CHATGPT / "sessions",
 PAGE_URL = {"claude": "./", "chatgpt": "chatgpt.html", "mridul": "mridul.html"}
 
 # The filter lists show these in this order.
-PROJECTS = ["Website", "Apex Dash", "Apex Dash 3D Masters", "Claire", "Iris", "PAT-AI", "PrintPlace", "SkyWardrobe",
+PROJECTS = ["Website", "Apex Dash", "Apex Dash 3D Masters", "Scan Runner", "Claire", "Iris", "PAT-AI", "PrintPlace", "SkyWardrobe",
             "StaySafe", "CrossPaste", "Sonic", "Gaming Archive", "NovaDiagnostics", "PocketDIY", "Automation Bot", "Portfolio Manager", "n8n", "Coles", "Remote box",
             "Music", "Physical projects", "Photos", "OpenRecall", "Workspace"]
 # Mridul's page has its own (his projects aren't in parth_project).
