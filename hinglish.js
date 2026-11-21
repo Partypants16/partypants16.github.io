@@ -111,6 +111,8 @@ const HINGLISH = {
     "Melbourne, AU weather translated into what to wear now.": "Melbourne ka mausam, seedha is baat mein ki abhi kya pehnein.",
     "Coming Soon": "Jaldi aa raha hai",
     "Not built yet": "Abhi bana nahi hai",
+    "In Progress": "Kaam chal raha hai",
+    "Still being built": "Abhi ban raha hai",
     "Digital family tree builder and genealogy tool.": "Digital family tree banane aur khandaan ki history dhoondhne ka tool.",
     "Takes you to the self-hosted Immich family photo library.": "Self-hosted Immich family photo library pe le jaata hai.",
     "Takes you to the self-hosted Navidrome music server.": "Self-hosted Navidrome music server pe le jaata hai.",
