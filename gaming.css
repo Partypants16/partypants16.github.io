@@ -213,8 +213,9 @@ h1 {
 }
 
 .itch-button-icon {
-    width: 22px;
-    height: 20px;
+    width: 18px;
+    height: 16px;
+    flex: none;
     fill: currentColor;
 }
 
