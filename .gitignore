@@ -14,9 +14,11 @@ tools/claude-timeline/vendor/
 # Python bytecode (build.py imports todo.py)
 __pycache__/
 
-# Parth's raw Spotify export (copied from ai/PAT-AI/Parth_Info/). It has IP
-# addresses and devices: never commit it. tools/build_music_data.py turns it
-# into music-data.js, which holds only totals and top lists.
+# Raw Spotify exports have IP addresses and devices: never commit them. They live
+# outside this repo in ../../_workspace/spotify-exports/<person>/ (Parth's moved
+# there from _spotify_raw/ on 2026-11-24). tools/build_music_data.py turns them
+# into music-data*.js, which hold only totals and top lists. The old folder stays
+# ignored in case a copy is ever dropped here again.
 _spotify_raw/
 
 # React pages: dependencies (react-src/ is built into music-explorer.js and movie-tracker.js)

@@ -73,7 +73,7 @@ Then go to <http://localhost:8000>.
 - `vibe-testing-zone/` is a playground for experiments.
 - `tools/` holds helper scripts:
   - `build_franchise_data.py` regenerates `franchise-data.js` (don't edit that file by hand).
-  - `build_music_data.py` regenerates each person's `music-data[-<person>].js` and `music-explorer-data[-<person>].js`, plus `music-people.js` (who there is, for the picker and the Media card), from the raw Spotify exports, which never go in this repo: mine in the git-ignored `_spotify_raw/`, everyone else's in `_workspace/spotify-exports/<person>/` outside it. Who's included is `PEOPLE` at the top of the script. A person's page swaps "I" / "my" for their name (`data-other` in `music.html`) and uses local time instead of Melbourne time when most of their listening was abroad.
+  - `build_music_data.py` regenerates each person's `music-data[-<person>].js` and `music-explorer-data[-<person>].js`, plus `music-people.js` (who there is, for the picker and the Media card), from the raw Spotify exports, which never go in this repo: everyone's, mine included, is in `_workspace/spotify-exports/<person>/` outside it. Who's included is `PEOPLE` at the top of the script. A person's page swaps "I" / "my" for their name (`data-other` in `music.html`) and uses local time instead of Melbourne time when most of their listening was abroad.
   - `build_wallpaper_images.py` draws the images some wallpapers use.
   - `pixelfx_strips.mjs` re-renders the pixel-art strips in `images/pixelfx/` from a pixelfx checkout (it says how).
   - [`service-status/`](tools/service-status/README.md) is the checker behind the Online/Offline dots.

@@ -12,10 +12,10 @@ are theirs, and a few totals for the picker page and the Media card). That one
 is made from whichever data files exist, so building one person keeps the rest.
 
 Raw folders (never in the repo):
-- Parth: _spotify_raw/ (git-ignored; copied from ai/PAT-AI/Parth_Info/Spotify
-  Extended Streaming History/)
-- Aaron, Henry: ../../_workspace/spotify-exports/<key>/ (outside the repo,
-  since 2026-11-24)
+- Everyone, Parth included: ../../_workspace/spotify-exports/<key>/ (outside
+  the repo; Aaron and Henry since 2026-11-24, Parth's moved there the same day
+  from the git-ignored _spotify_raw/. His original is in ai/PAT-AI/Parth_Info/
+  Spotify Extended Streaming History/)
 
 Adding someone: unzip their export into _workspace/spotify-exports/<key>/, add
 a line to PEOPLE, run this, add their Hinglish lines if any text is new, and
@@ -54,7 +54,7 @@ EXPORTS = os.path.join(WORKSPACE, "_workspace", "spotify-exports")
 # In the order the picker shows them. "self" is the site's owner: his pages say
 # "I" and "my"; everyone else's use their name.
 PEOPLE = {
-    "parth": {"name": "Parth", "self": True, "raw": os.path.join(SITE, "_spotify_raw"), "suffix": ""},
+    "parth": {"name": "Parth", "self": True, "raw": os.path.join(EXPORTS, "parth"), "suffix": ""},
     "aaron": {"name": "Aaron", "self": False, "raw": os.path.join(EXPORTS, "aaron"), "suffix": "-aaron"},
     "henry": {"name": "Henry", "self": False, "raw": os.path.join(EXPORTS, "henry"), "suffix": "-henry"},
 }
