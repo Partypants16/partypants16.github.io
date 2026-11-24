@@ -254,6 +254,36 @@ class Rig {
     _q.premultiply(new THREE.Quaternion().setFromUnitVectors(cur, _v.copy(dir).normalize()));
     this.setWorld(c, _q);
   }
+  // Point a two-bone limb (upper arm + forearm, or thigh + shin) along uDir and lDir while
+  // keeping its hinge (elbow/knee axis) in place: the upper bone gets the whole rotation
+  // that carries the current hinge onto the wanted one, then the lower bone just bends.
+  // Aiming each bone by the shortest turn instead lets the limb twist about its own axis,
+  // which wrings the skin and points elbows and knees the wrong way.
+  // hinge: a fixed world axis (knees), or null to use the elbow's own bend plane.
+  aimLimb(c1, c2, uDir, lDir, hinge) {
+    if (!this.map.has(c1) || !this.map.has(c2)) { this.aim(c1, uDir); this.aim(c2, lDir); return; }
+    const u0 = this.dirOf(c1), l0 = this.dirOf(c2);
+    if (!u0 || !l0) { this.aim(c1, uDir); this.aim(c2, lDir); return; }
+    const u = uDir.clone().normalize(), l = lDir.clone().normalize();
+    let n0 = hinge ? hinge.clone() : new THREE.Vector3().crossVectors(u0, l0);
+    if (n0.lengthSq() < 1e-4) { this.aim(c1, u); this.aim(c2, l); return; }
+    n0.normalize();
+    const carried = n0.clone().applyQuaternion(new THREE.Quaternion().setFromUnitVectors(u0, u));
+    let n = hinge ? hinge.clone() : new THREE.Vector3().crossVectors(u, l);
+    if (n.lengthSq() < 0.0025) n = carried;                  // nearly straight: keep the hinge
+    else if (n.dot(carried) < 0) n.negate();                 // never flip the joint backwards
+    const basis = (a, h) => {
+      const x = a.clone();
+      const z = h.clone().sub(x.clone().multiplyScalar(x.dot(h))).normalize();
+      return new THREE.Matrix4().makeBasis(x, new THREE.Vector3().crossVectors(z, x), z);
+    };
+    const R = new THREE.Quaternion().setFromRotationMatrix(basis(u, n).multiply(basis(u0, n0).transpose()));
+    const b = this.map.get(c1);
+    b.getWorldQuaternion(_q);
+    _q.premultiply(R);
+    this.setWorld(c1, _q);
+    this.aim(c2, l);
+  }
   // move the hips (world offset from their rest position)
   hipsOffset(off) {
     const r = this.rest.get('hips'), b = this.map.get('hips');
@@ -271,20 +301,25 @@ const TAU = Math.PI * 2;
 const d = (x, y, z) => new THREE.Vector3(x, y, z);
 const swingDir = (side, a, out = 0.06) => d(side * out, -Math.cos(a), Math.sin(a)); // a: forward angle from straight down
 
-function standLegs(p, bend = 0) {
-  for (const s of [1, -1]) {
-    p.aim[(s > 0 ? 'left' : 'right') + 'UpperLeg'] = swingDir(s, bend, 0.05);
-    p.aim[(s > 0 ? 'left' : 'right') + 'LowerLeg'] = swingDir(s, -bend * 1.2, 0.03);
-    p.aim[(s > 0 ? 'left' : 'right') + 'Foot'] = d(s * 0.06, -0.4, 1);
-  }
+// One leg: thigh swung `a` radians forward (negative = behind), knee bent `flex`.
+// The foot stays roughly square to the shin, so ankles don't lock.
+function leg(p, s, a, flex, out = 0.05) {
+  const n = s > 0 ? 'left' : 'right';
+  const shin = a - flex;
+  const f = shin + 1.32 + Math.min(0, shin) * 0.2;
+  p.aim[n + 'UpperLeg'] = swingDir(s, a, out);
+  p.aim[n + 'LowerLeg'] = swingDir(s, shin, out * 0.6);
+  p.aim[n + 'Foot'] = d(s * 0.05, -Math.cos(f), Math.sin(f));
 }
-function relaxedArms(p, sway = 0) {
-  for (const s of [1, -1]) {
-    const n = s > 0 ? 'left' : 'right';
-    p.aim[n + 'UpperArm'] = d(s * 0.16, -1, 0.03 + sway);
-    p.aim[n + 'LowerArm'] = d(s * 0.1, -1, 0.18 + sway);
-  }
+// One arm: upper arm swung `a` radians forward from hanging down, elbow bent `e`.
+function arm(p, s, a, e, out = 0.15) {
+  const n = s > 0 ? 'left' : 'right';
+  p.aim[n + 'UpperArm'] = d(s * out, -Math.cos(a), Math.sin(a));
+  p.aim[n + 'LowerArm'] = d(s * out * 0.6, -Math.cos(a + e), Math.sin(a + e));
 }
+function standLegs(p, bend = 0) { leg(p, 1, bend, bend * 2); leg(p, -1, bend, bend * 2); }
+function relaxedArms(p, sway = 0) { arm(p, 1, 0.03 + sway, 0.15, 0.16); arm(p, -1, 0.03 + sway, 0.15, 0.16); }
+const hump = (x, k = 1) => Math.pow(Math.max(0, x), k);
 
 const CLIPS = {
   still: null,
@@ -297,56 +332,49 @@ const CLIPS = {
     p.hips.y = -0.004 * (1 + br);
     return p;
   },
+  // Gaits: each leg's phase φ (the right leg half a cycle behind). The thigh swings with
+  // sin φ; the knee folds during the swing forward (when cos φ > 0) and stays nearly
+  // straight while the foot is on the ground. Arms swing against the legs.
   walk(t) {
-    const ph = (t / 1.1) * TAU, sw = Math.sin(ph);
-    const p = { aim: {}, turn: [], hips: d(0, -0.012 + 0.012 * Math.cos(2 * ph), 0) };
+    const ph = (t / 1.1) * TAU;
+    const p = { aim: {}, turn: [], hips: d(0, -0.018 + 0.014 * Math.cos(2 * ph), 0) };
     for (const s of [1, -1]) {
-      const n = s > 0 ? 'left' : 'right', k = s > 0 ? 1 : -1;
-      const a = 0.42 * sw * k;
-      const lift = Math.max(0, Math.cos(ph) * k);            // swinging forward: knee bends
-      p.aim[n + 'UpperLeg'] = swingDir(s, a);
-      p.aim[n + 'LowerLeg'] = swingDir(s, a - 0.12 - 0.85 * lift * lift, 0.04);
-      p.aim[n + 'Foot'] = d(s * 0.05, -0.35 + 0.3 * lift, 1);
-      const arm = -0.32 * sw * k;
-      p.aim[n + 'UpperArm'] = d(s * 0.15, -Math.cos(arm), Math.sin(arm));
-      p.aim[n + 'LowerArm'] = d(s * 0.1, -Math.cos(arm + 0.35), Math.sin(arm + 0.35));
+      const f = ph + (s > 0 ? 0 : Math.PI);
+      leg(p, s, 0.04 + 0.36 * Math.sin(f), 0.06 + 0.75 * hump(Math.cos(f + 0.5), 1.6));
+      arm(p, s, -0.28 * Math.sin(f), 0.25 + 0.15 * hump(-Math.sin(f)), 0.14);
     }
-    p.turn.push(['hips', Y, 0.07 * sw], ['spine', Y, -0.05 * sw], ['chest', Y, -0.04 * sw], ['head', Y, 0.04 * sw]);
+    const sw = Math.sin(ph);
+    p.turn.push(['hips', Y, 0.08 * sw], ['spine', Y, -0.05 * sw], ['chest', Y, -0.04 * sw], ['spine', X, 0.03]);
     return p;
   },
   run(t) {
-    const ph = (t / 0.68) * TAU, sw = Math.sin(ph);
-    const p = { aim: {}, turn: [], hips: d(0, -0.03 + 0.035 * Math.abs(Math.cos(ph)), 0) };
-    p.turn.push(['spine', X, 0.14], ['hips', Y, 0.1 * sw], ['chest', Y, -0.12 * sw], ['head', X, -0.1]);
+    const ph = (t / 0.66) * TAU;
+    const p = { aim: {}, turn: [], hips: d(0, -0.04 + 0.035 * Math.cos(2 * ph), 0) };
     for (const s of [1, -1]) {
-      const n = s > 0 ? 'left' : 'right', k = s > 0 ? 1 : -1;
-      const a = 0.75 * sw * k - 0.05;
-      const lift = Math.max(0, Math.cos(ph) * k);
-      p.aim[n + 'UpperLeg'] = swingDir(s, a);
-      p.aim[n + 'LowerLeg'] = swingDir(s, a - 0.35 - 1.4 * lift, 0.04);
-      p.aim[n + 'Foot'] = d(s * 0.05, -0.25, 1);
-      const arm = -0.65 * sw * k;
-      p.aim[n + 'UpperArm'] = d(s * 0.18, -Math.cos(arm), Math.sin(arm));
-      p.aim[n + 'LowerArm'] = d(s * 0.05, -Math.cos(arm + 1.45), Math.sin(arm + 1.45));
+      const f = ph + (s > 0 ? 0 : Math.PI);
+      leg(p, s, 0.15 + 0.55 * Math.sin(f), 0.3 + 1.5 * hump(Math.cos(f + 0.4), 1.3));
+      arm(p, s, -0.1 - 0.5 * Math.sin(f), 1.35, 0.17);
     }
+    const sw = Math.sin(ph);
+    p.turn.push(['spine', X, 0.15], ['hips', Y, 0.1 * sw], ['chest', Y, -0.13 * sw], ['head', X, -0.12]);
     return p;
   },
   wave(t) {
     const p = CLIPS.idle(t);
-    p.aim.rightUpperArm = d(-0.72, 0.62, 0.18);
-    p.aim.rightLowerArm = d(-0.15 + 0.42 * Math.sin(t * 7), 1, 0.25);
+    p.aim.rightUpperArm = d(-0.72, 0.55, 0.25);
+    p.aim.rightLowerArm = d(-0.12 + 0.38 * Math.sin(t * 7), 1, 0.25);
     p.turn.push(['head', Z, 0.06], ['neck', Y, -0.08]);
     return p;
   },
+  // A groove: knees bounce on every beat, hips sway every two, arms pump at chest height.
   dance(t) {
-    const beat = (t / 0.9) * TAU, b = Math.sin(beat), b2 = Math.sin(beat * 2);
-    const p = { aim: {}, turn: [], hips: d(0.04 * b, -0.04 * Math.abs(b2), 0) };
-    standLegs(p, 0.12 + 0.12 * Math.abs(b2));
-    p.turn.push(['hips', Y, 0.28 * b], ['chest', Z, 0.08 * b], ['head', X, 0.12 * b2]);
-    p.aim.leftUpperArm = d(0.75, 0.35 + 0.35 * b, 0.35);
-    p.aim.leftLowerArm = d(0.2, 1, 0.2 + 0.3 * b2);
-    p.aim.rightUpperArm = d(-0.75, 0.35 - 0.35 * b, 0.35);
-    p.aim.rightLowerArm = d(-0.2, 1, 0.2 - 0.3 * b2);
+    const bt = (t / 0.6) * TAU, bounce = (1 - Math.cos(bt)) / 2, sway = Math.sin(bt / 2);
+    const p = { aim: {}, turn: [], hips: d(0.035 * sway, -0.035 * bounce, 0) };
+    for (const s of [1, -1]) {
+      leg(p, s, 0.1 + 0.12 * bounce, 0.22 + 0.25 * bounce, 0.08);
+      arm(p, s, 0.55 + 0.3 * Math.sin(bt + (s > 0 ? 0 : Math.PI)), 1.25, 0.28);
+    }
+    p.turn.push(['hips', Y, 0.22 * sway], ['chest', Z, -0.08 * sway], ['chest', Y, -0.1 * sway], ['head', X, 0.1 * Math.sin(bt)]);
     return p;
   },
   jump(t) {
@@ -355,15 +383,10 @@ const CLIPS = {
     if (ph < 0.25) { crouch = Math.sin(ph / 0.25 * Math.PI / 2); arms = -crouch; }
     else if (ph < 0.65) { const k = (ph - 0.25) / 0.4; up = Math.sin(k * Math.PI); arms = Math.min(1, k * 3); crouch = Math.max(0, 1 - k * 4); }
     else if (ph < 0.85) { const k = (ph - 0.65) / 0.2; crouch = Math.sin(k * Math.PI) * 0.8; arms = 1 - k; }
-    const p = { aim: {}, turn: [['spine', X, 0.25 * crouch]], hips: d(0, -0.16 * crouch + 0.45 * up, 0) };
+    const p = { aim: {}, turn: [['spine', X, 0.3 * crouch]], hips: d(0, -0.18 * crouch + 0.28 * up, 0) };
     for (const s of [1, -1]) {
-      const n = s > 0 ? 'left' : 'right';
-      p.aim[n + 'UpperLeg'] = swingDir(s, 0.9 * crouch + 0.1 * up);
-      p.aim[n + 'LowerLeg'] = swingDir(s, -1.1 * crouch - 0.25 * up, 0.04);
-      p.aim[n + 'Foot'] = d(s * 0.05, -0.4 - 0.4 * up, 1);
-      const a = -0.6 + 2.6 * Math.max(0, arms);
-      p.aim[n + 'UpperArm'] = d(s * 0.25, -Math.cos(a), Math.sin(a) * 0.6);
-      p.aim[n + 'LowerArm'] = d(s * 0.2, -Math.cos(a + 0.3), Math.sin(a + 0.3) * 0.6);
+      leg(p, s, 0.85 * crouch + 0.12 * up, 1.5 * crouch + 0.35 * up);
+      arm(p, s, -0.45 + 2.5 * Math.max(0, arms), 0.3 + 0.25 * Math.max(0, arms), 0.22);
     }
     return p;
   },
@@ -371,8 +394,8 @@ const CLIPS = {
     const p = { aim: {}, turn: [['head', X, -0.12]], hips: d(0, 0, 0) };
     standLegs(p);
     const w = 0.04 * Math.sin(t * 3);
-    p.aim.leftUpperArm = d(0.3 + w, 1, 0.05); p.aim.leftLowerArm = d(0.18 + w, 1, 0.05);
-    p.aim.rightUpperArm = d(-0.3 - w, 1, 0.05); p.aim.rightLowerArm = d(-0.18 - w, 1, 0.05);
+    p.aim.leftUpperArm = d(0.32 + w, 1, 0.08); p.aim.leftLowerArm = d(0.2 + w, 1, 0.08);
+    p.aim.rightUpperArm = d(-0.32 - w, 1, 0.08); p.aim.rightLowerArm = d(-0.2 - w, 1, 0.08);
     return p;
   },
   tpose() {
@@ -384,15 +407,41 @@ const CLIPS = {
   },
 };
 
+// Real shoulders lift the collarbone as the arm rises; without it the shoulder skin has
+// to stretch the whole way and looks wrong. From about 20° below level, the collarbone
+// rises by 30% of the arm's height angle, up to about 23°.
+function shrug(p) {
+  for (const [n, s] of [['left', 1], ['right', -1]]) {
+    const dir = p.aim[n + 'UpperArm'];
+    if (!dir) continue;
+    const e = Math.asin(THREE.MathUtils.clamp(dir.clone().normalize().y, -1, 1));
+    const k = THREE.MathUtils.clamp((e + 0.35) * 0.3, 0, 0.4);
+    if (k > 0) p.turn.push([n + 'Shoulder', Z, s * k]);
+  }
+}
+
 function applyPose(rig, p, facing) {
   rig.reset();
   if (!p) return;
+  shrug(p);
   if (p.hips) rig.hipsOffset(p.hips.clone().applyQuaternion(facing));
   const turns = new Map();
   for (const [c, axis, a] of p.turn || []) { if (!turns.has(c)) turns.set(c, []); turns.get(c).push([axis, a]); }
+  const LIMBS = { UpperArm: ['LowerArm', false], UpperLeg: ['LowerLeg', true] };
+  const done = new Set();
+  const kneeAxis = X.clone().applyQuaternion(facing);
   for (const c of rig.order) {
     for (const [axis, a] of turns.get(c) || []) rig.turn(c, axis.clone().applyQuaternion(facing), a);
-    if (p.aim && p.aim[c]) rig.aim(c, p.aim[c].clone().applyQuaternion(facing));
+    if (!p.aim || !p.aim[c] || done.has(c)) continue;
+    const m = c.match(/^(left|right)(UpperArm|UpperLeg)$/);
+    const lower = m && m[1] + LIMBS[m[2]][0];
+    if (m && p.aim[lower]) {
+      rig.aimLimb(c, lower, p.aim[c].clone().applyQuaternion(facing), p.aim[lower].clone().applyQuaternion(facing),
+        LIMBS[m[2]][1] ? kneeAxis : null);
+      done.add(lower);
+    } else {
+      rig.aim(c, p.aim[c].clone().applyQuaternion(facing));
+    }
   }
 }
 
@@ -1014,4 +1063,28 @@ window.addEventListener('pagehide', stopCam);
 window.__avatarLab = {
   get state() { return avatar ? { bones: avatar.rig.order.length, shapes: face.names.length + face.vrmNames.size, clip: clipName } : null; },
   get retarget() { return fileClip ? { pairs: fileClip.pairs.length, time: fileClip.action.time } : null; },
+  // checks: joint positions (cm, avatar space: x = its left, y up, z its front, from the hips)
+  joints(names) {
+    if (!avatar) return null;
+    const r = avatar.rig, hips = r.bone('hips').getWorldPosition(new THREE.Vector3());
+    const inv = avatar.facing.clone().invert(), out = {};
+    for (const c of names) if (r.map.has(c)) {
+      const v = r.bone(c).getWorldPosition(new THREE.Vector3()).sub(hips).applyQuaternion(inv);
+      out[c] = v.toArray().map(x => Math.round(x * 100));
+    }
+    return out;
+  },
+  // checks: hold a move at time t (seconds) and look from an angle (degrees around the avatar)
+  hold(clip, t, angle = 0) {
+    if (!avatar) return false;
+    setClip(clip);
+    clipTime = t;
+    $('al-speed').value = 0;
+    frame('body');
+    const off = camera.position.clone().sub(controls.target);
+    off.applyAxisAngle(new THREE.Vector3(0, 1, 0), THREE.MathUtils.degToRad(angle));
+    camera.position.copy(controls.target).add(off);
+    controls.update();
+    return true;
+  },
 };
