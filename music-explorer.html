@@ -36,7 +36,7 @@
   <!-- Everything inside #rx-root is drawn by music-explorer.js, a React app built from
        react-src/ (npm run build). Edit the source there, not the built file. -->
   <main class="rx">
-    <a class="back-link" href="music.html">&larr; Music</a>
+    <a class="back-link" id="rx-back" href="music.html">&larr; Music</a>
     <div id="rx-root"></div>
   </main>
 
@@ -44,9 +44,24 @@
     <p>&copy; <span id="year"></span> Parth</p>
   </footer>
 
-  <script src="music-data.js"></script>
-  <script src="music-explorer-data.js"></script>
-  <script src="music-explorer.js"></script>
+  <script src="music-people.js"></script>
+  <script>
+    // Load the chosen person's two data files (?for=aaron; Parth's without it), then
+    // the app. async = false keeps them in order. The back link returns to their charts.
+    (function () {
+      const people = typeof MUSIC_PEOPLE !== "undefined" ? MUSIC_PEOPLE : [];
+      const asked = new URLSearchParams(location.search).get("for");
+      const person = people.find(p => p.key === asked) || people.find(p => p.self) || people[0];
+      const files = person ? [person.data, person.explorer] : ["music-data.js", "music-explorer-data.js"];
+      if (person && !person.self) document.getElementById("rx-back").href = "music.html?for=" + encodeURIComponent(person.key);
+      for (const src of files.concat("music-explorer.js")) {
+        const script = document.createElement("script");
+        script.src = src;
+        script.async = false;
+        document.body.appendChild(script);
+      }
+    })();
+  </script>
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>

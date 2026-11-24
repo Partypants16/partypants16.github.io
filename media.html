@@ -50,11 +50,11 @@
           <span class="feature-cta"><span>Open Movies</span><svg class="pj-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></span>
         </div>
       </a>
-      <a class="feature-card media-card" href="music.html">
+      <a class="feature-card media-card" href="music-people.html">
         <div class="feature-body">
           <span class="pj-eyebrow">Listening history</span>
           <h2>Music</h2>
-          <p class="feature-tagline">Charts of what I've listened to over the years: top artists and songs, and when I listen most.</p>
+          <p class="feature-tagline">Charts of what we've listened to over the years, one page per person: top artists and songs, and when we listen most.</p>
           <ul class="feature-counts" id="music-counts" hidden></ul>
           <span class="feature-cta"><span>Open Music</span><svg class="pj-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></span>
         </div>
@@ -76,7 +76,7 @@
 
   <script src="movie-lists.js"></script>
   <script src="franchise-data.js"></script>
-  <script src="music-data.js"></script>
+  <script src="music-people.js"></script>
   <script>
     // The Movies card's numbers. The card is a plain link, so it still works if these don't load.
     function count(list, number, label) {
@@ -100,13 +100,15 @@
       counts.hidden = false;
     }
 
-    // The Music card's numbers, from the same summary the Music page draws.
-    if (typeof MUSIC !== "undefined") {
+    // The Music card's numbers: everyone on the Music pages, together (music-people.js).
+    if (typeof MUSIC_PEOPLE !== "undefined" && MUSIC_PEOPLE.length) {
       const counts = document.getElementById("music-counts");
-      const s = MUSIC.views.all.stats;
-      count(counts, Math.round(s.hours).toLocaleString("en-AU"), "Hours");
-      count(counts, s.artists.toLocaleString("en-AU"), "Artists");
-      count(counts, MUSIC.meta.years.length, "Years");
+      const hours = MUSIC_PEOPLE.reduce((n, p) => n + p.hours, 0);
+      const first = Math.min(...MUSIC_PEOPLE.map(p => +p.from.slice(0, 4)));
+      const last = Math.max(...MUSIC_PEOPLE.map(p => +p.to.slice(0, 4)));
+      count(counts, MUSIC_PEOPLE.length, MUSIC_PEOPLE.length === 1 ? "Person" : "People");
+      count(counts, Math.round(hours).toLocaleString("en-AU"), "Hours");
+      count(counts, last - first + 1, "Years");
       counts.hidden = false;
     }
 

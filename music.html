@@ -9,7 +9,7 @@
   <script src="settings.js"></script>
   <script src="motion.js"></script>
   <script src="topbar.js" defer></script>
-  <title>Music | Parth</title>
+  <title>My Music | Parth</title>
   <meta name="description" content="Parth's Spotify listening history in charts: top artists, songs and albums, when he listens, every day since 2017, and how his taste changed year by year.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎧</text></svg>">
   <link rel="stylesheet" href="movies.css">
@@ -33,18 +33,22 @@
     </nav>
   </header>
 
-  <!-- Everything below is drawn by music.js from music-data.js
-       (made from the Spotify export by tools/build_music_data.py). -->
+  <!-- Everything below is drawn by music.js from one person's data file
+       (music-data.js for Parth, music-data-<key>.js for the others; ?for=<key> picks,
+       made from each Spotify export by tools/build_music_data.py).
+       The text is Parth's ("I", "my"). For anyone else music.js swaps in each
+       element's data-other, with {name} filled in, and where most of their
+       listening was abroad, data-abroad. -->
   <main class="mu">
-    <a class="back-link mu-back" href="media.html">&larr; Media</a>
+    <a class="back-link mu-back" href="music-people.html">&larr; Music</a>
 
     <section class="mu-hero">
       <div class="mu-hero-text">
         <span class="mu-eyebrow"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1v-6h3zM3 19a2 2 0 0 0 2 2h1v-6H3z"/></svg><span>Spotify listening history</span></span>
-        <h1>Music</h1>
-        <p class="mu-hero-lead">Everything I've played on Spotify, turned into charts.</p>
+        <h1 data-other="{name}’s Music">My Music</h1>
+        <p class="mu-hero-lead" data-other="Everything {name} has played on Spotify, turned into charts.">Everything I've played on Spotify, turned into charts.</p>
         <p class="mu-range" id="mu-range"></p>
-        <a class="mu-explore-link" href="music-explorer.html">Open the Music Explorer: every artist and song, by year &rarr;</a>
+        <a class="mu-explore-link" id="mu-explore-link" href="music-explorer.html">Open the Music Explorer: every artist and song, by year &rarr;</a>
       </div>
       <div class="mu-hero-stat">
         <span class="mu-hero-label" id="mu-hero-label"></span>
@@ -92,7 +96,7 @@
     </section>
 
     <section class="mu-section" aria-labelledby="mu-h-when">
-      <div class="mu-head"><span class="mu-kicker">03</span><h2 id="mu-h-when">When I listen</h2></div>
+      <div class="mu-head"><span class="mu-kicker">03</span><h2 id="mu-h-when" data-other="When {name} listens">When I listen</h2></div>
       <div class="mu-card">
         <h3 id="mu-timeline-title"></h3>
         <p class="mu-sub" id="mu-timeline-sub"></p>
@@ -100,7 +104,7 @@
       </div>
       <div class="mu-card">
         <h3>Day and hour</h3>
-        <p class="mu-sub">Darker means more listening. Melbourne time.</p>
+        <p class="mu-sub" data-abroad="Darker means more listening. Local time where each play happened.">Darker means more listening. Melbourne time.</p>
         <div class="mu-chart mu-scroll" id="mu-heat"></div>
       </div>
       <div class="mu-grid">
@@ -124,7 +128,7 @@
     </section>
 
     <section class="mu-section" aria-labelledby="mu-h-how">
-      <div class="mu-head"><span class="mu-kicker">04</span><h2 id="mu-h-how">How I listen</h2></div>
+      <div class="mu-head"><span class="mu-kicker">04</span><h2 id="mu-h-how" data-other="How {name} listens">How I listen</h2></div>
       <div class="mu-grid mu-grid--three">
         <div class="mu-card">
           <h3>Devices</h3>
@@ -152,15 +156,15 @@
         <div class="mu-chart" id="mu-yearly"></div>
       </div>
       <div class="mu-card">
-        <h3>My top artists, year by year</h3>
-        <p class="mu-sub">Where my 8 biggest artists of all time ranked each year. A gap means they weren't in that year's top 25. Point at a name to follow it.</p>
+        <h3 data-other="{name}'s top artists, year by year">My top artists, year by year</h3>
+        <p class="mu-sub" data-other="Where {name}'s 8 biggest artists of all time ranked each year. A gap means they weren't in that year's top 25. Point at a name to follow it.">Where my 8 biggest artists of all time ranked each year. A gap means they weren't in that year's top 25. Point at a name to follow it.</p>
         <div class="mu-legend" id="mu-bump-legend"></div>
         <div class="mu-chart mu-bump" id="mu-bump"></div>
       </div>
       <div class="mu-grid">
         <div class="mu-card">
           <h3>New artists each year</h3>
-          <p class="mu-sub">Artists I played for the first time</p>
+          <p class="mu-sub" data-other="Artists {name} played for the first time">Artists I played for the first time</p>
           <div class="mu-chart" id="mu-new"></div>
         </div>
         <div class="mu-card">
@@ -172,7 +176,7 @@
       </div>
       <div class="mu-card">
         <h3>Skip rate by month</h3>
-        <p class="mu-sub">Share of plays I skipped. Spotify only started marking skips in late 2022, so before that only the next button counts. Months with fewer than 30 plays are left out.</p>
+        <p class="mu-sub" data-other="Share of plays {name} skipped. Spotify only started marking skips in late 2022, so before that only the next button counts. Months with fewer than 30 plays are left out.">Share of plays I skipped. Spotify only started marking skips in late 2022, so before that only the next button counts. Months with fewer than 30 plays are left out.</p>
         <div class="mu-chart" id="mu-skips"></div>
       </div>
       <div class="mu-card">
@@ -184,7 +188,7 @@
       <div class="mu-grid mu-grid--wide">
         <div class="mu-card">
           <h3>Always in rotation</h3>
-          <p class="mu-sub">Artists I've played in the most different years</p>
+          <p class="mu-sub" data-other="Artists {name} has played in the most different years">Artists I've played in the most different years</p>
           <ol class="mu-loyal" id="mu-loyal"></ol>
         </div>
         <div class="mu-card">
@@ -205,8 +209,8 @@
       <summary>How this is counted</summary>
       <ul>
         <li>A play counts once a song has played for 30 seconds, the same rule Spotify uses. Hours listened count every second, short plays included.</li>
-        <li>Spotify records times in UTC. They're shown here in Melbourne time.</li>
-        <li>A skip is a play Spotify marked as skipped, or one I ended with the next button. Spotify only started marking skips in late 2022, so earlier years look lower.</li>
+        <li data-abroad="Spotify records times in UTC. They're shown here in the local time of the country each play was made in.">Spotify records times in UTC. They're shown here in Melbourne time.</li>
+        <li data-other="A skip is a play Spotify marked as skipped, or one {name} ended with the next button. Spotify only started marking skips in late 2022, so earlier years look lower.">A skip is a play Spotify marked as skipped, or one I ended with the next button. Spotify only started marking skips in late 2022, so earlier years look lower.</li>
         <li>A listening session ends after 30 minutes with nothing playing.</li>
         <li>Only totals and top lists are on this page. The raw history stays private.</li>
       </ul>
@@ -219,8 +223,22 @@
     <p>&copy; <span id="year"></span> Parth</p>
   </footer>
 
-  <script src="music-data.js"></script>
-  <script src="music.js"></script>
+  <script src="music-people.js"></script>
+  <script>
+    // Load the chosen person's data (?for=aaron; Parth's without it), then the charts.
+    // async = false keeps them in order. Old links without ?for= still show Parth's.
+    (function () {
+      const people = typeof MUSIC_PEOPLE !== "undefined" ? MUSIC_PEOPLE : [];
+      const asked = new URLSearchParams(location.search).get("for");
+      const person = people.find(p => p.key === asked) || people.find(p => p.self) || people[0];
+      for (const src of [person ? person.data : "music-data.js", "music.js"]) {
+        const script = document.createElement("script");
+        script.src = src;
+        script.async = false;
+        document.body.appendChild(script);
+      }
+    })();
+  </script>
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>

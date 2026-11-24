@@ -1,13 +1,28 @@
-"""Build music-data.js (the Music page's data) from Parth's Spotify export.
+"""Build the Music pages' data from each person's Spotify export.
 
-    python tools/build_music_data.py            (from apps/my-website/)
+    python tools/build_music_data.py            (from apps/my-website/: everyone)
+    python tools/build_music_data.py aaron      (just one person)
 
-Reads Spotify's "Extended streaming history" JSON files from _spotify_raw/
-(git-ignored: copied from ai/PAT-AI/Parth_Info/Spotify Extended Streaming History/)
-and writes music-data.js as `const MUSIC = {...}`.
+One entry in PEOPLE per person. Each reads Spotify's "Extended streaming
+history" JSON files from that person's raw folder and writes:
+- music-data<suffix>.js           `const MUSIC = {...}` for music.html
+- music-explorer-data<suffix>.js  `const MUSIC_X = {...}` for music-explorer.html
+then music-people.js (`const MUSIC_PEOPLE = [...]`: who there is, which files
+are theirs, and a few totals for the picker page and the Media card). That one
+is made from whichever data files exist, so building one person keeps the rest.
+
+Raw folders (never in the repo):
+- Parth: _spotify_raw/ (git-ignored; copied from ai/PAT-AI/Parth_Info/Spotify
+  Extended Streaming History/)
+- Aaron, Henry: ../../_workspace/spotify-exports/<key>/ (outside the repo,
+  since 2026-11-24)
+
+Adding someone: unzip their export into _workspace/spotify-exports/<key>/, add
+a line to PEOPLE, run this, add their Hinglish lines if any text is new, and
+commit the new data files and music-people.js.
 
 The raw export has IP addresses, countries, device versions and every play with
-its exact time. None of that goes on the public site: music-data.js only holds
+its exact time. None of that goes on the public site: the data files only hold
 totals, top lists, and minutes per day / month / hour.
 
 Rules (keep them in sync with the "How this is counted" note on music.html):
@@ -16,7 +31,9 @@ Rules (keep them in sync with the "How this is counted" note on music.html):
 - Songs are music tracks (audio and music videos). Podcast episodes are counted
   apart and only shown in their own small list.
 - Spotify's times are UTC and mark when a play ended. Each play is placed at its
-  start, in Melbourne time (Kolkata time for plays made from India).
+  start, in the time zone of the country it was played from (ZONES), and in
+  Melbourne time for Australia and any country not in ZONES (unknown, or with
+  several zones, like the US). Parth's and Henry's are Melbourne (and Kolkata).
 - A skip is a play Spotify marks as skipped, or one ended with the next button.
 - A listening session ends after 30 minutes of nothing playing.
 """
@@ -31,12 +48,31 @@ from zoneinfo import ZoneInfo
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SITE = os.path.dirname(HERE)
-RAW = os.path.join(SITE, "_spotify_raw")
-OUT = os.path.join(SITE, "music-data.js")
-OUT_EXPLORER = os.path.join(SITE, "music-explorer-data.js")
+WORKSPACE = os.path.dirname(os.path.dirname(SITE))  # parth_project/
+EXPORTS = os.path.join(WORKSPACE, "_workspace", "spotify-exports")
+
+# In the order the picker shows them. "self" is the site's owner: his pages say
+# "I" and "my"; everyone else's use their name.
+PEOPLE = {
+    "parth": {"name": "Parth", "self": True, "raw": os.path.join(SITE, "_spotify_raw"), "suffix": ""},
+    "aaron": {"name": "Aaron", "self": False, "raw": os.path.join(EXPORTS, "aaron"), "suffix": "-aaron"},
+    "henry": {"name": "Henry", "self": False, "raw": os.path.join(EXPORTS, "henry"), "suffix": "-henry"},
+}
+OUT_PEOPLE = os.path.join(SITE, "music-people.js")
 
 MELBOURNE = ZoneInfo("Australia/Melbourne")
-ZONES = {"IN": ZoneInfo("Asia/Kolkata")}
+# Countries with one time zone (Spotify's conn_country). Others use Melbourne.
+ZONES = {c: ZoneInfo(z) for c, z in {
+    "AU": "Australia/Melbourne", "IN": "Asia/Kolkata", "BW": "Africa/Gaborone",
+    "ZA": "Africa/Johannesburg", "MZ": "Africa/Maputo", "KE": "Africa/Nairobi",
+    "ET": "Africa/Addis_Ababa", "NG": "Africa/Lagos", "GB": "Europe/London",
+    "NL": "Europe/Amsterdam", "DE": "Europe/Berlin", "FR": "Europe/Paris",
+    "CH": "Europe/Zurich", "CZ": "Europe/Prague", "TR": "Europe/Istanbul",
+    "AE": "Asia/Dubai", "QA": "Asia/Qatar", "SG": "Asia/Singapore",
+    "MY": "Asia/Kuala_Lumpur", "TH": "Asia/Bangkok", "PH": "Asia/Manila",
+    "JP": "Asia/Tokyo", "KR": "Asia/Seoul", "NZ": "Pacific/Auckland",
+    "UY": "America/Montevideo",
+}.items()}
 MIN_PLAY_MS = 30_000
 SESSION_GAP = dt.timedelta(minutes=30)
 TOP = 15
@@ -76,10 +112,10 @@ REASONS = {
 END_REASONS = dict(REASONS, trackdone="Played to the end")
 
 
-def load():
-    files = sorted(glob.glob(os.path.join(RAW, "Streaming_History_*.json")))
+def load(raw):
+    files = sorted(glob.glob(os.path.join(raw, "Streaming_History_*.json")))
     if not files:
-        sys.exit(f"No Streaming_History_*.json files in {RAW}")
+        sys.exit(f"No Streaming_History_*.json files in {raw}")
     rows = []
     for f in files:
         with open(f, encoding="utf-8") as fh:
@@ -112,6 +148,7 @@ def parse(rows):
             "end": end,
             "local": local,
             "device": device(r.get("platform")),
+            "country": r.get("conn_country") or "",
             "start_reason": r.get("reason_start") or "unknown",
             "end_reason": r.get("reason_end") or "unknown",
             "shuffle": bool(r.get("shuffle")),
@@ -373,39 +410,98 @@ def explorer(plays, years):
     }
 
 
-def main():
-    plays, episodes = parse(load())
+def build(key):
+    person = PEOPLE[key]
+    plays, episodes = parse(load(person["raw"]))
     years = sorted({p["local"].year for p in plays})
+    who = {"person": key, "name": person["name"], "self": person["self"]}
     data = {
-        "meta": {
+        "meta": dict(who, **{
             "from": plays[0]["local"].date().isoformat(),
             "to": plays[-1]["local"].date().isoformat(),
             "built": dt.date.today().isoformat(),
             "years": years,
-        },
+            # Share of play time outside Australia and India: the page says
+            # "local time" instead of "Melbourne time" when it's more than a little.
+            "abroad": round(100 * sum(p["ms"] for p in plays if p["country"] not in ("AU", "IN"))
+                            / max(1, sum(p["ms"] for p in plays)), 1),
+        }),
         "views": {"all": view(plays, daily=False)},
         "allTime": all_time(plays, episodes, years),
     }
     for yr in years:
         data["views"][str(yr)] = view([p for p in plays if p["local"].year == yr])
 
+    whose = person["name"] + "'s"
+    out = os.path.join(SITE, f"music-data{person['suffix']}.js")
     body = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
-    with open(OUT, "w", encoding="utf-8", newline="\n") as fh:
-        fh.write("// Made by tools/build_music_data.py from Parth's Spotify export. Don't edit by hand.\n")
+    with open(out, "w", encoding="utf-8", newline="\n") as fh:
+        fh.write(f"// Made by tools/build_music_data.py from {whose} Spotify export. Don't edit by hand.\n")
         fh.write("// Totals and top lists only: no raw plays, IP addresses, countries or devices' details.\n")
         fh.write("const MUSIC = " + body + ";\n")
-    s = data["views"]["all"]["stats"]
-    print(f"Wrote {OUT} ({len(body) // 1024} KB): {s['hours']} h, {s['plays']} plays, "
-          f"{s['artists']} artists, {s['songs']} songs, {data['meta']['from']} to {data['meta']['to']}")
+    st = data["views"]["all"]["stats"]
+    print(f"{person['name']}: wrote {os.path.basename(out)} ({len(body) // 1024} KB): {st['hours']} h, "
+          f"{st['plays']} plays, {st['artists']} artists, {st['songs']} songs, "
+          f"{data['meta']['from']} to {data['meta']['to']}, {data['meta']['abroad']}% abroad")
 
     x = explorer(plays, years)
+    x["meta"].update(who)
+    out = os.path.join(SITE, f"music-explorer-data{person['suffix']}.js")
     body = json.dumps(x, ensure_ascii=False, separators=(",", ":"))
-    with open(OUT_EXPLORER, "w", encoding="utf-8", newline="\n") as fh:
-        fh.write("// Made by tools/build_music_data.py from Parth's Spotify export. Don't edit by hand.\n")
+    with open(out, "w", encoding="utf-8", newline="\n") as fh:
+        fh.write(f"// Made by tools/build_music_data.py from {whose} Spotify export. Don't edit by hand.\n")
         fh.write("// For music-explorer.html: every artist and song with play counts per year / month.\n")
         fh.write("// No raw plays, exact times, IP addresses, countries or devices.\n")
         fh.write("const MUSIC_X = " + body + ";\n")
-    print(f"Wrote {OUT_EXPLORER} ({len(body) // 1024} KB): {len(x['artists'])} artists, {len(x['songs'])} songs")
+    print(f"{person['name']}: wrote {os.path.basename(out)} ({len(body) // 1024} KB): "
+          f"{len(x['artists'])} artists, {len(x['songs'])} songs")
+
+
+def write_people():
+    """music-people.js, from the data files that exist (built now or before)."""
+    people = []
+    for key, person in PEOPLE.items():
+        data_file = f"music-data{person['suffix']}.js"
+        path = os.path.join(SITE, data_file)
+        if not os.path.exists(path):
+            print(f"{person['name']}: no {data_file} yet, left off the picker")
+            continue
+        with open(path, encoding="utf-8") as fh:
+            text = fh.read()
+        start = text.index("const MUSIC = ") + len("const MUSIC = ")
+        data = json.loads(text[start:].rstrip().rstrip(";"))
+        st = data["views"]["all"]["stats"]
+        top = data["views"]["all"]["artists"]
+        people.append({
+            "key": key,
+            "name": person["name"],
+            "self": person["self"],
+            "data": data_file,
+            "explorer": f"music-explorer-data{person['suffix']}.js",
+            "from": data["meta"]["from"],
+            "to": data["meta"]["to"],
+            "years": len(data["meta"]["years"]),
+            "hours": st["hours"],
+            "plays": st["plays"],
+            "artists": st["artists"],
+            "topArtist": top[0][0] if top else None,
+        })
+    body = json.dumps(people, ensure_ascii=False, indent=1)
+    with open(OUT_PEOPLE, "w", encoding="utf-8", newline="\n") as fh:
+        fh.write("// Made by tools/build_music_data.py. Don't edit by hand.\n")
+        fh.write("// Whose Spotify history the Music pages have: their data files and a few totals.\n")
+        fh.write("const MUSIC_PEOPLE = " + body + ";\n")
+    print(f"Wrote music-people.js: {', '.join(p['name'] for p in people)}")
+
+
+def main():
+    keys = sys.argv[1:] or list(PEOPLE)
+    for key in keys:
+        if key not in PEOPLE:
+            sys.exit(f"Unknown person {key!r}. Known: {', '.join(PEOPLE)}")
+    for key in keys:
+        build(key)
+    write_people()
 
 
 if __name__ == "__main__":

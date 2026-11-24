@@ -11,8 +11,8 @@ A hand-built static site with plain HTML, CSS and JavaScript. It has no framewor
 | **Home** (`index.html`) | Swipe cards at the top (welcome, Vibe Testing Zone, Car Shows), then the *LAN Only* services I run on my home server, each with a live Online/Offline dot. |
 | **Wallpaper** (`wallpaper.html`) | 15 live wallpapers (animated scenes, Melbourne weather, countdowns, quotes, F1 and more) to view full screen. |
 | **Games** (`gaming.html`) | My gaming platforms, what I'm playing, and my own games under "My Games". |
-| **Media** (`media.html`) | Movies (recommendation lists plus franchise trackers like Marvel) and Music (`music.html`): my Spotify history since 2017 in charts (top artists, songs and albums, when I listen, every day, devices, and how it changed year by year), from a summary made by `tools/build_music_data.py`. |
-| **Music Explorer** (`music-explorer.html`) | Every artist and song I've played since 2017: pick a year, click an artist or song to see when I played it, search everything, or compare two years side by side. A React page. |
+| **Media** (`media.html`) | Movies (recommendation lists plus franchise trackers like Marvel) and Music: a picker (`music-people.html`) with one card per person (me, Aaron, Henry), each opening `music.html?for=<person>`: their Spotify history in charts (top artists, songs and albums, when they listen, every day, devices, and how it changed year by year), from a summary made by `tools/build_music_data.py`. `music.html` with no `?for=` is mine, so old links still work. |
+| **Music Explorer** (`music-explorer.html?for=<person>`) | Every artist and song someone has played: pick a year, click an artist or song to see when I played it, search everything, or compare two years side by side. A React page. |
 | **Movie Tracker** (`movie-tracker.html`) | Tick off films in each franchise and recommendation list, see progress bars and the next film in watch order. Starts from the shared spreadsheet's marks; ticks are saved in your browser. A React page. |
 | **Car Shows** (`car-events.html`) | Car shows, meets, cruises and track days coming up around Melbourne and Victoria, from three event sites (Trading Garage, Drivesome, Shannons Club), grouped into this weekend and then by month, with a type filter. See "Car Shows data" below. |
 | **Projects** (`projects.html`) | A showcase of things I've built. Each one has a story page (`project.html?p=<slug>`) covering the journey, the big decisions, a timeline, what didn't work and what I learned. |
@@ -73,7 +73,7 @@ Then go to <http://localhost:8000>.
 - `vibe-testing-zone/` is a playground for experiments.
 - `tools/` holds helper scripts:
   - `build_franchise_data.py` regenerates `franchise-data.js` (don't edit that file by hand).
-  - `build_music_data.py` regenerates `music-data.js` and `music-explorer-data.js` from the git-ignored Spotify export.
+  - `build_music_data.py` regenerates each person's `music-data[-<person>].js` and `music-explorer-data[-<person>].js`, plus `music-people.js` (who there is, for the picker and the Media card), from the raw Spotify exports, which never go in this repo: mine in the git-ignored `_spotify_raw/`, everyone else's in `_workspace/spotify-exports/<person>/` outside it. Who's included is `PEOPLE` at the top of the script. A person's page swaps "I" / "my" for their name (`data-other` in `music.html`) and uses local time instead of Melbourne time when most of their listening was abroad.
   - `build_wallpaper_images.py` draws the images some wallpapers use.
   - `pixelfx_strips.mjs` re-renders the pixel-art strips in `images/pixelfx/` from a pixelfx checkout (it says how).
   - [`service-status/`](tools/service-status/README.md) is the checker behind the Online/Offline dots.

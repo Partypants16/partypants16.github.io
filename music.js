@@ -1,5 +1,12 @@
-// The Music page (music.html): draws every chart from music-data.js
-// (`const MUSIC`, made by tools/build_music_data.py from the Spotify export).
+// The Music page (music.html): draws every chart from one person's data file
+// (`const MUSIC`, made by tools/build_music_data.py from their Spotify export;
+// music.html loads the one ?for=<key> asks for, Parth's by default).
+//
+// The page's text is Parth's own ("I", "my"). For anyone else (meta.self false)
+// it switches to their name: elements with data-other get that text with
+// {name} filled in, and the few lines written here use OTHER. Where more than
+// a tenth of their listening was outside Australia and India, data-abroad
+// swaps "Melbourne time" for local time (the build places plays that way).
 //
 // No chart library: each chart is a small SVG or HTML list built here, so it
 // follows the site's theme and accent colour (tokens in music.css) and its
@@ -25,6 +32,7 @@
 
   const D = MUSIC;
   const MAIN = document.querySelector("main.mu");
+  const OTHER = D.meta.self === false ? D.meta.name : null;
   const YEARS = D.meta.years.map(String);
   const NS = "http://www.w3.org/2000/svg";
   const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -918,7 +926,7 @@
     });
     const series = [
       { name: "New artists that year", values: rows.map(r => r.newShare), colour: "var(--mu-s1)" },
-      { name: "My top 10 artists that year", values: rows.map(r => r.top10Share), colour: "var(--mu-s2)" }
+      { name: OTHER ? `${OTHER}'s top 10 artists that year` : "My top 10 artists that year", values: rows.map(r => r.top10Share), colour: "var(--mu-s2)" }
     ];
     legend($("mu-share-legend"), series.map(s => ({ label: s.name, colour: s.colour, line: true })));
     const boxShare = $("mu-share");
@@ -1079,7 +1087,19 @@
     renderAll();
   }
 
-  $("mu-range").textContent = `From my Spotify history, ${niceDate(D.meta.from)} to ${niceDate(D.meta.to)}.`;
+  if (OTHER) {
+    for (const node of document.querySelectorAll("[data-other]")) {
+      node.textContent = node.dataset.other.replace(/\{name\}/g, OTHER);
+    }
+    document.title = `${OTHER}'s Music | Parth`;
+  }
+  if ((D.meta.abroad || 0) > 10) {
+    for (const node of document.querySelectorAll("[data-abroad]")) node.textContent = node.dataset.abroad;
+  }
+  if (D.meta.person && !D.meta.self) $("mu-explore-link").href = "music-explorer.html?for=" + encodeURIComponent(D.meta.person);
+  $("mu-range").textContent = OTHER
+    ? `From ${OTHER}'s Spotify history, ${niceDate(D.meta.from)} to ${niceDate(D.meta.to)}.`
+    : `From my Spotify history, ${niceDate(D.meta.from)} to ${niceDate(D.meta.to)}.`;
   buildEqualiser();
   buildYears();
   const asked = new URLSearchParams(location.search).get("year");

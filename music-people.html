@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="hinglish.js"></script>
+  <script src="i18n.js"></script>
+  <script src="settings.js"></script>
+  <script src="motion.js"></script>
+  <script src="topbar.js" defer></script>
+  <title>Music | Parth</title>
+  <meta name="description" content="Spotify listening history in charts, one page per person: pick whose top artists, songs and listening habits to see.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎧</text></svg>">
+  <link rel="stylesheet" href="movies.css">
+  <link rel="stylesheet" href="projects.css">
+  <link rel="stylesheet" href="settings.css">
+  <link rel="stylesheet" href="motion.css">
+  <link rel="stylesheet" href="media.css">
+</head>
+
+<body>
+  <header>
+    <nav>
+      <p class="logo"><a href="profile.html" title="Profile">PS</a></p>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="gaming.html">Games</a></li>
+        <li><a href="media.html" aria-current="page">Media</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="homelab.html">Home Lab</a></li>
+      </ul>
+      <button class="settings-toggle" id="settingsToggle" type="button" aria-label="Settings" title="Settings" aria-haspopup="dialog" aria-expanded="false" aria-controls="settingsPanel"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="3.34 3.34"/><circle cx="12" cy="12" r="5.2" fill="none" stroke="currentColor" stroke-width="4.4"/></svg></button>
+    </nav>
+  </header>
+
+  <main class="projects media">
+    <a class="back-link" href="media.html">&larr; Media</a>
+
+    <section class="lists-intro">
+      <h1>Music</h1>
+      <p>Spotify listening history in charts, one page per person. Pick whose to see.</p>
+    </section>
+
+    <p class="lists-intro" id="people-missing" hidden>The listening data didn't load. Try refreshing the page.</p>
+
+    <!-- One card per person, from music-people.js (made by tools/build_music_data.py,
+         which also lists who there is). Each opens music.html?for=<key>. -->
+    <div class="media-cards" id="music-people"></div>
+  </main>
+
+  <footer>
+    <p>&copy; <span id="year"></span> Parth</p>
+  </footer>
+
+  <script src="music-people.js"></script>
+  <script>
+    (function () {
+      const holder = document.getElementById("music-people");
+      if (typeof MUSIC_PEOPLE === "undefined" || !MUSIC_PEOPLE.length) {
+        document.getElementById("people-missing").hidden = false;
+        return;
+      }
+
+      function el(tag, className, parent, text) {
+        const node = document.createElement(tag);
+        if (className) node.className = className;
+        if (text !== undefined) node.textContent = text;
+        if (parent) parent.appendChild(node);
+        return node;
+      }
+
+      function count(list, number, label) {
+        const item = el("li", "", list);
+        el("b", "", item, String(number));
+        el("span", "", item, label);
+      }
+
+      for (const p of MUSIC_PEOPLE) {
+        const card = el("a", "feature-card media-card", holder);
+        card.href = "music.html?for=" + encodeURIComponent(p.key);
+        const body = el("div", "feature-body", card);
+        el("span", "pj-eyebrow", body, "Since " + p.from.slice(0, 4));
+        const name = el("h2", "", body, p.name);
+        name.setAttribute("translate", "no");
+        if (p.topArtist) {
+          const line = el("p", "feature-tagline", body);
+          el("span", "", line, "#1 artist");
+          line.append(": ");
+          el("span", "", line, p.topArtist).setAttribute("translate", "no");
+        }
+        const counts = el("ul", "feature-counts", body);
+        count(counts, Math.round(p.hours).toLocaleString("en-AU"), "Hours");
+        count(counts, p.artists.toLocaleString("en-AU"), "Artists");
+        count(counts, p.years, p.years === 1 ? "Year" : "Years");
+        const cta = el("span", "feature-cta", body);
+        el("span", "", cta, "Open the charts");
+        cta.insertAdjacentHTML("beforeend", '<svg class="pj-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>');
+      }
+    })();
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+
+</html>

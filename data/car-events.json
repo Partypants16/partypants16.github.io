@@ -1,19 +1,19 @@
 {
-  "generatedAt": "2026-11-20T17:00:28.336Z",
+  "generatedAt": "2026-11-23T17:00:25.979Z",
   "sources": [
     {
       "id": "trading-garage",
       "name": "Trading Garage",
       "url": "https://www.tradinggarage.com/events?state=vic",
-      "lastOk": "2026-11-20T17:00:28.336Z",
-      "count": 20,
+      "lastOk": "2026-11-23T17:00:25.979Z",
+      "count": 13,
       "status": "ok"
     },
     {
       "id": "drivesome",
       "name": "Drivesome",
       "url": "https://drivesome.com/events/in/victoria",
-      "lastOk": "2026-11-20T17:00:28.336Z",
+      "lastOk": "2026-11-23T17:00:25.979Z",
       "count": 25,
       "status": "ok",
       "note": "first 25 listed (what the page publishes for search engines)"
@@ -22,392 +22,12 @@
       "id": "shannons",
       "name": "Shannons Club",
       "url": "https://club.shannons.com.au/club/events/search/?mode=upcoming&postcodeorsuburb=3000&distance=100",
-      "lastOk": "2026-11-20T17:00:28.336Z",
-      "count": 16,
+      "lastOk": "2026-11-23T17:00:25.979Z",
+      "count": 10,
       "status": "ok"
     }
   ],
   "events": [
-    {
-      "id": "island-magic-2026-11-20",
-      "name": "Island Magic",
-      "start": "2026-11-20",
-      "end": "2026-11-22",
-      "time": null,
-      "venue": "Phillip Island Grand Prix Circuit",
-      "suburb": null,
-      "category": "Motorsport",
-      "image": "https://tg-production-bucket.s3.ap-southeast-2.amazonaws.com/171029/conversions/1792114521-6ad17f59de096_2026-11-20_Island_Magic_TA2_Grand_Final-card.jpg?v=1792114534",
-      "links": [
-        {
-          "source": "trading-garage",
-          "url": "https://tradinggarage.com/events/island-magic"
-        }
-      ]
-    },
-    {
-      "id": "colac-district-2026-11-21",
-      "name": "Colac & District Show and Shine 2026",
-      "start": "2026-11-21",
-      "end": null,
-      "time": "8:30 am",
-      "venue": "Memorial Square",
-      "suburb": "Colac",
-      "category": "Car Show",
-      "image": "https://tg-production-bucket.s3.ap-southeast-2.amazonaws.com/176658/conversions/1794369372-6af3e75cd56e6_Colac-District-Show-and-Shine-2026-card.jpg?v=1794369376",
-      "links": [
-        {
-          "source": "trading-garage",
-          "url": "https://tradinggarage.com/events/colac-district-show-and-shine-2026"
-        },
-        {
-          "source": "drivesome",
-          "url": "https://drivesome.com/events/colac-district-show-and-shine"
-        },
-        {
-          "source": "shannons",
-          "url": "https://club.shannons.com.au/club/events/colac-district-show-and-shine/"
-        }
-      ]
-    },
-    {
-      "id": "performance-pulse-tour-melbourne-2026-11-21",
-      "name": "Performance Pulse On Tour Melbourne 2026",
-      "start": "2026-11-21",
-      "end": null,
-      "time": "9:30 am",
-      "venue": "Caribbean Gardens",
-      "suburb": "Scoresby",
-      "category": "Car Show",
-      "image": "https://tg-production-bucket.s3.ap-southeast-2.amazonaws.com/176656/conversions/1794369340-6af3e73cc5486_Performance-Pulse-On-Tour-Melbourne-2026-card.jpg?v=1794369346",
-      "links": [
-        {
-          "source": "trading-garage",
-          "url": "https://tradinggarage.com/events/performance-pulse-on-tour-melbourne-2026"
-        },
-        {
-          "source": "shannons",
-          "url": "https://club.shannons.com.au/club/events/performance-pulse-on-tour/"
-        }
-      ]
-    },
-    {
-      "id": "vicdrift-drift-x-2026-11-21",
-      "name": "VicDrift Drift X 2026",
-      "start": "2026-11-21",
-      "end": null,
-      "time": "7:00 am",
-      "venue": "Calder Park Raceway",
-      "suburb": "Calder Park",
-      "category": "Motorsport",
-      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmuc6acs900plkv3z986q0wxh.jpg",
-      "links": [
-        {
-          "source": "drivesome",
-          "url": "https://drivesome.com/events/vicdrift-drift-x"
-        }
-      ]
-    },
-    {
-      "id": "vrmc-round-winton-2026-11-21",
-      "name": "VRMC Round 6 - Winton",
-      "start": "2026-11-21",
-      "end": null,
-      "time": "8:30 am",
-      "venue": "Winton Motor Raceway",
-      "suburb": null,
-      "category": "Motorsport",
-      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmreoz7jq01ef9qg9d9xmkijq.jpg",
-      "links": [
-        {
-          "source": "drivesome",
-          "url": "https://drivesome.com/events/vrmc-round-6-winton"
-        }
-      ]
-    },
-    {
-      "id": "compello-jdm-vs-euro-sung-kang-2026-11-21",
-      "name": "Compello JDM vs Euro featuring Sung Kang",
-      "start": "2026-11-21",
-      "end": null,
-      "time": "9:00 am",
-      "venue": "Melbourne Convention and Exhibition Centre",
-      "suburb": "South Wharf",
-      "category": "Other",
-      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmuc6adwe00ptkv3zkkmmbujs.jpg",
-      "links": [
-        {
-          "source": "drivesome",
-          "url": "https://drivesome.com/events/compello-jdm-vs-euro-featuring-sung-kang"
-        }
-      ]
-    },
-    {
-      "id": "castlemaine-rod-shop-invitational-2026-11-21",
-      "name": "Castlemaine Rod Shop Invitational 2026",
-      "start": "2026-11-21",
-      "end": null,
-      "time": "10:00 am",
-      "venue": "Victorian Motorsports Park",
-      "suburb": "Knowsley",
-      "category": "Other",
-      "image": "https://club.shannons.com.au/img-library/676x956x1/events/I67520D1C17BBTSN_feature/castlemaine-rod-shop-invitational.jpg",
-      "links": [
-        {
-          "source": "drivesome",
-          "url": "https://drivesome.com/events/castlemaine-rod-shop-invitational"
-        },
-        {
-          "source": "shannons",
-          "url": "https://club.shannons.com.au/club/events/castlemaine-rod-shop-invitational/"
-        }
-      ]
-    },
-    {
-      "id": "wangaratta-cruise-night-2026-11-21",
-      "name": "Wangaratta Cruise Night",
-      "start": "2026-11-21",
-      "end": null,
-      "time": "10:00 am",
-      "venue": null,
-      "suburb": "Wangaratta",
-      "category": "Drive/Cruise",
-      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmreoyjib00xt9qg9r5eftk84.jpg",
-      "links": [
-        {
-          "source": "drivesome",
-          "url": "https://drivesome.com/events/wangaratta-cruise-night"
-        }
-      ]
-    },
-    {
-      "id": "growl-racing-performance-pulse-tour-2026-11-21",
-      "name": "GROWL Racing - Performance Pulse on Tour",
-      "start": "2026-11-21",
-      "end": null,
-      "time": "10:00 am",
-      "venue": "Caribbean Park",
-      "suburb": "Scoresby",
-      "category": "Motorsport",
-      "image": null,
-      "links": [
-        {
-          "source": "drivesome",
-          "url": "https://drivesome.com/events/growl-racing-performance-pulse-scoresby"
-        }
-      ]
-    },
-    {
-      "id": "great-escape-2026-11-21",
-      "name": "The Great Escape",
-      "start": "2026-11-21",
-      "end": null,
-      "time": "11:00 am",
-      "venue": null,
-      "suburb": "Melbourne",
-      "category": "Other",
-      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmrhmnxli00lpd5no468agxvn.jpg",
-      "links": [
-        {
-          "source": "drivesome",
-          "url": "https://drivesome.com/events/the-great-escape"
-        }
-      ]
-    },
-    {
-      "id": "rob-roy-historic-classic-hillclimb-2026-11-22",
-      "name": "Rob Roy Historic & Classic Hillclimb (34th)",
-      "start": "2026-11-22",
-      "end": null,
-      "time": "10:00 am",
-      "venue": "Rob Roy Hillclimb",
-      "suburb": "Christmas Hills",
-      "category": "Motorsport",
-      "image": "https://tg-production-bucket.s3.ap-southeast-2.amazonaws.com/169740/conversions/rob-roy-historic-and-classic-hillclimb-34th-card.jpg?v=1791868842",
-      "links": [
-        {
-          "source": "trading-garage",
-          "url": "https://tradinggarage.com/events/rob-roy-historic-and-classic-hillclimb-34th"
-        },
-        {
-          "source": "drivesome",
-          "url": "https://drivesome.com/events/rob-roy-triple-cup-round-3"
-        },
-        {
-          "source": "shannons",
-          "url": "https://club.shannons.com.au/club/events/34th-rob-roy-historic-classic-hillclimb/"
-        }
-      ]
-    },
-    {
-      "id": "amoc-concours-d-elegance-2026-11-22",
-      "name": "AMOC Victoria Concours d’Elegance 2026",
-      "start": "2026-11-22",
-      "end": null,
-      "time": "9:00 am",
-      "venue": "Cruden Farm",
-      "suburb": "Langwarrin",
-      "category": "Concours",
-      "image": null,
-      "links": [
-        {
-          "source": "trading-garage",
-          "url": "https://tradinggarage.com/events/amoc-victoria-concours-d-elegance-2026"
-        }
-      ]
-    },
-    {
-      "id": "ford-mustang-cars-coffee-2026-11-22",
-      "name": "Ford Mustang Cars & Coffee 2026",
-      "start": "2026-11-22",
-      "end": null,
-      "time": "10:00 am",
-      "venue": "Jefferson Ford",
-      "suburb": "Mentone",
-      "category": "Car Meet",
-      "image": "https://tg-production-bucket.s3.ap-southeast-2.amazonaws.com/176659/conversions/1794369378-6af3e762d5edf_Ford-Mustang-Cars-Coffee-2026-card.jpg?v=1794369382",
-      "links": [
-        {
-          "source": "trading-garage",
-          "url": "https://tradinggarage.com/events/ford-mustang-cars-coffee-2026"
-        },
-        {
-          "source": "drivesome",
-          "url": "https://drivesome.com/events/ford-mustang-cars-coffee-jefferson-ford"
-        },
-        {
-          "source": "shannons",
-          "url": "https://club.shannons.com.au/club/events/ford-mustang-cars-coffee/"
-        }
-      ]
-    },
-    {
-      "id": "fpv-xr-2026-11-22",
-      "name": "FPV & XR Club Annual Show & Shine 2026",
-      "start": "2026-11-22",
-      "end": null,
-      "time": "10:00 am",
-      "venue": "Shannons Showroom",
-      "suburb": "Heatherton",
-      "category": "Car Show",
-      "image": "https://tg-production-bucket.s3.ap-southeast-2.amazonaws.com/176660/conversions/1794369385-6af3e76911b68_FPV-XR-Club-Annual-Show-Shine-2026-card.jpg?v=1794369388",
-      "links": [
-        {
-          "source": "trading-garage",
-          "url": "https://tradinggarage.com/events/fpv-xr-club-annual-show-shine-2026"
-        },
-        {
-          "source": "drivesome",
-          "url": "https://drivesome.com/events/fpv-xr-owners-club-show-and-shine"
-        },
-        {
-          "source": "shannons",
-          "url": "https://club.shannons.com.au/club/events/fpv-xr-club-annual-show-shine-2026/"
-        }
-      ]
-    },
-    {
-      "id": "wangaratta-swap-meet-2026-11-22",
-      "name": "Wangaratta Swap Meet & Show n Shine",
-      "start": "2026-11-22",
-      "end": null,
-      "time": "8:00 am",
-      "venue": "Wangaratta Showgrounds",
-      "suburb": "Wangaratta",
-      "category": "Swap Meet",
-      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmreoz7dz01eb9qg9unlhbrxz.jpg",
-      "links": [
-        {
-          "source": "drivesome",
-          "url": "https://drivesome.com/events/wangaratta-swap-meet-show-n-shine"
-        }
-      ]
-    },
-    {
-      "id": "classic-motor-heritage-trentham-2026-11-22",
-      "name": "Classic Motor Heritage Show - Trentham",
-      "start": "2026-11-22",
-      "end": null,
-      "time": "9:00 am",
-      "venue": "Historic Trentham Railway Station",
-      "suburb": "B",
-      "category": "Car Show",
-      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmu6ripzj00733ole9eaom03b.jpg",
-      "links": [
-        {
-          "source": "drivesome",
-          "url": "https://drivesome.com/events/classic-motor-heritage-show-trentham"
-        }
-      ]
-    },
-    {
-      "id": "heartkids-bike-fundraiser-2026-11-22",
-      "name": "HeartKids Car and Bike Fundraiser",
-      "start": "2026-11-22",
-      "end": null,
-      "time": "10:00 am",
-      "venue": "Penola Catholic College Broadmeadows",
-      "suburb": "Broadmeadows",
-      "category": "Other",
-      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmuc6ag0c00q9kv3zy4rnpd2z.jpg",
-      "links": [
-        {
-          "source": "drivesome",
-          "url": "https://drivesome.com/events/heartkids-car-and-bike-fundraiser"
-        }
-      ]
-    },
-    {
-      "id": "supercharged-auto-media-cars-coffee-2026-11-22",
-      "name": "Supercharged Auto Media Cars & Coffee",
-      "start": "2026-11-22",
-      "end": null,
-      "time": "11:00 am",
-      "venue": "Sir John Monash Museum",
-      "suburb": null,
-      "category": "Car Meet",
-      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmreoy75p00qf9qg9aj6xngzq.jpg",
-      "links": [
-        {
-          "source": "drivesome",
-          "url": "https://drivesome.com/events/supercharged-auto-media-cars-coffee"
-        }
-      ]
-    },
-    {
-      "id": "marvellous-machines-2026-11-22",
-      "name": "Marvellous Machines",
-      "start": "2026-11-22",
-      "end": null,
-      "time": "11:00 am",
-      "venue": "The basin Primary School",
-      "suburb": "The Basin",
-      "category": "Other",
-      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmu6riqm7007b3olevaaxphuf.jpg",
-      "links": [
-        {
-          "source": "drivesome",
-          "url": "https://drivesome.com/events/marvellous-machines"
-        }
-      ]
-    },
-    {
-      "id": "street-classica-2026-11-22",
-      "name": "Street Classica 2026",
-      "start": "2026-11-22",
-      "end": null,
-      "time": "11:00 am",
-      "venue": null,
-      "suburb": "Moonee Ponds",
-      "category": "Other",
-      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/inbox/d78e4f49-7f86-429f-ad6d-ba62f972f915.jpg",
-      "links": [
-        {
-          "source": "drivesome",
-          "url": "https://drivesome.com/events/street-classica"
-        }
-      ]
-    },
     {
       "id": "evolve-performance-driving-phillip-island-2026-11-25",
       "name": "Evolve Performance Driving - Phillip Island",
@@ -460,6 +80,23 @@
         {
           "source": "drivesome",
           "url": "https://drivesome.com/events/springnats-performance-car-festival"
+        }
+      ]
+    },
+    {
+      "id": "ballarat-rod-run-2026-11-27",
+      "name": "Ballarat Rod Run",
+      "start": "2026-11-27",
+      "end": null,
+      "time": "10:00 am",
+      "venue": "Lake Wendouree",
+      "suburb": "Ballarat",
+      "category": "Drive/Cruise",
+      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/inbox/6c9acadb-77f6-4f7b-94ac-678f1d060b3b.jpg",
+      "links": [
+        {
+          "source": "drivesome",
+          "url": "https://drivesome.com/events/ballarat-rod-run"
         }
       ]
     },
@@ -532,6 +169,40 @@
       ]
     },
     {
+      "id": "mr-excited-s-beautiful-yarra-farm-fresh-2026-11-28",
+      "name": "Mr Excited's Car Show, Beautiful Yarra Farm Fresh",
+      "start": "2026-11-28",
+      "end": null,
+      "time": "5:00 pm",
+      "venue": "Yarra Farm Fresh",
+      "suburb": "Coldstream",
+      "category": "Car Show",
+      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmreozjel01nr9qg9uuusjwsx.jpg",
+      "links": [
+        {
+          "source": "drivesome",
+          "url": "https://drivesome.com/events/mr-excited-s-car-show-beautiful-yarra-farm-fresh"
+        }
+      ]
+    },
+    {
+      "id": "winton-twilight-cruise-2026-11-28",
+      "name": "Winton Twilight Cruise",
+      "start": "2026-11-28",
+      "end": null,
+      "time": "6:00 pm",
+      "venue": "Winton Motor Raceway",
+      "suburb": null,
+      "category": "Drive/Cruise",
+      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmreoyqxe013r9qg9lsh2eql5.jpg",
+      "links": [
+        {
+          "source": "drivesome",
+          "url": "https://drivesome.com/events/winton-twilight-course"
+        }
+      ]
+    },
+    {
       "id": "classic-japan-2026-11-29",
       "name": "Classic Japan 2026",
       "start": "2026-11-29",
@@ -545,6 +216,40 @@
         {
           "source": "trading-garage",
           "url": "https://tradinggarage.com/events/classic-japan-2026"
+        }
+      ]
+    },
+    {
+      "id": "bendigo-all-holden-gm-day-2026-11-29",
+      "name": "Bendigo All Holden & GM Day 2026",
+      "start": "2026-11-29",
+      "end": null,
+      "time": "9:00 am",
+      "venue": "Bendigo Showground",
+      "suburb": "Bendigo",
+      "category": "Other",
+      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmuc6ak7000r5kv3z77zx997l.jpg",
+      "links": [
+        {
+          "source": "drivesome",
+          "url": "https://drivesome.com/events/bendigo-all-holden-gm-day"
+        }
+      ]
+    },
+    {
+      "id": "mount-egerton-2026-11-29",
+      "name": "Mount Egerton Car Show",
+      "start": "2026-11-29",
+      "end": null,
+      "time": "10:00 am",
+      "venue": null,
+      "suburb": "Mount Egerton",
+      "category": "Car Show",
+      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmuc6ajf600r1kv3zjwo8g95j.jpg",
+      "links": [
+        {
+          "source": "drivesome",
+          "url": "https://drivesome.com/events/mount-egerton-car-show"
         }
       ]
     },
@@ -566,19 +271,91 @@
       ]
     },
     {
+      "id": "e30-enduro-2026-12-04",
+      "name": "E30 Enduro",
+      "start": "2026-12-04",
+      "end": null,
+      "time": "11:00 am",
+      "venue": "Sandown Raceway",
+      "suburb": "Springvale",
+      "category": "Other",
+      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmrhmnyua00mld5noexi4mxam.jpg",
+      "links": [
+        {
+          "source": "drivesome",
+          "url": "https://drivesome.com/events/e30-enduro"
+        }
+      ]
+    },
+    {
       "id": "aasa-hours-sandown-2026-12-05",
       "name": "AASA 6 Hours of Sandown",
       "start": "2026-12-05",
       "end": "2026-12-06",
-      "time": null,
+      "time": "11:00 am",
       "venue": "Sandown Raceway",
-      "suburb": null,
+      "suburb": "Springvale",
       "category": "Motorsport",
-      "image": null,
+      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmrhmnyzy00mpd5noyawimzho.jpg",
       "links": [
         {
           "source": "trading-garage",
           "url": "https://tradinggarage.com/events/aasa-6-hours-of-sandown"
+        },
+        {
+          "source": "drivesome",
+          "url": "https://drivesome.com/events/round-5-australian-production-car-enduro-championship-6-hours-of-sandown"
+        }
+      ]
+    },
+    {
+      "id": "rotary-revival-calder-park-2026-12-05",
+      "name": "Rotary Revival, Calder Park",
+      "start": "2026-12-05",
+      "end": null,
+      "time": "10:00 am",
+      "venue": "Calder Park Raceway",
+      "suburb": "Calder Park",
+      "category": "Other",
+      "image": null,
+      "links": [
+        {
+          "source": "drivesome",
+          "url": "https://drivesome.com/events/rotary-revival-calder-park"
+        }
+      ]
+    },
+    {
+      "id": "seymour-cars-coffee-2026-12-05",
+      "name": "Seymour Cars n Coffee",
+      "start": "2026-12-05",
+      "end": null,
+      "time": "11:00 am",
+      "venue": null,
+      "suburb": "Seymour",
+      "category": "Car Meet",
+      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmu6riah600253ole4w8xoy40.webp",
+      "links": [
+        {
+          "source": "drivesome",
+          "url": "https://drivesome.com/events/seymour-cars-n-coffee"
+        }
+      ]
+    },
+    {
+      "id": "supercharged-link-up-missen-burgers-2026-12-05",
+      "name": "Supercharged Link-Up at Missen Link Burgers",
+      "start": "2026-12-05",
+      "end": null,
+      "time": "4:30 pm",
+      "venue": "Missen Link Burgers",
+      "suburb": "Traralgon",
+      "category": "Other",
+      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmuc68aw8008rkv3zjinigt4p.jpg",
+      "links": [
+        {
+          "source": "drivesome",
+          "url": "https://drivesome.com/events/supercharged-link-up-traralgon"
         }
       ]
     },
@@ -587,12 +364,16 @@
       "name": "Melbourne Bike Night",
       "start": "2026-12-05",
       "end": null,
-      "time": "5pm - 8pm",
-      "venue": "Shannons Showroom Melbourne",
-      "suburb": null,
+      "time": "6:00 pm",
+      "venue": "Shannons Showroom",
+      "suburb": "Heatherton",
       "category": "Other",
-      "image": "https://club.shannons.com.au/img-library/676x956x1/events/O9251C078SCWMVHQ_feature/melbourne-bike-night.jpg",
+      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmreoywz2017h9qg91y17u3zn.jpg",
       "links": [
+        {
+          "source": "drivesome",
+          "url": "https://drivesome.com/events/melbourne-bike-night"
+        },
         {
           "source": "shannons",
           "url": "https://club.shannons.com.au/club/events/melbourne-bike-night-1/"
@@ -604,7 +385,7 @@
       "name": "Frankston Rotary Motor Show",
       "start": "2026-12-06",
       "end": null,
-      "time": null,
+      "time": "10:00 am",
       "venue": "Cruden Farm",
       "suburb": "Langwarrin",
       "category": "Car Show",
@@ -613,6 +394,112 @@
         {
           "source": "trading-garage",
           "url": "https://tradinggarage.com/events/frankston-rotary-motor-show"
+        },
+        {
+          "source": "drivesome",
+          "url": "https://drivesome.com/events/frankston-rotary-motor-show"
+        }
+      ]
+    },
+    {
+      "id": "all-mods-meet-drouin-2026-12-06",
+      "name": "All Mods Car Meet, Drouin",
+      "start": "2026-12-06",
+      "end": null,
+      "time": "9:00 am",
+      "venue": "Civic Park",
+      "suburb": "Drouin",
+      "category": "Car Meet",
+      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmuc68e2u009lkv3znj1n0enx.jpg",
+      "links": [
+        {
+          "source": "drivesome",
+          "url": "https://drivesome.com/events/all-mods-car-meet-drouin"
+        }
+      ]
+    },
+    {
+      "id": "marque-collective-cars-coffee-2026-12-06",
+      "name": "The Marque Collective Cars and Coffee",
+      "start": "2026-12-06",
+      "end": null,
+      "time": "9:00 am",
+      "venue": "Melbourne",
+      "suburb": "Moorabbin",
+      "category": "Car Meet",
+      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/drivesome/posts/3cd8683c-c003-47f7-8c3b-07c5be7b52d9.jpg",
+      "links": [
+        {
+          "source": "drivesome",
+          "url": "https://drivesome.com/events/the-marque-collective-cars-and-coffee"
+        }
+      ]
+    },
+    {
+      "id": "cars-coffee-warrnambool-2026-12-06",
+      "name": "Cars & Coffee Warrnambool",
+      "start": "2026-12-06",
+      "end": null,
+      "time": "10:00 am",
+      "venue": "Flying Horse Bar & Brewery",
+      "suburb": "Warrnambool",
+      "category": "Car Meet",
+      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmuc68hf100avkv3zgew54md0.jpg",
+      "links": [
+        {
+          "source": "drivesome",
+          "url": "https://drivesome.com/events/cars-coffee-warrnambool"
+        }
+      ]
+    },
+    {
+      "id": "kilmore-coffee-cars-2026-12-06",
+      "name": "Kilmore Coffee and Cars",
+      "start": "2026-12-06",
+      "end": null,
+      "time": "10:00 am",
+      "venue": "Kilmore Village",
+      "suburb": "Kilmore",
+      "category": "Car Meet",
+      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmreoyqll01379qg9roig450r.jpg",
+      "links": [
+        {
+          "source": "drivesome",
+          "url": "https://drivesome.com/events/kilmore-coffee-and-cars"
+        }
+      ]
+    },
+    {
+      "id": "cars-coffee-campe-s-motor-museum-2026-12-06",
+      "name": "Cars & Coffee - Campe's Motor Museum",
+      "start": "2026-12-06",
+      "end": null,
+      "time": "10:00 am",
+      "venue": "Campe's Motor Museum",
+      "suburb": "Hamilton",
+      "category": "Car Meet",
+      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmreozi3101m59qg999rjitmv.jpg",
+      "links": [
+        {
+          "source": "drivesome",
+          "url": "https://drivesome.com/events/cars-coffee-campe-s-motor-museum"
+        }
+      ]
+    },
+    {
+      "id": "kealba-milkbar-meet-2026-12-06",
+      "name": "Kealba Milkbar Car Meet",
+      "start": "2026-12-06",
+      "end": null,
+      "time": "11:00 am",
+      "venue": "Kealba Convenience & Cafe (Milkbar)",
+      "suburb": "Kealba",
+      "category": "Car Meet",
+      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/drivesome/posts/f67a8aa2-bce8-4c41-b1a9-d8cc13948885.jpg",
+      "links": [
+        {
+          "source": "drivesome",
+          "url": "https://drivesome.com/events/kealba-milkbar-car-meet"
         }
       ]
     },

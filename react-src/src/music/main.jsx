@@ -1,7 +1,9 @@
 // Music Explorer (music-explorer.html): pick a year, click an artist or song to
-// dig in, compare two years, search everything played since 2017.
+// dig in, compare two years, search everything they've played.
 // Data: MUSIC_X (music-explorer-data.js) for every artist and song, MUSIC
-// (music-data.js) for the yearly totals. Both are made by tools/build_music_data.py.
+// (music-data.js) for the yearly totals. Both are made by tools/build_music_data.py,
+// one pair per person (music-explorer.html loads the one ?for=<key> asks for).
+// Parth's page says "I" / "my"; anyone else's (meta.self false) uses their name.
 import { createRoot } from "react-dom/client";
 import { useEffect, useMemo, useState } from "react";
 import { fmt, plural, fold, niceDate, readHash, writeHash } from "../shared/util.js";
@@ -9,6 +11,8 @@ import { fmt, plural, fold, niceDate, readHash, writeHash } from "../shared/util
 /* global MUSIC_X, MUSIC */
 const X = typeof MUSIC_X !== "undefined" ? MUSIC_X : null;
 const M = typeof MUSIC !== "undefined" ? MUSIC : null;
+const OTHER = X && X.meta.self === false ? X.meta.name : null;
+const monthName = (iso) => new Date(iso + "T00:00:00").toLocaleString("en-AU", { month: "long", year: "numeric" });
 
 // ---------- Data, prepared once ----------
 function prepare(x) {
@@ -260,7 +264,7 @@ function Detail({ selected, y, pick, close }) {
   if (!selected) {
     return (
       <aside className="rx-card rx-detail rx-detail-empty">
-        <p>Pick an artist or song to see when I played it.</p>
+        <p>{`Pick an artist or song to see when ${OTHER || "I"} played it.`}</p>
       </aside>
     );
   }
@@ -368,7 +372,7 @@ function Compare({ a, b, setA, setB, open }) {
             </tbody>
           </table>
         ) : null}
-        {partial(ya) || partial(yb) ? <p className="rx-note">My Spotify history starts in late 2017 and ends in September 2026, so those two years are only part of a year.</p> : null}
+        {partial(ya) || partial(yb) ? <p className="rx-note">{`${OTHER ? OTHER + "'s" : "My"} Spotify history starts in ${monthName(X.meta.from)} and ends in ${monthName(X.meta.to)}, so those two years are only part of a year.`}</p> : null}
         <p className="rx-note">{`The arrows show how many places each one moved from ${ya} to ${yb}. “new” wasn't played at all in ${ya}; “gone” wasn't played at all in ${yb}.`}</p>
       </section>
       <div className="rx-two">
@@ -459,7 +463,7 @@ function App() {
       <section className="rx-hero">
         <span className="rx-eyebrow">Spotify listening history</span>
         <h1>Music Explorer</h1>
-        <p className="rx-lead">Dig into everything I've played since 2017: pick a year, click an artist or a song, or compare two years.</p>
+        <p className="rx-lead">{`Dig into everything ${OTHER ? OTHER + " has" : "I've"} played since ${X.meta.from.slice(0, 4)}: pick a year, click an artist or a song, or compare two years.`}</p>
         <p className="rx-meta">{`${fmt(D.artists.length)} artists · ${fmt(D.songs.length)} songs · ${niceDate(X.meta.from)} to ${niceDate(X.meta.to)}`}</p>
       </section>
 
