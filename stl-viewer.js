@@ -304,11 +304,12 @@ function loadPLY(buf, name) {
 
 // ---------- GLB and USDZ (whole scenes with their own materials) ----------
 function sceneInfo(root) {
-  let triangles = 0, meshes = 0, textured = false, vcol = false, tinted = false;
+  let triangles = 0, meshes = 0, textured = false, vcol = false, tinted = false, skinned = false;
   const materials = new Set();
   root.traverse(o => {
     if (!o.isMesh) return;
     meshes++;
+    if (o.isSkinnedMesh) skinned = true;
     o.castShadow = true;
     const g = o.geometry;
     triangles += (g.index ? g.index.count : g.getAttribute('position').count) / 3;
@@ -320,7 +321,7 @@ function sceneInfo(root) {
     }
     o.userData.fileMaterial = o.material;   // kept to switch back to "From the file"
   });
-  return { triangles: Math.round(triangles), meshes, materials: materials.size, textured, vcol, tinted };
+  return { triangles: Math.round(triangles), meshes, materials: materials.size, textured, vcol, tinted, skinned };
 }
 
 async function loadGLB(buf, name) {
@@ -536,6 +537,13 @@ function renderFacts() {
   note.hidden = true;
   if (m.kind === 'ply' && m.ply.splat) {
     note.textContent = 'This is a Gaussian splat, shown here as coloured points. A splat viewer would blend them into a photo-like image.';
+    note.hidden = false;
+  } else if (m.info && m.info.skinned) {
+    // a rigged model: Avatar Lab can make it move (the visitor opens the file there again)
+    const link = document.createElement('a');
+    link.href = 'avatar-lab.html';
+    link.textContent = 'Open it in Avatar Lab';
+    note.replaceChildren('This model has a skeleton, so it can move.', ' ', link);
     note.hidden = false;
   }
 }

@@ -36,6 +36,7 @@
     ["Profile", SITE + "profile.html", "Pages", "about me psn"],
     ["Car Shows", SITE + "car-events.html", "Pages", "cars meets track days events"],
     ["3D Scan Viewer", SITE + "stl-viewer.html", "Pages", "stl usdz glb ply model"],
+    ["Avatar Lab", SITE + "avatar-lab.html", "Pages", "avatar vrm glb rig animation face webcam"],
     ["Vibe Testing Zone", SITE + "vibe-testing-zone/home.html", "Pages", "experiments"],
     ["Claude page", SITE + "claude.html", "Pages", "memory sessions timeline log", true],
     ["ChatGPT page", SITE + "chatgpt.html", "Pages", "codex memory sessions", true],

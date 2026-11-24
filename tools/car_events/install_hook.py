@@ -1,10 +1,11 @@
-"""Install the pre-commit hook that adds the latest car events to every my-website commit.
+"""Install my-website's pre-commit hook: the 3D model guard, then the latest car events.
 
 usage (from apps/my-website/):  python tools/car_events/install_hook.py
 
 Git hooks aren't part of the repo, so run this once per clone. It writes
-.git/hooks/pre-commit, which runs pull_car_events.py --stage. That script never fails, so a
-commit always goes through, with or without fresh events. If a pre-commit hook already exists
+.git/hooks/pre-commit, which first runs tools/model_guard.py (blocks a commit that adds a 3D
+model file outside play/ or vendor/), then pull_car_events.py --stage. That second script
+never fails, so a commit goes through with or without fresh events. If a pre-commit hook already exists
 and isn't ours, it stops instead of overwriting it.
 """
 import os, stat, subprocess, sys
@@ -13,7 +14,11 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SITE = os.path.dirname(os.path.dirname(HERE))
 MARK = "# car-events pre-commit hook (tools/car_events/install_hook.py)"
 HOOK = MARK + """
-# Adds the latest data/car-events.json from n8n to this commit. Never blocks the commit.
+# 1. No 3D model files outside play/ and vendor/ (the repo is public; scans can be private).
+#    This one does block the commit.
+if command -v python >/dev/null 2>&1; then PY=python; else PY=py; fi
+$PY tools/model_guard.py || exit 1
+# 2. Adds the latest data/car-events.json from n8n to this commit. Never blocks the commit.
 python tools/car_events/pull_car_events.py --stage || py tools/car_events/pull_car_events.py --stage || true
 exit 0
 """

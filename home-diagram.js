@@ -189,7 +189,8 @@
     scanviewer() {
       return [para(t("Open an STL file or a 3D scan and see it in full colour and light. Your file never leaves your device.")),
         para(t("Works with STL, GLB, PLY and USDZ files.")),
-        links([[t("Open the viewer"), "stl-viewer.html"]])];
+        para(t("Rigged avatars (GLB or VRM) can move in Avatar Lab: animations, face expressions and webcam face tracking.")),
+        links([[t("Open the viewer"), "stl-viewer.html"], [t("Open Avatar Lab"), "avatar-lab.html"]])];
     },
     vibe() {
       return [para(t("Pure vibe coding to test the capabilities and experiment with new technologies. No fleshed out products.")),

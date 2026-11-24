@@ -25,3 +25,10 @@ react-src/node_modules/
 # Car Shows: the home-network address of n8n (pull_car_events.py). Never commit it.
 tools/car_events/source_url.txt
 data/*.tmp
+
+# Avatars and scans opened in the 3D Scan Viewer / Avatar Lab while testing. Parth's are
+# private (a body scan of him). tools/model_guard.py (pre-commit) also blocks model files
+# outside play/ and vendor/.
+*.vrm
+parth_avatar*
+parth_scan*

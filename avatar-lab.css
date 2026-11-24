@@ -1,0 +1,65 @@
+/* Avatar Lab (avatar-lab.html). Builds on stl-viewer.css (same stage, panel and
+   controls); this file only adds what the lab needs on top. */
+
+.al-back { margin: .25rem 0 0; font-size: .9rem; }
+
+.al-clips button { flex: 1 1 30%; }
+.al-visemes { margin-top: 6px; }
+.al-visemes button { flex: 1 1 14%; }
+#al-file-clips { margin-top: 6px; }
+
+/* buttons (style.css's .fancy-button isn't loaded on these pages) */
+.al-small,
+.al .sv-drop .sv-pick {
+  display: inline-block;
+  position: relative;
+  background: var(--link, #1464c0);
+  color: #fff;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  font: inherit;
+  text-align: center;
+}
+.al-small { margin-top: .6rem; font-size: .85rem; padding: .45rem .8rem; }
+.al .sv-drop .sv-pick { padding: .6rem 1.4rem; }
+.al-small:hover,
+.al .sv-drop .sv-pick:hover { filter: brightness(1.12); }
+
+.sv-row input[type="range"] { flex: 1; margin-left: .75rem; }
+
+.al-shapes { margin-top: .6rem; font-size: .88rem; }
+.al-shapes summary { cursor: pointer; color: var(--link); }
+.al-shapes h3 {
+  font-size: .75rem;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--muted-text);
+  margin: .8rem 0 .3rem;
+}
+.al-slider {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 44%;
+  align-items: center;
+  gap: .5rem;
+  margin: .15rem 0;
+  font-size: .8rem;
+}
+.al-slider span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.al-slider input { width: 100%; }
+
+/* small camera picture in the corner of the stage while the webcam drives the face */
+.al-video {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  width: min(28%, 200px);
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, .25);
+  background: #000;
+}
+.al-video.is-mirrored { transform: scaleX(-1); }
+
+#al-cam[aria-pressed="true"] { background: #c0392b; border-color: #c0392b; }
