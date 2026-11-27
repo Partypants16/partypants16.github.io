@@ -219,14 +219,14 @@ footer {
 /* Link style – subtle underline + transition */
 .contact-info a {
     color: var(--link);
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition: border-color .2s ease, color .2s ease;
+    text-decoration: underline 1px transparent;
+    text-underline-offset: 3px;
+    transition: text-decoration-color .2s ease, color .2s ease;
 }
 
 .contact-info a:hover,
 .contact-info a:focus {
-    border-color: var(--link);
+    text-decoration-color: var(--link);
     color: var(--link-hover);
 }
 
@@ -272,14 +272,14 @@ footer {
 /* ---------- Link styling --------------------------------------------- */
 .certifications a {
     color: var(--link);
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition: border-color .2s ease, color .2s ease;
+    text-decoration: underline 1px transparent;
+    text-underline-offset: 3px;
+    transition: text-decoration-color .2s ease, color .2s ease;
 }
 
 .certifications a:hover,
 .certifications a:focus {
-    border-color: var(--link);
+    text-decoration-color: var(--link);
     color: var(--link-hover);
 }
 

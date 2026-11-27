@@ -1,19 +1,20 @@
 {
-  "generatedAt": "2026-11-23T17:00:25.979Z",
+  "generatedAt": "2026-11-26T17:00:30.602Z",
   "sources": [
     {
       "id": "trading-garage",
       "name": "Trading Garage",
       "url": "https://www.tradinggarage.com/events?state=vic",
-      "lastOk": "2026-11-23T17:00:25.979Z",
-      "count": 13,
-      "status": "ok"
+      "lastOk": "2026-11-25T17:00:40.126Z",
+      "count": 14,
+      "status": "failed",
+      "error": "getaddrinfo EAI_AGAIN portal.tradinggarage.com"
     },
     {
       "id": "drivesome",
       "name": "Drivesome",
       "url": "https://drivesome.com/events/in/victoria",
-      "lastOk": "2026-11-23T17:00:25.979Z",
+      "lastOk": "2026-11-26T17:00:30.602Z",
       "count": 25,
       "status": "ok",
       "note": "first 25 listed (what the page publishes for search engines)"
@@ -22,46 +23,12 @@
       "id": "shannons",
       "name": "Shannons Club",
       "url": "https://club.shannons.com.au/club/events/search/?mode=upcoming&postcodeorsuburb=3000&distance=100",
-      "lastOk": "2026-11-23T17:00:25.979Z",
+      "lastOk": "2026-11-26T17:00:30.602Z",
       "count": 10,
       "status": "ok"
     }
   ],
   "events": [
-    {
-      "id": "evolve-performance-driving-phillip-island-2026-11-25",
-      "name": "Evolve Performance Driving - Phillip Island",
-      "start": "2026-11-25",
-      "end": null,
-      "time": "8:00 am",
-      "venue": "Phillip Island Grand Prix Circuit",
-      "suburb": "Ventnor",
-      "category": "Other",
-      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmuc6ahy600qpkv3zra7ua6b0.jpg",
-      "links": [
-        {
-          "source": "drivesome",
-          "url": "https://drivesome.com/events/evolve-performance-driving-phillip-island"
-        }
-      ]
-    },
-    {
-      "id": "bp-adelaide-grand-final-parade-2026-11-25",
-      "name": "bp Adelaide Grand Final parade",
-      "start": "2026-11-25",
-      "end": null,
-      "time": "10:00 am",
-      "venue": "Victoria Square",
-      "suburb": null,
-      "category": "Other",
-      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmreozum001v39qg9k1hld6oo.jpg",
-      "links": [
-        {
-          "source": "drivesome",
-          "url": "https://drivesome.com/events/bp-adelaide-grand-final-parade"
-        }
-      ]
-    },
     {
       "id": "springnats-2026-11-27",
       "name": "SpringNats 2026",
@@ -271,32 +238,15 @@
       ]
     },
     {
-      "id": "e30-enduro-2026-12-04",
-      "name": "E30 Enduro",
+      "id": "shift-nation-sandown-2026-12-04",
+      "name": "SHIFT Nation Sandown 2026",
       "start": "2026-12-04",
-      "end": null,
-      "time": "11:00 am",
-      "venue": "Sandown Raceway",
-      "suburb": "Springvale",
-      "category": "Other",
-      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmrhmnyua00mld5noexi4mxam.jpg",
-      "links": [
-        {
-          "source": "drivesome",
-          "url": "https://drivesome.com/events/e30-enduro"
-        }
-      ]
-    },
-    {
-      "id": "aasa-hours-sandown-2026-12-05",
-      "name": "AASA 6 Hours of Sandown",
-      "start": "2026-12-05",
       "end": "2026-12-06",
       "time": "11:00 am",
       "venue": "Sandown Raceway",
       "suburb": "Springvale",
       "category": "Motorsport",
-      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmrhmnyzy00mpd5noyawimzho.jpg",
+      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmrhmnyua00mld5noexi4mxam.jpg",
       "links": [
         {
           "source": "trading-garage",
@@ -304,7 +254,7 @@
         },
         {
           "source": "drivesome",
-          "url": "https://drivesome.com/events/round-5-australian-production-car-enduro-championship-6-hours-of-sandown"
+          "url": "https://drivesome.com/events/e30-enduro"
         }
       ]
     },
@@ -339,6 +289,23 @@
         {
           "source": "drivesome",
           "url": "https://drivesome.com/events/seymour-cars-n-coffee"
+        }
+      ]
+    },
+    {
+      "id": "round-australian-production-enduro-championship-hours-sandow-2026-12-05",
+      "name": "Round 5 - Australian Production Car Enduro Championship: 6 Hours of Sandown",
+      "start": "2026-12-05",
+      "end": null,
+      "time": "11:00 am",
+      "venue": "Sandown Raceway",
+      "suburb": "Springvale",
+      "category": "Motorsport",
+      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmrhmnyzy00mpd5noyawimzho.jpg",
+      "links": [
+        {
+          "source": "drivesome",
+          "url": "https://drivesome.com/events/round-5-australian-production-car-enduro-championship-6-hours-of-sandown"
         }
       ]
     },
@@ -385,7 +352,7 @@
       "name": "Frankston Rotary Motor Show",
       "start": "2026-12-06",
       "end": null,
-      "time": "10:00 am",
+      "time": "9:30 am",
       "venue": "Cruden Farm",
       "suburb": "Langwarrin",
       "category": "Car Show",
@@ -504,6 +471,23 @@
       ]
     },
     {
+      "id": "beeac-cars-coffee-2026-12-06",
+      "name": "Beeac Cars & Coffee",
+      "start": "2026-12-06",
+      "end": null,
+      "time": "11:00 am",
+      "venue": "Farmers Arms Hotel",
+      "suburb": "Beeac",
+      "category": "Car Meet",
+      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmreozk8b01of9qg9vasfxglp.jpg",
+      "links": [
+        {
+          "source": "drivesome",
+          "url": "https://drivesome.com/events/beeac-cars-coffee"
+        }
+      ]
+    },
+    {
       "id": "december-cars-coffee-x-mas-edition-2026-12-06",
       "name": "December Cars & Coffee- X-mas Edition",
       "start": "2026-12-06",
@@ -517,6 +501,23 @@
         {
           "source": "shannons",
           "url": "https://club.shannons.com.au/club/events/december-cars-coffee-x-mas-edition/"
+        }
+      ]
+    },
+    {
+      "id": "heathcote-cars-coffee-bikes-no-cruise-out-to-rochester-hotel-2026-12-11",
+      "name": "Heathcote Cars, Coffee and Bikes no:22 Cruise out to Rochester Hotel",
+      "start": "2026-12-11",
+      "end": null,
+      "time": "10:00 am",
+      "venue": "Melbourne",
+      "suburb": "Heathcote",
+      "category": "Car Meet",
+      "image": "https://main-sydney.syd1.cdn.digitaloceanspaces.com/events/flyers/ev-cmrhmnzho00n1d5novhwnce3p.jpg",
+      "links": [
+        {
+          "source": "drivesome",
+          "url": "https://drivesome.com/events/heathcote-cars-coffee-and-bikes-no-22-cruise-out-to-rochester-hotel"
         }
       ]
     },
@@ -610,11 +611,28 @@
       ]
     },
     {
+      "id": "mercedes-move-2027-02-06",
+      "name": "Mercedes at MOVE 2027",
+      "start": "2027-02-06",
+      "end": null,
+      "time": "9:00 am",
+      "venue": "MOVE Museum",
+      "suburb": "Kialla",
+      "category": "Car Show",
+      "image": null,
+      "links": [
+        {
+          "source": "trading-garage",
+          "url": "https://tradinggarage.com/events/mercedes-at-move-2027"
+        }
+      ]
+    },
+    {
       "id": "torquay-rotary-motor-2027-02-14",
       "name": "Torquay Rotary Motor Show 2027",
       "start": "2027-02-14",
       "end": null,
-      "time": null,
+      "time": "8:00 am",
       "venue": "Torquay Esplanade",
       "suburb": null,
       "category": "Car Show",
